@@ -4,6 +4,8 @@ struct PromptRowView: View {
     let prompt: Prompt
     let onFavorite: () -> Void
     
+    @State private var copied = false
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -19,7 +21,23 @@ struct PromptRowView: View {
                 }) {
                     Image(systemName: prompt.isFavorite ? "heart.fill" : "heart")
                         .foregroundColor(prompt.isFavorite ? .red : .gray)
-                        .font(.title3)
+                }
+                .buttonStyle(.plain)
+                
+                Button(action: {
+                    UIPasteboard.general.string = prompt.prompt
+                    copied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        copied = false
+                    }
+                }) {
+                    ZStack {
+                        Image(systemName: "doc.on.doc")
+                            .opacity(copied ? 0 : 1)
+                        Image(systemName: "checkmark")
+                            .opacity(copied ? 1 : 0)
+                    }
+                    .foregroundColor(copied ? .green : .gray)
                 }
                 .buttonStyle(.plain)
             }
@@ -32,13 +50,7 @@ struct PromptRowView: View {
             
             HStack {
                 if prompt.forDevs {
-                    HStack(spacing: 4) {
-                        Image(systemName: "laptopcomputer")
-                        .font(.caption)
-                        Text("For Developers")
-                        .font(.caption)
-                    }
-                    .foregroundColor(.blue)
+                    BadgeView(icon: "laptopcomputer", text: "For Developers")
                 }
                 
                 Spacer()

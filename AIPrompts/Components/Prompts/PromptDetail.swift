@@ -94,13 +94,7 @@ struct PromptDetailView: View {
                     }
 
                     if model.prompt.forDevs {
-                        HStack {
-                            Image(systemName: "laptopcomputer")
-                                .foregroundColor(.blue)
-                            Text("For Developers")
-                                .font(.caption)
-                                .foregroundColor(.blue)
-                        }
+                        BadgeView(icon: "laptopcomputer", text: "For Developers")
                     }
                 }
 

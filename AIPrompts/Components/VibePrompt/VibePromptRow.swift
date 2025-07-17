@@ -3,7 +3,9 @@ import SwiftUI
 struct VibePromptRowView: View {
     let vibePrompt: VibePrompt
     let onFavorite: () -> Void
-    
+
+    @State private var copied = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -13,37 +15,52 @@ struct VibePromptRowView: View {
                     .lineLimit(2)
 
                 Spacer()
-                
+
                 Button(action: {
                     onFavorite()
                 }) {
                     Image(systemName: vibePrompt.isFavorite ? "heart.fill" : "heart")
                         .foregroundColor(vibePrompt.isFavorite ? .red : .gray)
-                        .font(.title3)
+                }
+                .buttonStyle(.plain)
+
+                Button(action: {
+                    UIPasteboard.general.string = vibePrompt.prompt
+                    copied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        copied = false
+                    }
+                }) {
+                    ZStack {
+                        Image(systemName: "doc.on.doc")
+                            .opacity(copied ? 0 : 1)
+                        Image(systemName: "checkmark")
+                            .opacity(copied ? 1 : 0)
+                    }
+                    .foregroundColor(copied ? .green : .gray)
                 }
                 .buttonStyle(.plain)
             }
-            
+
             Text(vibePrompt.prompt)
                 .font(.body)
                 .foregroundColor(.secondary)
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)
-            
-            HStack {
-                HStack(spacing: 4) {
-                    Image(systemName: "person.circle")
-                        .font(.caption)
-                    Text(vibePrompt.contributor)
-                        .font(.caption)
+
+            // Tech Stack as badges
+            if !vibePrompt.techstack.isEmpty {
+                HStack(spacing: 8) {
+                    ForEach(vibePrompt.techstackArray, id: \.self) { tech in
+                        Text(tech)
+                            .font(.caption)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color(.systemGray5))
+                            .foregroundColor(.primary)
+                            .cornerRadius(8)
+                    }
                 }
-                .foregroundColor(.secondary)
-                
-                Spacer()
-                
-//                Text("\(vibePrompt.techStackArray.count) tech")
-//                    .font(.caption)
-//                    .foregroundColor(.secondary)
             }
         }
         .padding(.vertical, 4)
@@ -68,4 +85,4 @@ struct VibePromptRowView: View {
         )) {}
     }
     .environmentObject(DataManager())
-} 
+}
