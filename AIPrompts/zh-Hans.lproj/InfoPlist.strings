@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  TimesMatter
+
+  Created by Banghua Zhao on 13/07/2025.
+  
+*/
+
+"CFBundleDisplayName" = "AI提示词";
+"NSUserTrackingUsageDescription" = "该标识符将用于向您投放个性化广告。";
