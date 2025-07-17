@@ -81,7 +81,7 @@ struct VibePromptListView: View {
         NavigationView {
             VStack {
                 List(model.filteredVibePrompts) { vibePrompt in
-                    NavigationLink(destination: VibePromptDetailView(vibePrompt: vibePrompt)) {
+                    NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
                         VibePromptRowView(vibePrompt: vibePrompt) {
                             model.onFavorite(vibePrompt)
                         }
@@ -113,10 +113,10 @@ struct VibePromptListView: View {
                 }
             }
             .sheet(isPresented: Binding($model.route.showingAddVibePrompt)) {
-                AddVibePromptView()
+                VibePromptFormView(model: VibePromptFormModel() { _ in model.route = nil })
             }
             .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
-                EditVibePromptView(vibePrompt: prompt)
+                VibePromptFormView(model: VibePromptFormModel(prompt: VibePrompt.Draft(prompt)) { _ in model.route = nil })
             }
             .alert(
                 item: $model.route.showingDeleteAlert,
@@ -138,58 +138,6 @@ struct VibePromptListView: View {
     }
 }
 
-struct AddVibePromptView: View {
-    @EnvironmentObject var dataManager: DataManager
-    @Environment(\.dismiss) var dismiss
-
-    @State private var app = ""
-    @State private var prompt = ""
-    @State private var contributor = ""
-    @State private var techstack = ""
-
-    var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("App Details")) {
-                    TextField("App Name", text: $app)
-                    TextField("Contributor", text: $contributor)
-                    TextField("Tech Stack (comma-separated)", text: $techstack)
-                }
-
-                Section(header: Text("Prompt")) {
-                    TextEditor(text: $prompt)
-                        .frame(minHeight: 100)
-                }
-            }
-            .navigationTitle("Add Vibe Prompt")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        let newVibePrompt = VibePrompt(
-                            id: 0,
-                            app: app,
-                            prompt: prompt,
-                            contributor: contributor,
-                            techstack: techstack
-                        )
-
-                        dismiss()
-                    }
-                    .disabled(app.isEmpty || prompt.isEmpty)
-                }
-            }
-        }
-    }
-}
-
 #Preview {
     VibePromptListView()
-        .environmentObject(DataManager())
 }

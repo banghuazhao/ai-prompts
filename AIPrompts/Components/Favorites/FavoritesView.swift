@@ -1,22 +1,20 @@
-import SwiftUI
 import SharingGRDB
-
-
+import SwiftUI
 
 struct FavoritesView: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var selectedTab = 0
-    
+
     @FetchAll(
         Prompt.all
             .where(\.isFavorite)
     ) var favoritePrompts
-    
+
     @FetchAll(
         VibePrompt.all
             .where(\.isFavorite)
     ) var favoriteVibePrompts
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -27,7 +25,7 @@ struct FavoritesView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
-                
+
                 // Content based on selected tab
                 if selectedTab == 0 {
                     if favoritePrompts.isEmpty {
@@ -44,7 +42,6 @@ struct FavoritesView: View {
                                 )
                             ) {
                                 PromptRowView(prompt: prompt) {
-                                    
                                 }
                             }
                         }
@@ -59,9 +56,13 @@ struct FavoritesView: View {
                         )
                     } else {
                         List(favoriteVibePrompts) { vibePrompt in
-                            NavigationLink(destination: VibePromptDetailView(vibePrompt: vibePrompt)) {
+                            NavigationLink(
+                                destination: VibePromptDetailView(
+                                    model: .init(vibePrompt: vibePrompt)
+                                )
+                            ) {
                                 VibePromptRowView(vibePrompt: vibePrompt) {
-                                    
+//                                    model.onDeleteRequest(vibePrompt)
                                 }
                             }
                         }
@@ -79,18 +80,18 @@ struct EmptyFavoritesView: View {
     let title: String
     let message: String
     let systemImage: String
-    
+
     var body: some View {
         VStack(spacing: 20) {
             Image(systemName: systemImage)
                 .font(.system(size: 60))
                 .foregroundColor(.gray)
-            
+
             Text(title)
                 .font(.title2)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
-            
+
             Text(message)
                 .font(.body)
                 .foregroundColor(.secondary)
