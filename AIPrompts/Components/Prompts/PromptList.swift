@@ -128,7 +128,9 @@ struct PromptListView: View {
                 PromptFormView(
                     model: PromptFormModel(
                         prompt: Prompt.Draft(prompt)
-                    )
+                    ) { _ in
+                        model.route = nil
+                    }
                 )
             }
             .alert(
