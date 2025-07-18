@@ -213,7 +213,10 @@ struct VibePromptDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { model.onDeleteRequest() }) {
+                Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onDeleteRequest()
+                }) {
                     Image(systemName: "trash")
                 }
                 .tint(.red)
@@ -224,7 +227,10 @@ struct VibePromptDetailView: View {
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { model.onEdit() }) {
+                Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onEdit()
+                }) {
                     Image(systemName: "pencil")
                 }
             }
@@ -245,11 +251,14 @@ struct VibePromptDetailView: View {
             },
             actions: { _ in
                 Button("Delete", role: .destructive) {
+                    Haptics.shared.vibrateIfEnabled()
                     model.confirmDelete {
                         dismiss()
                     }
                 }
-                Button("Cancel", role: .cancel) {}
+                Button("Cancel", role: .cancel) {
+                    Haptics.shared.vibrateIfEnabled()
+                }
             },
             message: { prompt in
                 Text("Are you sure you want to delete \(prompt.app)? This action cannot be undone.")

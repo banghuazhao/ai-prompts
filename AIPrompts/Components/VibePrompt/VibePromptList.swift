@@ -187,6 +187,7 @@ struct VibePromptListView: View {
                             HStack(spacing: 8) {
                                 ForEach(model.selectedTechStacks, id: \.self) { techStack in
                                     Button(action: {
+                                        Haptics.shared.vibrateIfEnabled()
                                         model.onDeselectTechStack(techStack)
                                     }) {
                                         HStack(spacing: 4) {
@@ -212,13 +213,22 @@ struct VibePromptListView: View {
                                 model.onFavorite(vibePrompt)
                             }
                             .contextMenu {
-                                Button(action: { model.onEdit(vibePrompt) }) {
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onEdit(vibePrompt)
+                                }) {
                                     Label("Edit", systemImage: "pencil")
                                 }
-                                Button(action: { model.onFavorite(vibePrompt) }) {
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onFavorite(vibePrompt)
+                                }) {
                                     Label(vibePrompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: vibePrompt.isFavorite ? "heart.slash" : "heart")
                                 }
-                                Button(role: .destructive, action: { model.onDeleteRequest(vibePrompt) }) {
+                                Button(role: .destructive, action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onDeleteRequest(vibePrompt)
+                                }) {
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
@@ -243,6 +253,7 @@ struct VibePromptListView: View {
                                 Label("Sort", systemImage: model.isDefault ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
                             }
                             Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
                                 model.onTapFilterTechStackSheet()
                             }) {
                                 Image(systemName: "line.3.horizontal.decrease.circle")
@@ -251,6 +262,7 @@ struct VibePromptListView: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
                             model.generateMarkovPrompt()
                         }) {
                             Image(systemName: "sparkles")
@@ -258,6 +270,7 @@ struct VibePromptListView: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
                             model.route = .showingAddVibePrompt
                         }) {
                             Image(systemName: "plus")
@@ -269,6 +282,7 @@ struct VibePromptListView: View {
                         ScrollView {
                             FlowLayout(items: model.allTechStacks, spacing: 8) { techStack in
                                 Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
                                     model.onSelectTechStack(techStack)
                                 }) {
                                     HStack(spacing: 4) {
