@@ -63,8 +63,7 @@ struct VibePromptRowView: View {
                 }
             }
         }
-        .padding(.vertical, 4)
-        .padding(.horizontal)
+        .padding()
         .background(
             ZStack {
                 Rectangle().fill(.ultraThinMaterial)

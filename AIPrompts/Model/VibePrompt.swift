@@ -21,3 +21,5 @@ struct VibePrompt: Identifiable, Hashable {
         return URL(string: value) ?? URL(string: "https://github.com/banghuazhao/ai-prompts")!
     }
 }
+
+extension VibePrompt.Draft: Identifiable, Hashable {}

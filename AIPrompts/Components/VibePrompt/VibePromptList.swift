@@ -13,8 +13,9 @@ class VibePromptListModel {
         case title = "Title"
         case characterLengthAsc = "Character Length ↑"
         case characterLengthDesc = "Character Length ↓"
-        var id: String { self.rawValue }
+        var id: String { rawValue }
     }
+
     var sortOption: SortOption = .modifiedDate
     var isDefault: Bool {
         sortOption == .modifiedDate
@@ -30,12 +31,51 @@ class VibePromptListModel {
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
 
+    var markovGenerator: MarkovTextGenerator?
+    var corpusLoaded = false
+
+    func loadCorpusIfNeeded() {
+        guard !corpusLoaded else { return }
+        if let url = Bundle.main.url(forResource: "vibeprompts", withExtension: "csv"),
+           let content = try? String(contentsOf: url) {
+            let lines = content.components(separatedBy: "\n").dropFirst() // skip header
+            let prompts = lines.compactMap { line -> String? in
+                let parts = line.components(separatedBy: ",")
+                if parts.count > 1 {
+                    return parts[1].trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\"", with: "")
+                }
+                return nil
+            }.filter { !$0.isEmpty }
+            markovGenerator = MarkovTextGenerator(corpus: prompts)
+            corpusLoaded = true
+        }
+    }
+
+    func generateMarkovPrompt() {
+        loadCorpusIfNeeded()
+        if let generator = markovGenerator {
+            if let url = Bundle.main.url(forResource: "vibeprompts", withExtension: "csv"),
+               let content = try? String(contentsOf: url) {
+                let generated = generator.generatePrompt()
+                let draft = VibePrompt.Draft(app: "AI Generated App", prompt: generated)
+                route = .showingAddMarkovPrompt(draft)
+            } else {
+                let draft = VibePrompt.Draft(app: "AI Generated App", prompt: "Failed to load corpus.")
+                route = .showingAddMarkovPrompt(draft)
+            }
+        } else {
+            let draft = VibePrompt.Draft(app: "AI Generated App", prompt: "Failed to load corpus.")
+            route = .showingAddMarkovPrompt(draft)
+        }
+    }
+
     @CasePathable
     enum Route {
         case showingAddVibePrompt
         case editingPrompt(VibePrompt)
         case showingDeleteAlert(VibePrompt)
         case isFilterTechShareSheetPresented
+        case showingAddMarkovPrompt(VibePrompt.Draft)
     }
 
     var route: Route?
@@ -185,7 +225,8 @@ struct VibePromptListView: View {
                         }
                     }
                 }
-                .listStyle(PlainListStyle())
+                .scrollDismissesKeyboard(.immediately)
+                .listStyle(.plain)
                 .searchable(text: $model.searchText, prompt: "Search prompts")
                 .navigationTitle("Vibe Prompts")
                 .navigationBarTitleDisplayMode(.large)
@@ -206,6 +247,13 @@ struct VibePromptListView: View {
                             }) {
                                 Image(systemName: "line.3.horizontal.decrease.circle")
                             }
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            model.generateMarkovPrompt()
+                        }) {
+                            Image(systemName: "sparkles")
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -249,7 +297,10 @@ struct VibePromptListView: View {
                 .sheet(isPresented: Binding($model.route.showingAddVibePrompt)) {
                     VibePromptFormView(model: VibePromptFormModel { _ in model.route = nil })
                 }
-                .sheet(item: $model.route.editingPrompt, id: \ .self) { prompt in
+                .sheet(item: $model.route.showingAddMarkovPrompt, id: \.self) { draft in
+                    VibePromptFormView(model: VibePromptFormModel(prompt: draft) { _ in model.route = nil })
+                }
+                .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
                     VibePromptFormView(model: VibePromptFormModel(prompt: VibePrompt.Draft(prompt)) { _ in model.route = nil })
                 }
                 .alert(

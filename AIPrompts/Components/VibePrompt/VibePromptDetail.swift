@@ -216,6 +216,7 @@ struct VibePromptDetailView: View {
                 Button(action: { model.onDeleteRequest() }) {
                     Image(systemName: "trash")
                 }
+                .tint(.red)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 ShareLink(item: "\(model.vibePrompt.app)\n\n\(model.vibePrompt.prompt)") {

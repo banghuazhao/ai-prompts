@@ -12,13 +12,15 @@ class PromptListModel {
         case title = "Title"
         case characterLengthAsc = "Character Length ↑"
         case characterLengthDesc = "Character Length ↓"
-        var id: String { self.rawValue }
+        var id: String { rawValue }
     }
+
     enum FilterOption: String, CaseIterable, Identifiable {
         case all = "All"
         case forDevelopers = "For Developers"
-        var id: String { self.rawValue }
+        var id: String { rawValue }
     }
+
     var sortOption: SortOption = .modifiedDate
     var filterOption: FilterOption = .all
     var isDefault: Bool {
@@ -40,6 +42,7 @@ class PromptListModel {
         case showingAddPrompt
         case editingPrompt(Prompt)
         case showingDeleteAlert(Prompt)
+        case showingMarkovAddPrompt(Prompt.Draft)
     }
 
     var route: Route?
@@ -105,6 +108,48 @@ class PromptListModel {
             }
         }
     }
+
+    // MARK: - Markov Generator State
+
+    @ObservationIgnored
+    var markovGenerator: MarkovTextGenerator? = nil
+    var corpusLoaded = false
+
+    func loadCorpusIfNeeded() {
+        guard !corpusLoaded else { return }
+        if let url = Bundle.main.url(forResource: "prompts", withExtension: "csv"),
+           let content = try? String(contentsOf: url) {
+            let lines = content.components(separatedBy: "\n").dropFirst() // skip header
+            let prompts = lines.compactMap { line -> String? in
+                let parts = line.components(separatedBy: ",")
+                if parts.count > 1 {
+                    return parts[1].trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\"", with: "")
+                }
+                return nil
+            }.filter { !$0.isEmpty }
+            markovGenerator = MarkovTextGenerator(corpus: prompts)
+            corpusLoaded = true
+        }
+    }
+
+    func generateMarkovPrompt() {
+        loadCorpusIfNeeded()
+        if let generator = markovGenerator {
+            if let url = Bundle.main.url(forResource: "prompts", withExtension: "csv"),
+               let content = try? String(contentsOf: url) {
+                let act = "AI Generated Act"
+                let generated = generator.generatePrompt()
+                let draft = Prompt.Draft(act: act, prompt: generated)
+                route = .showingMarkovAddPrompt(draft)
+            } else {
+                let draft = Prompt.Draft(act: "AI Generated Act", prompt: "Failed to load corpus.")
+                route = .showingMarkovAddPrompt(draft)
+            }
+        } else {
+            let draft = Prompt.Draft(act: "AI Generated Act", prompt: "Failed to load corpus.")
+            route = .showingMarkovAddPrompt(draft)
+        }
+    }
 }
 
 struct PromptListView: View {
@@ -138,6 +183,7 @@ struct PromptListView: View {
                 }
                 .listStyle(PlainListStyle())
             }
+            .scrollDismissesKeyboard(.immediately)
             .searchable(text: $model.searchText)
             .navigationTitle("Prompts")
             .navigationBarTitleDisplayMode(.large)
@@ -164,6 +210,13 @@ struct PromptListView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
+                        model.generateMarkovPrompt()
+                    }) {
+                        Image(systemName: "sparkles")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
                         model.route = .showingAddPrompt
                     }) {
                         Image(systemName: "plus")
@@ -172,7 +225,7 @@ struct PromptListView: View {
             }
             .sheet(isPresented: Binding($model.route.showingAddPrompt)) {
                 PromptFormView(
-                    model: PromptFormModel() { _ in
+                    model: PromptFormModel { _ in
                         model.route = nil
                     }
                 )
@@ -202,6 +255,15 @@ struct PromptListView: View {
                     Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")
                 }
             )
+            .sheet(item: $model.route.showingMarkovAddPrompt, id: \.self) { draft in
+                PromptFormView(
+                    model: PromptFormModel(
+                        prompt: draft
+                    ) { _ in
+                        model.route = nil
+                    }
+                )
+            }
         }
     }
 }
