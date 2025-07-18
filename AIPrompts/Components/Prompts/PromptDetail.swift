@@ -162,7 +162,10 @@ struct PromptDetailView: View {
                             .font(.headline)
                             .foregroundColor(.secondary)
                         Spacer()
-                        Button(action: { model.onCopy() }) {
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onCopy()
+                        }) {
                             ZStack {
                                 HStack {
                                     Image(systemName: "doc.on.doc")
