@@ -1,16 +1,28 @@
 # AI Prompts
 
-A Swift iOS app for managing, browsing, and sharing AI prompts. This project is inspired by [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts), a popular collection of curated prompts for ChatGPT and other LLM tools.
+A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts), this app offers a curated collection of prompts for ChatGPT, Grok, and other LLM tools.
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/1.png" width="250" />
+  <img src="screenshots/2.png" width="250" />
+  <img src="screenshots/3.png" width="250" />
+</p>
 
 ## Features
 
-- Browse curated AI prompts and "vibe" prompts
-- Mark prompts as favorites for quick access
-- View prompt details, including contributor info and tech stack
-- Modular architecture (e.g., MoreApps module for app recommendations)
-- Local data management using GRDB
-- Multilingual support (English, Simplified Chinese, Traditional Chinese)
-- Modern SwiftUI interface
+- **Curated Prompts**: Browse a collection of high-quality AI prompts, including a special "Vibe Prompts" section for app-specific or mood-based prompts.
+- **Favorites**: Mark prompts as favorites for quick access.
+- **Prompt Details**: View detailed information for each prompt, including contributor and tech stack.
+- **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
+- **Modular Architecture**: Includes a reusable `MoreApps` module for app recommendations, with localization support.
+- **Local Data Management**: Uses GRDB for efficient, local data storage and management.
+- **CSV Import**: Prompt and vibe prompt data are loaded from local CSV files for easy updates and contributions.
+- **Multilingual Support**: Fully localized in English, Simplified Chinese, and Traditional Chinese.
+- **Dark Mode**: Supports system-wide dark mode, with user preference override.
+- **Ad Integration**: Integrates Google Mobile Ads with ATT permission handling.
+- **App Store Links**: The More tab features other recommended apps with direct App Store links.
 
 ## Getting Started
 
@@ -32,11 +44,11 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. This project is 
 
 ### Project Structure
 
-- `AIPrompts/App/` – App entry point and main views
-- `AIPrompts/Components/` – SwiftUI components (Favorites, Prompts, VibePrompt, etc.)
-- `AIPrompts/Model/` – Data models (Prompt, VibePrompt)
-- `AIPrompts/Service/` – Data management (e.g., DataManager)
-- `AIPrompts/Modules/MoreApps/` – Modular feature for app recommendations
+- `AIPrompts/App/` – App entry point and main views (tab navigation)
+- `AIPrompts/Components/` – SwiftUI components (Favorites, Prompts, VibePrompt, More, etc.)
+- `AIPrompts/Model/` – Data models (`Prompt`, `VibePrompt`)
+- `AIPrompts/Service/` – Data management, CSV loading, and app services
+- `AIPrompts/Modules/MoreApps/` – Modular feature for app recommendations (with localization)
 - `AIPrompts/Doc/` – CSV files for prompt data
 - `AIPrompts/Assets.xcassets/` – App icons and assets
 
@@ -56,11 +68,11 @@ struct VibePrompt: Identifiable, Hashable {
 
 ## Contributing
 
-Contributions are welcome! Please open issues or pull requests for new prompts, features, or bug fixes.
+Contributions are welcome! Please open issues or pull requests for new prompts, features, or bug fixes. To add new prompts, simply update the CSV files in `AIPrompts/Doc/`.
 
 ## License
 
-[MIT](LICENSE) (or specify your license)
+[MIT](LICENSE)
 
 ## Author
 
