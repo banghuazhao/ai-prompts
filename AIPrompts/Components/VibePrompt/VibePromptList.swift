@@ -20,28 +20,42 @@ class VibePromptListModel {
         case showingAddVibePrompt
         case editingPrompt(VibePrompt)
         case showingDeleteAlert(VibePrompt)
+        case isFilterTechShareSheetPresented
     }
 
     var route: Route?
 
-    var filteredVibePrompts: [VibePrompt] {
-        var vibePrompts = vibePrompts
-
-        if !searchText.isEmpty {
-            vibePrompts = searchVibePrompts(query: searchText)
-        }
-
-        return vibePrompts
+    var allTechStacks: [String] {
+        Array(Set(vibePrompts.flatMap { $0.techstackArray }))
+            .sorted()
     }
 
-    func searchVibePrompts(query: String) -> [VibePrompt] {
+    var selectedTechStacks: [String] = []
+
+    var filteredVibePrompts: [VibePrompt] {
+        var new = vibePrompts
+        if !selectedTechStacks.isEmpty {
+            new = new.filter { prompt in
+                let techs = Set(prompt.techstackArray.map { $0.lowercased() })
+                return selectedTechStacks.allSatisfy { token in
+                    techs.contains(token.lowercased())
+                }
+            }
+        }
+        if !searchText.isEmpty {
+            return searchVibePrompts(vibePrompts: new, query: searchText)
+        } else {
+            return new
+        }
+    }
+
+    func searchVibePrompts(vibePrompts: [VibePrompt], query: String) -> [VibePrompt] {
         guard !query.isEmpty else { return vibePrompts }
 
         let lowercasedQuery = query.lowercased()
         return vibePrompts.filter { vibePrompt in
             vibePrompt.app.lowercased().contains(lowercasedQuery) ||
-                vibePrompt.prompt.lowercased().contains(lowercasedQuery) ||
-                vibePrompt.techstack.lowercased().contains(lowercasedQuery)
+                vibePrompt.prompt.lowercased().contains(lowercasedQuery)
         }
     }
 
@@ -72,15 +86,61 @@ class VibePromptListModel {
             }
         }
     }
+
+    func onTapFilterTechStackSheet() {
+        route = .isFilterTechShareSheetPresented
+    }
+
+    func onDeselectTechStack(_ techStack: String) {
+        withAnimation {
+            if let idx = selectedTechStacks.firstIndex(of: techStack) {
+                selectedTechStacks.remove(at: idx)
+            }
+        }
+    }
+
+    func onSelectTechStack(_ techStack: String) {
+        withAnimation {
+            if let idx = selectedTechStacks.firstIndex(of: techStack) {
+                selectedTechStacks.remove(at: idx)
+            } else {
+                selectedTechStacks.append(techStack)
+            }
+        }
+    }
 }
 
 struct VibePromptListView: View {
     @State private var model = VibePromptListModel()
 
     var body: some View {
-        NavigationView {
-            VStack {
-                List(model.filteredVibePrompts) { vibePrompt in
+        NavigationStack {
+            List {
+                if !model.selectedTechStacks.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(model.selectedTechStacks, id: \.self) { techStack in
+                                Button(action: {
+                                    model.onDeselectTechStack(techStack)
+                                }) {
+                                    HStack(spacing: 4) {
+                                        Text(techStack)
+                                            .font(.callout)
+                                            .foregroundColor(.blue)
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.blue)
+                                    }
+                                    .padding(.vertical, 6)
+                                    .padding(.horizontal, 10)
+                                    .background(Color.blue.opacity(0.15))
+                                    .clipShape(Capsule())
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                }
+                ForEach(model.filteredVibePrompts) { vibePrompt in
                     NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
                         VibePromptRowView(vibePrompt: vibePrompt) {
                             model.onFavorite(vibePrompt)
@@ -98,12 +158,19 @@ struct VibePromptListView: View {
                         }
                     }
                 }
-                .listStyle(PlainListStyle())
             }
-            .searchable(text: $model.searchText)
+            .listStyle(PlainListStyle())
+            .searchable(text: $model.searchText, prompt: "Search prompts")
             .navigationTitle("Vibe Prompts")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        model.onTapFilterTechStackSheet()
+                    }) {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         model.route = .showingAddVibePrompt
@@ -112,10 +179,40 @@ struct VibePromptListView: View {
                     }
                 }
             }
-            .sheet(isPresented: Binding($model.route.showingAddVibePrompt)) {
-                VibePromptFormView(model: VibePromptFormModel() { _ in model.route = nil })
+            .sheet(isPresented: Binding($model.route.isFilterTechShareSheetPresented)) {
+                NavigationView {
+                    ScrollView {
+                        FlowLayout(items: model.allTechStacks, spacing: 8) { techStack in
+                            Button(action: {
+                                model.onSelectTechStack(techStack)
+                            }) {
+                                HStack(spacing: 4) {
+                                    Text(techStack)
+                                        .font(.callout)
+                                        .foregroundColor(.primary)
+                                    if model.selectedTechStacks.contains(techStack) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+                                .padding(.vertical, 6)
+                                .padding(.horizontal, 10)
+                                .background(model.selectedTechStacks.contains(techStack) ? Color.blue.opacity(0.15) : Color(.systemGray6))
+                                .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding()
+                    }
+                    .navigationTitle("Filter by Tech Stack")
+                    .navigationBarTitleDisplayMode(.inline)
+                }
+                .presentationDetents([.medium, .large])
             }
-            .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
+            .sheet(isPresented: Binding($model.route.showingAddVibePrompt)) {
+                VibePromptFormView(model: VibePromptFormModel { _ in model.route = nil })
+            }
+            .sheet(item: $model.route.editingPrompt, id: \ .self) { prompt in
                 VibePromptFormView(model: VibePromptFormModel(prompt: VibePrompt.Draft(prompt)) { _ in model.route = nil })
             }
             .alert(

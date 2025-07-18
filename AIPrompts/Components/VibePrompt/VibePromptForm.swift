@@ -51,18 +51,58 @@ struct VibePromptFormView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("App Details")) {
-                    TextField("App Name", text: $model.prompt.app)
-                    TextField("Contributor", text: $model.prompt.contributor)
-                    TextField("Tech Stack (comma-separated)", text: $model.prompt.techstack)
-                }
+            ScrollView {
+                VStack(spacing: 24) {
+                    // App Details Card
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("App Details")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                            .padding(.bottom, 2)
+                        TextField("App Name", text: $model.prompt.app)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("Contributor (optional)", text: $model.prompt.contributor)
+                            .textFieldStyle(.roundedBorder)
+                        Text("Enter your GitHub username (e.g., banghuazhao, which will link to https://github.com/banghuazhao). Optional.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        TextField("Tech Stack (comma-separated, optional)", text: $model.prompt.techstack)
+                            .textFieldStyle(.roundedBorder)
+                        Text("Example: Swift, SwiftUI, iOS. Optional.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Color(.systemBackground))
+                            .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                    )
 
-                Section(header: Text("Prompt")) {
-                    TextEditor(text: $model.prompt.prompt)
-                        .frame(minHeight: 100)
+                    // Prompt Card
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Prompt")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                            .padding(.bottom, 2)
+                        TextEditor(text: $model.prompt.prompt)
+                            .frame(minHeight: 100)
+                            .padding(8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .fill(Color(.systemGray6))
+                            )
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Color(.systemBackground))
+                            .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                    )
                 }
+                .padding()
             }
+            .background(Color(.systemGroupedBackground).ignoresSafeArea())
             .navigationTitle(
                 model.isEdit ?
                     "Edit Vibe Prompt" :
@@ -75,10 +115,15 @@ struct VibePromptFormView: View {
                         dismiss()
                     }
                 }
-
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        model.onTapSave()
+                    Button(action: { model.onTapSave() }) {
+                        Text("Save")
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(model.prompt.app.isEmpty || model.prompt.prompt.isEmpty ? Color(.systemGray4) : Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
                     }
                     .disabled(model.prompt.app.isEmpty || model.prompt.prompt.isEmpty)
                 }

@@ -74,100 +74,113 @@ struct VibePromptDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Header
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text(model.vibePrompt.app)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-
+            VStack(alignment: .leading, spacing: 24) {
+                // Header Card
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(model.vibePrompt.app)
+                                .font(.title.bold())
+                                .foregroundColor(.primary)
+                                .lineLimit(3)
+                                .minimumScaleFactor(0.5)
+                            if !model.vibePrompt.contributor.isEmpty {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "person.circle")
+                                    Link(model.vibePrompt.contributor, destination: model.vibePrompt.contributorGithubURL)
+                                }
+                                .font(.caption)
+                                .foregroundColor(.accentColor)
+                            }
+                        }
                         Spacer()
-
-                        Button(action: {
-                            model.onFavorite()
-                        }) {
+                        Button(action: { model.onFavorite() }) {
                             Image(systemName: model.vibePrompt.isFavorite ? "heart.fill" : "heart")
                                 .foregroundColor(model.vibePrompt.isFavorite ? .red : .gray)
                                 .font(.title2)
+                                .padding(8)
+                                .background(Color(.systemGray6))
+                                .clipShape(Circle())
+                                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
                         }
-                    }
-
-                    if !model.vibePrompt.contributor.isEmpty {
-                        HStack {
-                            Image(systemName: "person.circle")
-                            Link(model.vibePrompt.contributor, destination: model.vibePrompt.contributorGithubURL)
-                        }
-                        .foregroundColor(.accentColor)
                     }
                 }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(Color(.systemBackground))
+                        .shadow(color: .black.opacity(0.07), radius: 6, x: 0, y: 2)
+                )
 
-                Divider()
-
-                // Tech Stack as badges
+                // Tech Stack Badges
                 if !model.vibePrompt.techstack.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Tech Stack")
                             .font(.headline)
+                            .foregroundColor(.secondary)
                         HStack(spacing: 8) {
                             ForEach(model.vibePrompt.techstackArray, id: \.self) { tech in
-                                Text(tech)
-                                    .font(.caption)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(Color(.systemGray5))
-                                    .foregroundColor(.primary)
-                                    .cornerRadius(8)
+                                BadgeView(icon: nil, text: tech)
                             }
                         }
                     }
+                    .padding(.horizontal, 2)
                 }
 
-                Divider()
-
-                // Prompt Content
-                VStack(alignment: .leading, spacing: 15) {
-                    Text("Prompt")
-                        .font(.headline)
-
+                // Prompt Content Card
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Prompt")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Button(action: { model.onCopy() }) {
+                            ZStack {
+                                HStack {
+                                    Image(systemName: "doc.on.doc")
+                                        .opacity(model.copiedToClipboard ? 0 : 1)
+                                    Text("Copy")
+                                        .opacity(model.copiedToClipboard ? 0 : 1)
+                                }
+                                HStack {
+                                    Image(systemName: "checkmark")
+                                        .opacity(model.copiedToClipboard ? 1 : 0)
+                                    Text("Copied!")
+                                        .opacity(model.copiedToClipboard ? 1 : 0)
+                                }
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.blue)
+                        .disabled(model.copiedToClipboard)
+                    }
                     Text(model.vibePrompt.prompt)
                         .font(.body)
-                        .lineSpacing(4)
+                        .lineSpacing(5)
+                        .foregroundColor(.primary)
+                        .padding(12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color(.systemGray6))
+                        )
                 }
+                .padding(.horizontal, 2)
 
-                // Action Buttons
-                VStack(spacing: 10) {
-                    Button(action: {
-                        model.onCopy()
-                    }) {
-                        HStack {
-                            Image(systemName: model.copiedToClipboard ? "checkmark" : "doc.on.doc")
-                            Text(model.copiedToClipboard ? "Copied!" : "Copy Prompt")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                }
+                // Action Buttons Row (removed)
             }
             .padding()
         }
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    model.onDeleteRequest()
-                }) {
-                    Image(systemName: "trash")
+                Button(action: { model.onEdit() }) {
+                    Image(systemName: "pencil")
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    model.onEdit()
-                }) {
-                    Image(systemName: "pencil")
+                Button(action: { model.onDeleteRequest() }) {
+                    Image(systemName: "trash")
                 }
             }
         }

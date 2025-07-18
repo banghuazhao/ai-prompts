@@ -74,75 +74,93 @@ struct PromptDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Header
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text(model.prompt.act)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-
+            VStack(alignment: .leading, spacing: 24) {
+                // Header Card
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(model.prompt.act)
+                                .font(.title.bold())
+                                .foregroundColor(.primary)
+                                .lineLimit(3)
+                                .minimumScaleFactor(0.5)
+                            if model.prompt.forDevs {
+                                BadgeView(icon: "laptopcomputer", text: "For Developers")
+                            }
+                        }
                         Spacer()
-
-                        Button(action: {
-                            model.onFavorite()
-                        }) {
+                        Button(action: { model.onFavorite() }) {
                             Image(systemName: model.prompt.isFavorite ? "heart.fill" : "heart")
                                 .foregroundColor(model.prompt.isFavorite ? .red : .gray)
                                 .font(.title2)
+                                .padding(8)
+                                .background(Color(.systemGray6))
+                                .clipShape(Circle())
+                                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
                         }
                     }
-
-                    if model.prompt.forDevs {
-                        BadgeView(icon: "laptopcomputer", text: "For Developers")
-                    }
                 }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(Color(.systemBackground))
+                        .shadow(color: .black.opacity(0.07), radius: 6, x: 0, y: 2)
+                )
 
-                Divider()
-
-                // Prompt Content
-                VStack(alignment: .leading, spacing: 15) {
-                    Text("Prompt")
-                        .font(.headline)
-
+                // Prompt Content Card
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Prompt")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Button(action: { model.onCopy() }) {
+                            ZStack {
+                                HStack {
+                                    Image(systemName: "doc.on.doc")
+                                        .opacity(model.copiedToClipboard ? 0 : 1)
+                                    Text("Copy")
+                                        .opacity(model.copiedToClipboard ? 0 : 1)
+                                }
+                                HStack {
+                                    Image(systemName: "checkmark")
+                                        .opacity(model.copiedToClipboard ? 1 : 0)
+                                    Text("Copied!")
+                                        .opacity(model.copiedToClipboard ? 1 : 0)
+                                }
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.blue)
+                        .disabled(model.copiedToClipboard)
+                    }
                     Text(model.prompt.prompt)
                         .font(.body)
-                        .lineSpacing(4)
+                        .lineSpacing(5)
+                        .foregroundColor(.primary)
+                        .padding(12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color(.systemGray6))
+                        )
                 }
+                .padding(.horizontal, 2)
 
-                // Action Buttons
-                VStack(spacing: 10) {
-                    Button(action: {
-                        model.onCopy()
-                    }) {
-                        HStack {
-                            Image(systemName: model.copiedToClipboard ? "checkmark" : "doc.on.doc")
-                            Text(model.copiedToClipboard ? "Copied!" : "Copy Prompt")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                }
+                // Action Buttons Row (removed)
             }
             .padding()
         }
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    model.onDeleteRequest()
-                }) {
-                    Image(systemName: "trash")
+                Button(action: { model.onEdit() }) {
+                    Image(systemName: "pencil")
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    model.onEdit()
-                }) {
-                    Image(systemName: "pencil")
+                Button(action: { model.onDeleteRequest() }) {
+                    Image(systemName: "trash")
                 }
             }
         }
@@ -166,8 +184,7 @@ struct PromptDetailView: View {
                         dismiss()
                     }
                 }
-                Button("Cancel", role: .cancel) {
-                }
+                Button("Cancel", role: .cancel) {}
             },
             message: { prompt in
                 Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")

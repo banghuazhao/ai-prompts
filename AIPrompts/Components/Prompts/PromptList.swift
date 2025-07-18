@@ -7,7 +7,6 @@ import SwiftUINavigation
 @MainActor
 class PromptListModel {
     var searchText = ""
-    var showingAddPrompt = false
 
     @ObservationIgnored
     @FetchAll(Prompt.all, animation: .default) var prompts
@@ -110,7 +109,7 @@ struct PromptListView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        model.showingAddPrompt = true
+                        model.route = .showingAddPrompt
                     }) {
                         Image(systemName: "plus")
                     }

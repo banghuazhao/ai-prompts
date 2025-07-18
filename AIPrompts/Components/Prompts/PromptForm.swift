@@ -47,18 +47,31 @@ struct PromptFormView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Prompt Details")) {
-                    TextField("Act/Role (e.g., 'Act as a iOS Developer')", text: $model.prompt.act)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-
-                    TextField("Prompt Text", text: $model.prompt.prompt, axis: .vertical)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .lineLimit(5 ... 10)
-
-                    Toggle("Is for Developers", isOn: $model.prompt.forDevs)
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Prompt Details Card
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Prompt Details")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                            .padding(.bottom, 2)
+                        TextField("Act/Role (e.g., 'Act as a iOS Developer')", text: $model.prompt.act)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("Prompt Text", text: $model.prompt.prompt, axis: .vertical)
+                            .textFieldStyle(.roundedBorder)
+                            .lineLimit(5 ... 10)
+                        Toggle("Is for Developers", isOn: $model.prompt.forDevs)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Color(.systemBackground))
+                            .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                    )
                 }
+                .padding()
             }
+            .background(Color(.systemGroupedBackground).ignoresSafeArea())
             .navigationTitle(
                 model.isEdit ?
                     "Edit Prompt" :
@@ -71,10 +84,15 @@ struct PromptFormView: View {
                         dismiss()
                     }
                 }
-
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        model.onTapSave()
+                    Button(action: { model.onTapSave() }) {
+                        Text("Save")
+                            .fontWeight(.semibold)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty ? Color(.systemGray4) : Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
                     }
                     .disabled(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty)
                 }
