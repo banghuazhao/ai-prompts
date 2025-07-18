@@ -60,7 +60,20 @@ struct PromptRowView: View {
                     .foregroundColor(.secondary)
             }
         }
-        .padding(.vertical, 4)
+        .padding()
+        .background(
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial)
+                LinearGradient(
+                    colors: [Color.purple.opacity(0.10), Color.cyan.opacity(0.08), Color.pink.opacity(0.08), Color.white.opacity(0.18)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .shadow(color: Color.white.opacity(0.07), radius: 3, x: -3, y: -3)
+        .shadow(color: Color.black.opacity(0.10), radius: 3, x: 3, y: 3)
     }
 }
 
