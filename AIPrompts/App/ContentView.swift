@@ -1,8 +1,6 @@
 import SwiftUI
 
-struct ContentView: View {
-    @EnvironmentObject var dataManager: DataManager
-    
+struct ContentView: View {    
     var body: some View {
         TabView {
             PromptListView()
@@ -30,5 +28,4 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environmentObject(DataManager())
 } 
