@@ -26,6 +26,11 @@ public struct AppItemStore {
             icon: UIImage(named: "appIcon_swiftsum", in: .module, with: nil),
             url: URL(string: "http://itunes.apple.com/app/id1610829871")),
         AppItem(
+            title: String(localized: "Times Matter", bundle: .module),
+            detail: String(localized: "Times Matter", bundle: .module),
+            icon: UIImage(named: "appIcon_timematters", in: .module, with: nil),
+            url: URL(string: "http://itunes.apple.com/app/id6748243795")),
+        AppItem(
             title: String(localized: "Shows", bundle: .module),
             detail: String(localized: "Movie,TV Show Tracker", bundle: .module),
             icon: UIImage(named: "appIcon_shows", in: .module, with: nil),

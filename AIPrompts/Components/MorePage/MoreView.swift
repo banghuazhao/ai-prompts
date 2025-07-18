@@ -73,7 +73,7 @@ struct MoreView: View {
 
                     // App info section (moved below othersView)
                     VStack(spacing: 4) {
-                        Text("Times Matter  |  Smart Reminders")
+                        Text("AI Prompts  |  AI Prompt Directory")
                             .font(.footnote)
                             .fontWeight(.semibold)
                             .foregroundColor(.gray)
@@ -105,11 +105,6 @@ struct MoreView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
                 NavigationLink(destination: SettingView()) {
                     featureItem(icon: "gear", title: String(localized: "Settings"))
-                }
-                NavigationLink(destination: ThemeColorView()) {
-                    
-                    featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
-                    
                 }
             }
         }
@@ -193,7 +188,7 @@ struct MoreView: View {
 
 struct SupportEmail {
     let toAddress = "appsbayarea@gmail.com"
-    let subject: String = String(localized: "\("Times Matter") - \("Feedback")")
+    let subject: String = String(localized: "\("AI Prompts") - \("Feedback")")
     var body: String { """
       Application Name: \(Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "Unknown")
       iOS Version: \(UIDevice.current.systemVersion)
