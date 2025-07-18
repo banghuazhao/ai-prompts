@@ -1,6 +1,7 @@
 import GoogleMobileAds
 import SharingGRDB
 import SwiftUI
+import UIKit
 
 @main
 struct AIPrompts: App {
@@ -9,6 +10,9 @@ struct AIPrompts: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        // Make all List (UITableView) backgrounds transparent globally
+        UITableView.appearance().backgroundColor = .clear
+        UITableViewCell.appearance().backgroundColor = .clear
         MobileAds.shared.start(completionHandler: nil)
         prepareDependencies {
             $0.defaultDatabase = try! appDatabase()
