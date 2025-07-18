@@ -169,13 +169,22 @@ struct PromptListView: View {
                             onFavorite: { model.onFavorite(prompt) }
                         )
                         .contextMenu {
-                            Button(action: { model.onEdit(prompt) }) {
+                            Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.onEdit(prompt)
+                            }) {
                                 Label("Edit", systemImage: "pencil")
                             }
-                            Button(action: { model.onFavorite(prompt) }) {
+                            Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.onFavorite(prompt)
+                            }) {
                                 Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
                             }
-                            Button(role: .destructive, action: { model.onDeleteRequest(prompt) }) {
+                            Button(role: .destructive, action: {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.onDeleteRequest(prompt)
+                            }) {
                                 Label("Delete", systemImage: "trash")
                             }
                         }
@@ -210,6 +219,7 @@ struct PromptListView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
                         model.generateMarkovPrompt()
                     }) {
                         Image(systemName: "sparkles")
@@ -217,6 +227,7 @@ struct PromptListView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
                         model.route = .showingAddPrompt
                     }) {
                         Image(systemName: "plus")
@@ -246,9 +257,11 @@ struct PromptListView: View {
                 },
                 actions: { prompt in
                     Button("Delete", role: .destructive) {
+                        Haptics.shared.vibrateIfEnabled()
                         model.confirmDelete(prompt)
                     }
                     Button("Cancel", role: .cancel) {
+                        Haptics.shared.vibrateIfEnabled()
                     }
                 },
                 message: { prompt in
@@ -282,6 +295,7 @@ struct SearchBar: View {
 
             if !text.isEmpty {
                 Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
                     text = ""
                 }) {
                     Image(systemName: "xmark.circle.fill")

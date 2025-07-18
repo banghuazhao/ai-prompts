@@ -82,11 +82,15 @@ struct PromptFormView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
+                        Haptics.shared.vibrateIfEnabled()
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { model.onTapSave() }) {
+                    Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapSave()
+                    }) {
                         Text("Save")
                             .fontWeight(.semibold)
                             .padding(.horizontal, 16)

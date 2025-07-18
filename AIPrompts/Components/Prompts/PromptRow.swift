@@ -17,6 +17,7 @@ struct PromptRowView: View {
                 Spacer()
                 
                 Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
                     onFavorite()
                 }) {
                     Image(systemName: prompt.isFavorite ? "heart.fill" : "heart")
@@ -25,6 +26,7 @@ struct PromptRowView: View {
                 .buttonStyle(.plain)
                 
                 Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
                     UIPasteboard.general.string = prompt.prompt
                     copied = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

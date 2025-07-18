@@ -17,6 +17,7 @@ struct VibePromptRowView: View {
                 Spacer()
 
                 Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
                     onFavorite()
                 }) {
                     Image(systemName: vibePrompt.isFavorite ? "heart.fill" : "heart")
@@ -25,6 +26,7 @@ struct VibePromptRowView: View {
                 .buttonStyle(.plain)
 
                 Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
                     UIPasteboard.general.string = vibePrompt.prompt
                     copied = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
