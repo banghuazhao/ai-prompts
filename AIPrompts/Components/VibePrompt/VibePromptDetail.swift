@@ -213,13 +213,18 @@ struct VibePromptDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { model.onEdit() }) {
-                    Image(systemName: "pencil")
+                Button(action: { model.onDeleteRequest() }) {
+                    Image(systemName: "trash")
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { model.onDeleteRequest() }) {
-                    Image(systemName: "trash")
+                ShareLink(item: "\(model.vibePrompt.app)\n\n\(model.vibePrompt.prompt)") {
+                    Image(systemName: "square.and.arrow.up")
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { model.onEdit() }) {
+                    Image(systemName: "pencil")
                 }
             }
         }

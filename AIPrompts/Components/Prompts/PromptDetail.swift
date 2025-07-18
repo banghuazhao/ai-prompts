@@ -194,13 +194,19 @@ struct PromptDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { model.onEdit() }) {
-                    Image(systemName: "pencil")
+                Button(action: { model.onDeleteRequest() }) {
+                    Image(systemName: "trash")
+                }
+                .tint(.red)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                ShareLink(item: "\(model.prompt.act)\n\n\(model.prompt.prompt)") {
+                    Image(systemName: "square.and.arrow.up")
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { model.onDeleteRequest() }) {
-                    Image(systemName: "trash")
+                Button(action: { model.onEdit() }) {
+                    Image(systemName: "pencil")
                 }
             }
         }
