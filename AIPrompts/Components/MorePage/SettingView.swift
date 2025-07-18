@@ -38,7 +38,6 @@ struct SettingView: View {
             }
             .padding()
         }
-        .background(themeManager.current.background.ignoresSafeArea())
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .preferredColorScheme(darkModeEnabled ? .dark : .light)

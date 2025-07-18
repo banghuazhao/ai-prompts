@@ -91,7 +91,6 @@ struct MoreView: View {
                 .padding(.vertical)
             }
             .scrollDismissesKeyboard(.immediately)
-            .background(model.themeManager.current.background)
             .navigationTitle("More")
             .navigationBarTitleDisplayMode(.inline)
         }
