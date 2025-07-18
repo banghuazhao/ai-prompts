@@ -8,4 +8,5 @@ struct Prompt: Identifiable, Hashable {
     var prompt: String = ""
     var forDevs: Bool = false
     var isFavorite: Bool = false
+    var modifiedDate: Date = Date()
 } 

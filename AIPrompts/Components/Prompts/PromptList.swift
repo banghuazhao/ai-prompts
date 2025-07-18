@@ -1,6 +1,6 @@
+import Dependencies
 import SharingGRDB
 import SwiftUI
-import Dependencies
 import SwiftUINavigation
 
 @Observable
@@ -9,17 +9,22 @@ class PromptListModel {
     var searchText = ""
 
     @ObservationIgnored
-    @FetchAll(Prompt.all, animation: .default) var prompts
+    @FetchAll(
+        Prompt
+            .all
+            .order { $0.modifiedDate.desc() }
+        , animation: .default) var prompts
 
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
-    
+
     @CasePathable
     enum Route {
         case showingAddPrompt
         case editingPrompt(Prompt)
         case showingDeleteAlert(Prompt)
     }
+
     var route: Route?
 
     var filteredPrompts: [Prompt] {
@@ -68,7 +73,6 @@ class PromptListModel {
                 try Prompt.delete(prompt).execute(db)
             }
         }
-
     }
 }
 
@@ -129,7 +133,7 @@ struct PromptListView: View {
             }
             .alert(
                 item: $model.route.showingDeleteAlert,
-                title: { prompt in
+                title: { _ in
                     Text("Delete Prompt")
                 },
                 actions: { prompt in

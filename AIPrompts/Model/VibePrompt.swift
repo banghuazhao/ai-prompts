@@ -9,6 +9,7 @@ struct VibePrompt: Identifiable, Hashable {
     var contributor: String = ""
     var techstack: String = ""
     var isFavorite: Bool = false
+    var modifiedDate: Date = Date()
 
     var techstackArray: [String] {
         techstack.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }

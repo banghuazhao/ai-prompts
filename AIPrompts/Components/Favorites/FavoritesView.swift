@@ -8,11 +8,13 @@ struct FavoritesView: View {
     @FetchAll(
         Prompt.all
             .where(\.isFavorite)
+            .order { $0.modifiedDate.desc() }
     ) var favoritePrompts
 
     @FetchAll(
         VibePrompt.all
             .where(\.isFavorite)
+            .order { $0.modifiedDate.desc() }
     ) var favoriteVibePrompts
 
     var body: some View {

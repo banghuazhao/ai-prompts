@@ -49,7 +49,8 @@ func appDatabase() throws -> any DatabaseWriter {
              "act" TEXT NOT NULL DEFAULT '', 
              "prompt" TEXT NOT NULL DEFAULT '', 
              "forDevs" INTEGER NOT NULL DEFAULT 0,
-             "isFavorite" INTEGER NOT NULL DEFAULT 0
+             "isFavorite" INTEGER NOT NULL DEFAULT 0,
+             "modifiedDate" TEXT NOT NULL DEFAULT ''
             ) STRICT 
             """
         )
@@ -63,7 +64,8 @@ func appDatabase() throws -> any DatabaseWriter {
              "prompt" TEXT NOT NULL DEFAULT '',
              "contributor" TEXT NOT NULL DEFAULT '',
              "techstack" TEXT NOT NULL DEFAULT '',
-             "isFavorite" INTEGER NOT NULL DEFAULT 0
+             "isFavorite" INTEGER NOT NULL DEFAULT 0,
+             "modifiedDate" TEXT NOT NULL DEFAULT ''
             ) STRICT 
             """
         )

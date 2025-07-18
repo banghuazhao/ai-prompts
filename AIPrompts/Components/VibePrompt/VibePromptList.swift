@@ -10,7 +10,11 @@ class VibePromptListModel {
     var showingAddPrompt = false
 
     @ObservationIgnored
-    @FetchAll(VibePrompt.all, animation: .default) var vibePrompts
+    @FetchAll(
+        VibePrompt
+            .all
+            .order { $0.modifiedDate.desc() }
+        , animation: .default) var vibePrompts
 
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
