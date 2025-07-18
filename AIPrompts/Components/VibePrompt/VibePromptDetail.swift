@@ -124,7 +124,54 @@ struct VibePromptDetailView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 2)
+                }
+
+                // Quick Launch LLMs
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Quick Launch")
+                        .font(AppFont.headline)
+                        .foregroundColor(.secondary)
+                        .padding(.bottom, 2)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: AppSpacing.small) {
+                            LLMQuickLaunchButton(
+                                icon: "message.fill",
+                                label: "ChatGPT",
+                                background: .chatGPT,
+                                foreground: .white,
+                                url: URL(string: "https://chatgpt.com/?prompt=\(model.vibePrompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
+                            )
+                            LLMQuickLaunchButton(
+                                icon: "bolt.fill",
+                                label: "Grok",
+                                background: .grok,
+                                foreground: .white,
+                                url: URL(string: "https://grok.x.ai/?q=\(model.vibePrompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
+                            )
+                            LLMQuickLaunchButton(
+                                icon: "sun.max.fill",
+                                label: "Claude",
+                                background: .claude,
+                                foreground: .black,
+                                url: URL(string: "https://claude.ai/chat?prompt=\(model.vibePrompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
+                            )
+                            LLMQuickLaunchButton(
+                                icon: "questionmark.circle.fill",
+                                label: "Perplexity",
+                                background: .perplexity,
+                                foreground: .white,
+                                url: URL(string: "https://www.perplexity.ai/?q=\(model.vibePrompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
+                            )
+                            LLMQuickLaunchButton(
+                                icon: "sparkles",
+                                label: "Gemini",
+                                background: .gemini,
+                                foreground: .white,
+                                url: URL(string: "https://gemini.google.com/app?prompt=\(model.vibePrompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
+                            )
+                        }
+                        .padding(.vertical, 2)
+                    }
                 }
 
                 // Prompt Content Card
@@ -158,15 +205,7 @@ struct VibePromptDetailView: View {
                         .font(.body)
                         .lineSpacing(5)
                         .foregroundColor(.primary)
-                        .padding(12)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(Color(.systemGray6))
-                        )
                 }
-                .padding(.horizontal, 2)
-
-                // Action Buttons Row (removed)
             }
             .padding()
         }

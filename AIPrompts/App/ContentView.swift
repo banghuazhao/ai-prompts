@@ -12,7 +12,7 @@ struct ContentView: View {
             
             VibePromptListView()
                 .tabItem {
-                    Label("Vibe Prompts", systemImage: "sparkles")
+                    Label("Vibe Prompts", systemImage: "laptopcomputer")
                 }
             
             FavoritesView()
