@@ -19,6 +19,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Favorites", systemImage: "heart.fill")
                 }
+            
+            MoreView()
+                .tabItem {
+                    Label("More", systemImage: "ellipsis.circle")
+                }
         }
     }
 }
