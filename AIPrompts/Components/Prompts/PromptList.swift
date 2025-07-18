@@ -7,6 +7,23 @@ import SwiftUINavigation
 @MainActor
 class PromptListModel {
     var searchText = ""
+    enum SortOption: String, CaseIterable, Identifiable {
+        case modifiedDate = "Modified Date"
+        case title = "Title"
+        case characterLengthAsc = "Character Length ↑"
+        case characterLengthDesc = "Character Length ↓"
+        var id: String { self.rawValue }
+    }
+    enum FilterOption: String, CaseIterable, Identifiable {
+        case all = "All"
+        case forDevelopers = "For Developers"
+        var id: String { self.rawValue }
+    }
+    var sortOption: SortOption = .modifiedDate
+    var filterOption: FilterOption = .all
+    var isDefault: Bool {
+        sortOption == .modifiedDate && filterOption == .all
+    }
 
     @ObservationIgnored
     @FetchAll(
@@ -29,11 +46,25 @@ class PromptListModel {
 
     var filteredPrompts: [Prompt] {
         var prompts = prompts
-
+        // Filter
+        if filterOption == .forDevelopers {
+            prompts = prompts.filter { $0.forDevs }
+        }
+        // Search
         if !searchText.isEmpty {
             prompts = searchPrompts(query: searchText)
         }
-
+        // Sort
+        switch sortOption {
+        case .modifiedDate:
+            prompts = prompts.sorted { $0.modifiedDate > $1.modifiedDate }
+        case .title:
+            prompts = prompts.sorted { $0.act.localizedCaseInsensitiveCompare($1.act) == .orderedAscending }
+        case .characterLengthAsc:
+            prompts = prompts.sorted { $0.prompt.count < $1.prompt.count }
+        case .characterLengthDesc:
+            prompts = prompts.sorted { $0.prompt.count > $1.prompt.count }
+        }
         return prompts
     }
 
@@ -111,6 +142,26 @@ struct PromptListView: View {
             .navigationTitle("Prompts")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Section(header: Text("Sort By")) {
+                            Picker("Sort", selection: $model.sortOption) {
+                                ForEach(PromptListModel.SortOption.allCases) { option in
+                                    Text(option.rawValue).tag(option)
+                                }
+                            }
+                        }
+                        Section(header: Text("Filter")) {
+                            Picker("Filter", selection: $model.filterOption) {
+                                ForEach(PromptListModel.FilterOption.allCases) { option in
+                                    Text(option.rawValue).tag(option)
+                                }
+                            }
+                        }
+                    } label: {
+                        Label("Sort & Filter", systemImage: model.isDefault ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         model.route = .showingAddPrompt
@@ -121,7 +172,9 @@ struct PromptListView: View {
             }
             .sheet(isPresented: Binding($model.route.showingAddPrompt)) {
                 PromptFormView(
-                    model: PromptFormModel()
+                    model: PromptFormModel() { _ in
+                        model.route = nil
+                    }
                 )
             }
             .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
