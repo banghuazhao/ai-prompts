@@ -109,7 +109,7 @@ struct FavoritesView: View {
     @State private var model = FavoritesViewModel()
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 // Tab Picker
                 Picker("Favorites", selection: $model.selectedTab) {

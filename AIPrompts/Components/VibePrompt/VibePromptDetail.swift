@@ -271,7 +271,7 @@ struct VibePromptDetailView: View {
 }
 
 #Preview {
-    NavigationView {
+    NavigationStack {
         VibePromptDetailView(
             model: VibePromptDetailModel(
                 vibePrompt: VibePrompt(id: 0, app: "Test App", prompt: "This is a test vibe prompt content.", contributor: "Test Contributor", techstack: "Swift, SwiftUI, iOS")

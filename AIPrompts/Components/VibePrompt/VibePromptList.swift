@@ -2,6 +2,7 @@ import Dependencies
 import SharingGRDB
 import SwiftUI
 import SwiftUINavigation
+import SwiftUIFlowLayout
 
 @Observable
 @MainActor
@@ -278,9 +279,9 @@ struct VibePromptListView: View {
                     }
                 }
                 .sheet(isPresented: Binding($model.route.isFilterTechShareSheetPresented)) {
-                    NavigationView {
+                    NavigationStack {
                         ScrollView {
-                            FlowLayout(items: model.allTechStacks, spacing: 8) { techStack in
+                            FlowLayout(items: model.allTechStacks) { techStack in
                                 Button(action: {
                                     Haptics.shared.vibrateIfEnabled()
                                     model.onSelectTechStack(techStack)

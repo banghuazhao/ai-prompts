@@ -19,7 +19,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationView {
+        NavigationStack {
             MoreAppsView()
         }
     }
@@ -34,7 +34,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationView {
+        NavigationStack {
             MoreAppsView(apps: [
                 AppItem(
                     title: "My App",

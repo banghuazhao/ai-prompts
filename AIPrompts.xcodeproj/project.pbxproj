@@ -11,6 +11,8 @@
 		99442A212E289533004A205C /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 99442A202E289533004A205C /* SwiftUINavigation */; };
 		99442A242E28954D004A205C /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 99442A232E28954D004A205C /* SharingGRDB */; };
 		99442AAD2E2895CA004A205C /* MoreApps in Frameworks */ = {isa = PBXBuildFile; productRef = 99442AAC2E2895CA004A205C /* MoreApps */; };
+		99442BBC2E2C475B004A205C /* SwiftUIFlowLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 99442BBB2E2C475B004A205C /* SwiftUIFlowLayout */; };
+		999235552E2C509700AE3AC9 /* SwiftUIFlowLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 999235542E2C509700AE3AC9 /* SwiftUIFlowLayout */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 			files = (
 				99442A212E289533004A205C /* SwiftUINavigation in Frameworks */,
 				99442A242E28954D004A205C /* SharingGRDB in Frameworks */,
+				999235552E2C509700AE3AC9 /* SwiftUIFlowLayout in Frameworks */,
+				99442BBC2E2C475B004A205C /* SwiftUIFlowLayout in Frameworks */,
 				99442A1E2E28951B004A205C /* GoogleMobileAds in Frameworks */,
 				99442AAD2E2895CA004A205C /* MoreApps in Frameworks */,
 			);
@@ -54,10 +58,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99442BBA2E2C475B004A205C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		99782A662E2890320029FD22 = {
 			isa = PBXGroup;
 			children = (
 				99782A712E2890320029FD22 /* AIPrompts */,
+				99442BBA2E2C475B004A205C /* Frameworks */,
 				99782A702E2890320029FD22 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,6 +106,8 @@
 				99442A202E289533004A205C /* SwiftUINavigation */,
 				99442A232E28954D004A205C /* SharingGRDB */,
 				99442AAC2E2895CA004A205C /* MoreApps */,
+				99442BBB2E2C475B004A205C /* SwiftUIFlowLayout */,
+				999235542E2C509700AE3AC9 /* SwiftUIFlowLayout */,
 			);
 			productName = AIPrompt;
 			productReference = 99782A6F2E2890320029FD22 /* AIPrompts.app */;
@@ -129,6 +143,7 @@
 				99442A1F2E289533004A205C /* XCRemoteSwiftPackageReference "swift-navigation" */,
 				99442A222E28954D004A205C /* XCRemoteSwiftPackageReference "sharing-grdb" */,
 				99442AAB2E2895CA004A205C /* XCLocalSwiftPackageReference "AIPrompt/Modules/MoreApps" */,
+				999235532E2C509700AE3AC9 /* XCRemoteSwiftPackageReference "swiftui_flow_layout" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 99782A702E2890320029FD22 /* Products */;
@@ -292,7 +307,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.0.1;
+				CURRENT_PROJECT_VERSION = 1.0.0.2;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -324,7 +339,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.0.1;
+				CURRENT_PROJECT_VERSION = 1.0.0.2;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -405,6 +420,14 @@
 				minimumVersion = 0.5.0;
 			};
 		};
+		999235532E2C509700AE3AC9 /* XCRemoteSwiftPackageReference "swiftui_flow_layout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/banghuazhao/swiftui_flow_layout";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -426,6 +449,15 @@
 		99442AAC2E2895CA004A205C /* MoreApps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MoreApps;
+		};
+		99442BBB2E2C475B004A205C /* SwiftUIFlowLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftUIFlowLayout;
+		};
+		999235542E2C509700AE3AC9 /* SwiftUIFlowLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 999235532E2C509700AE3AC9 /* XCRemoteSwiftPackageReference "swiftui_flow_layout" */;
+			productName = SwiftUIFlowLayout;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

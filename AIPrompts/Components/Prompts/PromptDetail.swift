@@ -252,7 +252,7 @@ struct PromptDetailView: View {
 }
 
 #Preview {
-    NavigationView {
+    NavigationStack {
         PromptDetailView(
             model: PromptDetailModel(
                 prompt: Prompt(id: 1, act: "Test Prompt", prompt: "This is a test prompt content.", forDevs: true)

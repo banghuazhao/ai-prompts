@@ -156,7 +156,7 @@ struct PromptListView: View {
     @State private var model = PromptListModel()
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 List(model.filteredPrompts) { prompt in
                     NavigationLink(
