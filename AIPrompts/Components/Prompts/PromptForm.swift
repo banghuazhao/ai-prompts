@@ -68,6 +68,8 @@ struct PromptFormView: View {
     @State var model: PromptFormModel
     @Environment(\.dismiss) private var dismiss
     @AppStorage("showContextEngineeringTips") private var showContextEngineeringTips: Bool = true
+    @State private var showAnalyzerFeedback: Bool = false
+    @State private var analyzerIssues: [PromptIssue] = []
 
     var body: some View {
         NavigationStack {
@@ -103,6 +105,56 @@ struct PromptFormView: View {
                             }
                         }
                         Toggle("Is for Developers", isOn: $model.prompt.forDevs)
+                        // --- Analyzer Button ---
+                        if !model.prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            Button(action: {
+                                analyzerIssues = PromptAnalyzer.analyze(model.prompt.prompt)
+                                showAnalyzerFeedback = true
+                            }) {
+                                Label("Improve Prompt", systemImage: "wand.and.stars")
+                                    .font(.subheadline)
+                                    .padding(8)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .cornerRadius(8)
+                            }
+                            .padding(.top, 4)
+                        }
+                        // --- Analyzer Feedback Panel ---
+                        if showAnalyzerFeedback {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("Prompt Improvement Suggestions")
+                                        .font(.headline)
+                                    Spacer()
+                                    Button(action: { showAnalyzerFeedback = false }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                if analyzerIssues.isEmpty {
+                                    Text("No major issues detected. Your prompt looks good!")
+                                        .font(.caption)
+                                        .foregroundColor(.green)
+                                } else {
+                                    ForEach(analyzerIssues) { issue in
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text("• \(issue.type): \(issue.description)")
+                                                .font(.caption)
+                                                .foregroundColor(.orange)
+                                            if let suggestion = issue.suggestion {
+                                                Text("  Suggestion: \(suggestion)")
+                                                    .font(.caption2)
+                                                    .foregroundColor(.secondary)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(8)
+                            .background(Color.yellow.opacity(0.1))
+                            .cornerRadius(10)
+                        }
 
                         if showContextEngineeringTips {
                             VStack(alignment: .leading, spacing: AppSpacing.small) {
