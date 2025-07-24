@@ -1,6 +1,6 @@
 # AI Prompts ✨
 
-A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts), this app offers a curated collection of prompts for ChatGPT, Grok, and other LLM tools.
+A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts), this app offers a curated collection of prompts for ChatGPT, Grok, and other LLM tools. Now featuring prompt categories, context engineering tips, and a built-in prompt analyzer for enhanced prompt engineering.
 
 ## 📸 Screenshots
 
@@ -19,8 +19,9 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🖥️ **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
 - 🧩 **Modular Architecture**: Includes a reusable `MoreApps` module for app recommendations, with localization support.
 - 💾 **Local Data Management**: Uses GRDB for efficient, local data storage and management.
-- 📄 **CSV Import**: Prompt and vibe prompt data are loaded from local CSV files for easy updates and contributions.
-- 🌏 **Multilingual Support**: Fully localized in English, Simplified Chinese, and Traditional Chinese.
+- 🗂️ **Prompt Categories**: Organize and browse prompts by category for easier discovery and filtering. Quickly find prompts relevant to your needs.
+- 🧠 **Context Engineering Tips**: Access best practices and actionable tips for effective context engineering directly in the app, helping you craft better prompts for LLMs.
+- 🛠️ **Prompt Engineering Analyzer**: Analyze your prompts with built-in tools to improve their effectiveness, clarity, and results.
 - 🌙 **Dark Mode**: Supports system-wide dark mode, with user preference override.
 - 📢 **Ad Integration**: Integrates Google Mobile Ads with ATT permission handling.
 - 🛒 **App Store Links**: The More tab features other recommended apps with direct App Store links.
