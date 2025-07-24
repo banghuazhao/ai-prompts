@@ -20,6 +20,9 @@ class PromptListModel {
         case forDevelopers = "For Developers"
         var id: String { rawValue }
     }
+    
+    @ObservationIgnored
+    @Shared(.appStorage("selectedCategory")) var selectedCategory: PromptCategory.ID?
 
     var sortOption: SortOption = .modifiedDate
     var filterOption: FilterOption = .all
@@ -43,12 +46,17 @@ class PromptListModel {
         case editingPrompt(Prompt)
         case showingDeleteAlert(Prompt)
         case showingMarkovAddPrompt(Prompt.Draft)
+        case selectCategory
     }
 
     var route: Route?
 
     var filteredPrompts: [Prompt] {
         var prompts = prompts
+        if let selectedCategory {
+            prompts = prompts.filter { $0.categoryID == selectedCategory }
+        }
+        
         // Filter
         if filterOption == .forDevelopers {
             prompts = prompts.filter { $0.forDevs }
@@ -78,6 +86,21 @@ class PromptListModel {
         return prompts.filter { prompt in
             prompt.act.lowercased().contains(lowercasedQuery) ||
                 prompt.prompt.lowercased().contains(lowercasedQuery)
+        }
+    }
+    
+    func onTapSelectCategory() {
+        route = .selectCategory
+    }
+    
+    func onSelectCategory(_ category: PromptCategory?) {
+        withAnimation {
+            $selectedCategory.withLock {
+                $0 = category?.id
+            }
+        }
+        Task {
+            route = nil
         }
     }
 
@@ -214,9 +237,23 @@ struct PromptListView: View {
                             }
                         }
                     } label: {
-                        Label("Sort & Filter", systemImage: model.isDefault ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                        Label("Sort & Filter", systemImage: model.isDefault ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
                     }
                 }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapSelectCategory()
+                    }) {
+                        if model.selectedCategory != nil {
+                            Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                        } else {
+                            Image(systemName: "line.3.horizontal.decrease.circle")
+                        }
+                    }
+                }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         Haptics.shared.vibrateIfEnabled()
@@ -240,6 +277,16 @@ struct PromptListView: View {
                         model.route = nil
                     }
                 )
+            }
+            .sheet(isPresented: Binding($model.route.selectCategory)) {
+                CategorySelectionSheet(
+                    selectedCategory: model.selectedCategory,
+                    onSelect: { category in
+                        model.onSelectCategory(category)
+                    }
+                )
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
             .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
                 PromptFormView(

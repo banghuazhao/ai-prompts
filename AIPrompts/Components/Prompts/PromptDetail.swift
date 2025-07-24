@@ -1,6 +1,7 @@
 import Dependencies
 import SwiftUI
 import SwiftUINavigation
+import SharingGRDB
 
 @Observable
 @MainActor
@@ -22,6 +23,15 @@ class PromptDetailModel {
 
     init(prompt: Prompt) {
         self.prompt = prompt
+    }
+    
+    var category: PromptCategory? {
+        try? database.read { db in
+            try? PromptCategory
+                .all
+                .where { $0.id.is(prompt.categoryID) }
+                .fetchOne(db)
+        }
     }
 
     func onCopy() {
@@ -84,8 +94,14 @@ struct PromptDetailView: View {
                                 .foregroundColor(.primary)
                                 .lineLimit(3)
                                 .minimumScaleFactor(0.5)
-                            if model.prompt.forDevs {
-                                BadgeView(icon: "laptopcomputer", text: "For Developers")
+                            HStack {
+                                if let category = model.category {
+                                    BadgeView(icon: nil, text: category.title)
+                                }
+                                
+                                if model.prompt.forDevs {
+                                    BadgeView(icon: "laptopcomputer", text: "For Developers")
+                                }
                             }
                         }
                         Spacer()

@@ -72,10 +72,34 @@ func appDatabase() throws -> any DatabaseWriter {
         .execute(db)
     }
     
+    migrator.registerMigration("Update Prompt table to add PromptCategory") { db in
+        try #sql(
+            """
+            CREATE TABLE "promptCategories" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "title" TEXT NOT NULL DEFAULT ''
+            ) STRICT;
+            """
+        )
+        .execute(db)
+        try #sql(
+            """
+            ALTER TABLE "prompts" ADD COLUMN "categoryID" INTEGER REFERENCES "promptCategories"("id") ON DELETE SET NULL;
+            """
+        )
+        .execute(db)
+    }
+    
     migrator.registerMigration("Seed") { db in
         try db.seed {
             DataManager.shared.loadPromptsDraft()
             DataManager.shared.loadVibePromptsDraft()
+        }
+    }
+    
+    migrator.registerMigration("Seed Prompt Categories") { db in
+        try db.seed {
+            PromptCategoryStore.seed
         }
     }
 

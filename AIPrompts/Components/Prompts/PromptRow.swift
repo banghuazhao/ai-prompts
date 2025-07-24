@@ -1,11 +1,23 @@
+import SharingGRDB
 import SwiftUI
 
 struct PromptRowView: View {
     let prompt: Prompt
     let onFavorite: () -> Void
-    
+
     @State private var copied = false
-    
+
+    @Dependency(\.defaultDatabase) private var database
+
+    var category: PromptCategory? {
+        try? database.read { db in
+            try? PromptCategory
+                .all
+                .where { $0.id.is(prompt.categoryID) }
+                .fetchOne(db)
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -13,9 +25,9 @@ struct PromptRowView: View {
                     .font(.headline)
                     .fontWeight(.semibold)
                     .lineLimit(2)
-                
+
                 Spacer()
-                
+
                 Button(action: {
                     Haptics.shared.vibrateIfEnabled()
                     onFavorite()
@@ -24,7 +36,7 @@ struct PromptRowView: View {
                         .foregroundColor(prompt.isFavorite ? .red : .gray)
                 }
                 .buttonStyle(.plain)
-                
+
                 Button(action: {
                     Haptics.shared.vibrateIfEnabled()
                     UIPasteboard.general.string = prompt.prompt
@@ -43,20 +55,26 @@ struct PromptRowView: View {
                 }
                 .buttonStyle(.plain)
             }
-            
+
             Text(prompt.prompt)
                 .font(.body)
                 .foregroundColor(.secondary)
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)
-            
+
             HStack {
-                if prompt.forDevs {
-                    BadgeView(icon: "laptopcomputer", text: "For Developers")
+                VStack(alignment: .leading) {
+                    if let category {
+                        BadgeView(icon: nil, text: category.title)
+                    }
+
+                    if prompt.forDevs {
+                        BadgeView(icon: "laptopcomputer", text: "For Developers")
+                    }
                 }
-                
+
                 Spacer()
-                
+
                 Text("\(prompt.prompt.count) characters")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -95,4 +113,4 @@ struct PromptRowView: View {
         ), onFavorite: {})
     }
     .environmentObject(DataManager())
-} 
+}

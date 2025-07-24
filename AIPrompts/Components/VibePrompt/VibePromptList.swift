@@ -1,8 +1,8 @@
 import Dependencies
 import SharingGRDB
 import SwiftUI
-import SwiftUINavigation
 import SwiftUIFlowLayout
+import SwiftUINavigation
 
 @Observable
 @MainActor
@@ -243,24 +243,30 @@ struct VibePromptListView: View {
                 .navigationBarTitleDisplayMode(.large)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        HStack {
-                            Menu {
-                                Picker("Sort", selection: $model.sortOption) {
-                                    ForEach(VibePromptListModel.SortOption.allCases) { option in
-                                        Text(option.rawValue).tag(option)
-                                    }
+                        Menu {
+                            Picker("Sort", selection: $model.sortOption) {
+                                ForEach(VibePromptListModel.SortOption.allCases) { option in
+                                    Text(option.rawValue).tag(option)
                                 }
-                            } label: {
-                                Label("Sort", systemImage: model.isDefault ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
                             }
-                            Button(action: {
-                                Haptics.shared.vibrateIfEnabled()
-                                model.onTapFilterTechStackSheet()
-                            }) {
+                        } label: {
+                            Label("Sort", systemImage: model.isDefault ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
+                        }
+                    }
+
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onTapFilterTechStackSheet()
+                        }) {
+                            if model.selectedTechStacks.count == 0 {
                                 Image(systemName: "line.3.horizontal.decrease.circle")
+                            } else {
+                                Image(systemName: "line.3.horizontal.decrease.circle.fill")
                             }
                         }
                     }
+
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             Haptics.shared.vibrateIfEnabled()

@@ -9,6 +9,7 @@ struct Prompt: Identifiable, Hashable {
     var forDevs: Bool = false
     var isFavorite: Bool = false
     var modifiedDate: Date = Date()
+    var categoryID: PromptCategory.ID? = nil
 }
 
 extension Prompt.Draft: Identifiable, Hashable {}

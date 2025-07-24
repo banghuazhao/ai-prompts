@@ -7,11 +7,20 @@ import SwiftUINavigation
 class PromptFormModel {
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
+    
+    @ObservationIgnored
+    @FetchAll(PromptCategory.all, animation: .default) var allCategories
 
     var prompt: Prompt.Draft
 
     let isEdit: Bool
     let onUpsert: ((Prompt) -> Void)?
+    
+    @CasePathable
+    enum Route {
+        case selectCategory
+    }
+    var route: Route?
 
     init(
         prompt: Prompt.Draft = Prompt.Draft(),
@@ -20,6 +29,17 @@ class PromptFormModel {
         self.prompt = prompt
         self.onUpsert = onUpsert
         isEdit = prompt.id != nil
+    }
+    
+    func onTapSelectCategory() {
+        route = .selectCategory
+    }
+    
+    func onSelectCategory(_ category: PromptCategory?) {
+        prompt.categoryID = category?.id
+        Task {
+            route = nil
+        }
     }
 
     func onTapSave() {
@@ -61,6 +81,24 @@ struct PromptFormView: View {
                         TextField("Prompt Text", text: $model.prompt.prompt, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                             .lineLimit(5 ... 10)
+                        // Category Selection
+                        HStack {
+                            Text("Category")
+                            
+                            Spacer()
+                            
+                            Button {
+                                model.onTapSelectCategory()
+                            } label: {
+                                HStack {
+                                    if let selectedCategory = model.allCategories.first(where: { $0.id == model.prompt.categoryID }) {
+                                        Text(selectedCategory.title)
+                                    } else {
+                                        Text("💬 All")
+                                    }
+                                }
+                            }
+                        }
                         Toggle("Is for Developers", isOn: $model.prompt.forDevs)
                     }
                     .padding()
@@ -102,11 +140,27 @@ struct PromptFormView: View {
                     .disabled(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty)
                 }
             }
+            .sheet(isPresented: Binding($model.route.selectCategory)) {
+                CategoryFormView(
+                   model: CategoryFormModel(
+                       selectedCategory: model.prompt.categoryID,
+                       onSelect: { category in
+                           model.onSelectCategory(category)
+                       }
+                   )
+                )
+                .presentationDetents([.fraction(0.7), .large])
+                .presentationDragIndicator(.visible)
+            }
         }
     }
 }
 
 #Preview {
+    let _ = prepareDependencies {
+        $0.defaultDatabase = try! appDatabase()
+    }
+    
     PromptFormView(
         model: PromptFormModel()
     )
