@@ -5,8 +5,6 @@
 //  Created by Lulin Yang on 2025/7/18.
 //
 
-
-
 import Dependencies
 import MoreApps
 import SharingGRDB
@@ -17,10 +15,9 @@ import SwiftUI
 class MeViewModel: HashableObject {
     @ObservationIgnored
     @Dependency(\.themeManager) var themeManager
-    
+
     @ObservationIgnored
     @Dependency(\.appRatingService) var appRatingService
-
 
     var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -33,7 +30,6 @@ class MeViewModel: HashableObject {
     var appBuild: String {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "no app build version"
     }
-
 
     func onTapRateUs(openURL: OpenURLAction) {
         if let url = URL(string: "https://itunes.apple.com/app/id\(Constants.AppID.thisAppID)?action=write-review") {
@@ -65,11 +61,9 @@ struct MoreView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: AppSpacing.large) {
-                    
                     moreFeatureView
 
                     othersView
-                    
 
                     // App info section (moved below othersView)
                     VStack(spacing: 4) {
@@ -86,7 +80,6 @@ struct MoreView: View {
                                 .underline()
                         }
                     }
-                    
                 }
                 .padding(.vertical)
             }
@@ -95,8 +88,7 @@ struct MoreView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
     }
-    
-    
+
     private var moreFeatureView: some View {
         VStack(alignment: .leading, spacing: AppSpacing.medium) {
             Text(String(localized: "More Features"))
@@ -105,11 +97,14 @@ struct MoreView: View {
                 NavigationLink(destination: SettingView()) {
                     featureItem(icon: "gear", title: String(localized: "Settings"))
                 }
+                NavigationLink(destination: ContextEngineeringInfoView()) {
+                    moreItem(icon: "brain.head.profile", title: String(localized: "Context Engineering"))
+                }
             }
         }
         .padding(.horizontal)
     }
-    
+
     private var othersView: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Others")
@@ -119,7 +114,6 @@ struct MoreView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
                 NavigationLink(destination: MoreAppsView()) {
                     moreItem(icon: "storefront", title: String(localized: "More Apps"))
-                    
                 }
                 Button {
                     model.onTapRateUs(openURL: openURL)
@@ -134,14 +128,13 @@ struct MoreView: View {
                 if let appURL = model.onTapShareApp() {
                     ShareLink(item: appURL) {
                         moreItem(icon: "square.and.arrow.up", title: String(localized: "Share App"))
-                        
                     }
                 }
             }
         }
         .padding(.horizontal)
     }
-    
+
     private func moreItem(icon: String, title: String) -> some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
@@ -159,7 +152,7 @@ struct MoreView: View {
         .cornerRadius(AppCornerRadius.card)
         .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
-    
+
     private func featureItem(icon: String, title: String) -> some View {
         VStack(spacing: AppSpacing.small) {
             Image(systemName: icon)
@@ -182,7 +175,7 @@ struct MoreView: View {
 }
 
 #Preview {
-        MoreView()
+    MoreView()
 }
 
 struct SupportEmail {

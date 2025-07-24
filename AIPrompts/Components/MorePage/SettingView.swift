@@ -14,6 +14,7 @@ struct SettingView: View {
     @AppStorage("buttonSoundEnabled") private var buttonSoundEnabled: Bool = true
     @AppStorage("vibrateEnabled") private var vibrateEnabled: Bool = true
     @AppStorage("darkModeEnabled") private var darkModeEnabled: Bool = false
+    @AppStorage("showContextEngineeringTips") private var showContextEngineeringTips: Bool = true
     @Dependency(\.themeManager) var themeManager
 
     var body: some View {
@@ -30,6 +31,14 @@ struct SettingView: View {
                 settingsSection(title: "Appearance") {
                     Toggle(isOn: $darkModeEnabled) {
                         Text(String(localized: "Dark Mode"))
+                            .font(AppFont.body)
+                            .foregroundColor(themeManager.current.textPrimary)
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
+                }
+                settingsSection(title: "Prompt Creation") {
+                    Toggle(isOn: $showContextEngineeringTips) {
+                        Text(String(localized: "Show Context Engineering Tips"))
                             .font(AppFont.body)
                             .foregroundColor(themeManager.current.textPrimary)
                     }

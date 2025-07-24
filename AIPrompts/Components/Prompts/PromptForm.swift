@@ -1,3 +1,4 @@
+import Dependencies
 import SharingGRDB
 import SwiftUI
 import SwiftUINavigation
@@ -7,7 +8,7 @@ import SwiftUINavigation
 class PromptFormModel {
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
-    
+
     @ObservationIgnored
     @FetchAll(PromptCategory.all, animation: .default) var allCategories
 
@@ -15,11 +16,12 @@ class PromptFormModel {
 
     let isEdit: Bool
     let onUpsert: ((Prompt) -> Void)?
-    
+
     @CasePathable
     enum Route {
         case selectCategory
     }
+
     var route: Route?
 
     init(
@@ -30,11 +32,11 @@ class PromptFormModel {
         self.onUpsert = onUpsert
         isEdit = prompt.id != nil
     }
-    
+
     func onTapSelectCategory() {
         route = .selectCategory
     }
-    
+
     func onSelectCategory(_ category: PromptCategory?) {
         prompt.categoryID = category?.id
         Task {
@@ -65,6 +67,7 @@ class PromptFormModel {
 struct PromptFormView: View {
     @State var model: PromptFormModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("showContextEngineeringTips") private var showContextEngineeringTips: Bool = true
 
     var body: some View {
         NavigationStack {
@@ -84,9 +87,9 @@ struct PromptFormView: View {
                         // Category Selection
                         HStack {
                             Text("Category")
-                            
+
                             Spacer()
-                            
+
                             Button {
                                 model.onTapSelectCategory()
                             } label: {
@@ -100,6 +103,34 @@ struct PromptFormView: View {
                             }
                         }
                         Toggle("Is for Developers", isOn: $model.prompt.forDevs)
+
+                        if showContextEngineeringTips {
+                            VStack(alignment: .leading, spacing: AppSpacing.small) {
+                                HStack {
+                                    Text("Context Engineering Tips")
+                                        .font(AppFont.headline)
+                                    Spacer()
+                                    Button{
+                                        withAnimation {
+                                            showContextEngineeringTips = false
+                                        }
+                                    } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                Text("• Be clear and specific about the task.")
+                                    .font(AppFont.caption)
+                                Text("• Include only necessary information.")
+                                    .font(AppFont.caption)
+                                Text("• Use structure (lists, JSON, etc.) for clarity.")
+                                    .font(AppFont.caption)
+                                Text("• Break complex tasks into steps.")
+                                    .font(AppFont.caption)
+                            }
+                            .appInfoSection()
+                        }
                     }
                     .padding()
                     .background(
@@ -142,12 +173,12 @@ struct PromptFormView: View {
             }
             .sheet(isPresented: Binding($model.route.selectCategory)) {
                 CategoryFormView(
-                   model: CategoryFormModel(
-                       selectedCategory: model.prompt.categoryID,
-                       onSelect: { category in
-                           model.onSelectCategory(category)
-                       }
-                   )
+                    model: CategoryFormModel(
+                        selectedCategory: model.prompt.categoryID,
+                        onSelect: { category in
+                            model.onSelectCategory(category)
+                        }
+                    )
                 )
                 .presentationDetents([.fraction(0.7), .large])
                 .presentationDragIndicator(.visible)
@@ -160,7 +191,7 @@ struct PromptFormView: View {
     let _ = prepareDependencies {
         $0.defaultDatabase = try! appDatabase()
     }
-    
+
     PromptFormView(
         model: PromptFormModel()
     )

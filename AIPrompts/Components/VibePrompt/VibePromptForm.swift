@@ -3,6 +3,7 @@
 // Copyright Apps Bay Limited. All rights reserved.
 //
 
+import Dependencies
 import SharingGRDB
 import SwiftUI
 import SwiftUINavigation
@@ -49,6 +50,7 @@ class VibePromptFormModel {
 struct VibePromptFormView: View {
     @State var model: VibePromptFormModel
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("showContextEngineeringTips") private var showContextEngineeringTips: Bool = true
 
     var body: some View {
         NavigationStack {
@@ -100,6 +102,36 @@ struct VibePromptFormView: View {
                             .fill(Color(.systemBackground))
                             .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
                     )
+
+                    if showContextEngineeringTips {
+                        VStack(alignment: .leading, spacing: AppSpacing.small) {
+                            HStack {
+                                Text("Context Engineering Tips")
+                                    .font(AppFont.headline)
+                                Spacer()
+                                Button(
+                                    action: {
+                                        withAnimation {
+                                            showContextEngineeringTips = false
+                                        }
+                                    }
+                                ) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            Text("• Be clear and specific about the app or use case.")
+                                .font(AppFont.caption)
+                            Text("• Include only necessary information.")
+                                .font(AppFont.caption)
+                            Text("• Use structure (lists, JSON, etc.) for clarity.")
+                                .font(AppFont.caption)
+                            Text("• Break complex tasks into steps.")
+                                .font(AppFont.caption)
+                        }
+                        .appInfoSection()
+                    }
                 }
                 .padding()
             }
