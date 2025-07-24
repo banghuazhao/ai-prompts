@@ -234,6 +234,9 @@ struct MoreView: View {
                 NavigationLink(destination: ContextEngineeringInfoView()) {
                     moreItem(icon: "brain.head.profile", title: String(localized: "Context Engineering"))
                 }
+                NavigationLink(destination: PromptEngineeringBestPracticesView()) {
+                    moreItem(icon: "lightbulb", title: String(localized: "Prompt Engineering"))
+                }
             }
         }
         .padding(.horizontal)
