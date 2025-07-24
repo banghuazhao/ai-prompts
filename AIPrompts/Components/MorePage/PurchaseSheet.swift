@@ -37,21 +37,30 @@ struct PurchaseSheet: View {
 
                     // Top image
                     ZStack {
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.pink, Color.orange, Color.yellow, Color.purple, Color.green]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                        // Glowing, multi-color background
+                        RadialGradient(
+                            gradient: Gradient(colors: [Color.yellow.opacity(0.5), Color.pink.opacity(0.3), Color.purple.opacity(0.2)]),
+                            center: .center,
+                            startRadius: 10,
+                            endRadius: 60
                         )
                         .frame(width: 90, height: 90)
-                        .clipShape(RoundedRectangle(cornerRadius: 18))
+                        .clipShape(RoundedRectangle(cornerRadius: 22))
+                        .shadow(color: Color.yellow.opacity(0.3), radius: 10, x: 0, y: 4)
 
-                        Image(systemName: "bell.circle.fill")
+                        // Crown icon
+                        Image(systemName: "crown.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 60, height: 60)
-                            .foregroundColor(Color(red: 1.0, green: 0.92, blue: 0.88)) // Cuter pastel peach
-                            .shadow(radius: 6)
-                       
+                            .frame(width: 54, height: 54)
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [Color.yellow, Color.orange, Color.pink],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .shadow(color: Color.yellow.opacity(0.5), radius: 8, x: 0, y: 4)
                     }
                     .frame(width: 90, height: 90)
                     
