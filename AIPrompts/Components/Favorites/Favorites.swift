@@ -110,7 +110,7 @@ struct FavoritesView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
                 // Tab Picker
                 Picker("Favorites", selection: $model.selectedTab) {
                     Text("Prompts (\(model.favoritePrompts.count))").tag(0)
@@ -185,6 +185,9 @@ struct FavoritesView: View {
                         .listStyle(PlainListStyle())
                     }
                 }
+                BannerView()
+                    .frame(height: 50)
+                    .padding(.bottom, 16)
             }
             .navigationTitle("Favorites")
             .navigationBarTitleDisplayMode(.large)

@@ -15,7 +15,7 @@ class AdManager {
 
     struct GoogleAdsID {
         static let bannerViewAdUnitID = Bundle.main.object(forInfoDictionaryKey: "bannerViewAdUnitID") as? String ?? "ca-app-pub-3940256099942544/2934735716"
-        static let appOpenAdID = Bundle.main.object(forInfoDictionaryKey: "appOpenAdID") as? String ?? "ca-app-pub-3940256099942544/5575463023"
+        static let appOpenAdID = Bundle.main.object(forInfoDictionaryKey: "appOpenAdID") as? String ?? "ca-app-pub-3940256099942544/5575463023" 
     }
 
     static func requestATTPermission(with time: TimeInterval = 0) {
