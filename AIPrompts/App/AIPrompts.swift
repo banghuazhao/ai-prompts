@@ -8,6 +8,7 @@ struct AIPrompts: App {
     @AppStorage("darkModeEnabled") private var darkModeEnabled: Bool = false
     @StateObject private var openAd = OpenAd()
     @Environment(\.scenePhase) private var scenePhase
+    @Dependency(\.purchaseManager) private var purchaseManager
 
     init() {
         // Make all List (UITableView) backgrounds transparent globally
@@ -26,7 +27,9 @@ struct AIPrompts: App {
                 .onChange(of: scenePhase) { _, newPhase in
                     print("scenePhase: \(newPhase)")
                     if newPhase == .active {
-                        openAd.tryToPresentAd()
+                        if !purchaseManager.isPremiumUserPurchased {
+                            openAd.tryToPresentAd()
+                        }
                         openAd.appHasEnterBackgroundBefore = false
                     } else if newPhase == .background {
                         openAd.appHasEnterBackgroundBefore = true

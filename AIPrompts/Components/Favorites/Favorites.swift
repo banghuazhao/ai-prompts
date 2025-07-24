@@ -23,6 +23,9 @@ class FavoritesViewModel {
 
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
+    
+    @ObservationIgnored
+    @Dependency(\.purchaseManager) var purchaseManager
 
     @CasePathable
     enum Route {
@@ -185,12 +188,14 @@ struct FavoritesView: View {
                         .listStyle(PlainListStyle())
                     }
                 }
-                BannerView()
-                    .frame(height: 50)
-                    .padding(.bottom, 16)
+                if !model.purchaseManager.isPremiumUserPurchased {
+                    BannerView()
+                        .frame(height: 50)
+                        .padding(.bottom, 16)
+                }
             }
             .navigationTitle("Favorites")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             // Prompt sheets/alerts
             .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
                 PromptFormView(

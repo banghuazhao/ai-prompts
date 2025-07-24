@@ -16,6 +16,8 @@ struct SettingView: View {
     @AppStorage("darkModeEnabled") private var darkModeEnabled: Bool = false
     @AppStorage("showContextEngineeringTips") private var showContextEngineeringTips: Bool = true
     @Dependency(\.themeManager) var themeManager
+    
+    @Dependency(\.purchaseManager) var purchaseManager
 
     var body: some View {
         VStack(spacing: 0) {
@@ -48,9 +50,11 @@ struct SettingView: View {
                 }
                 .padding()
             }
-            BannerView()
-                .frame(height: 50)
-                .padding(.bottom, 16)
+            if !purchaseManager.isPremiumUserPurchased {
+                BannerView()
+                    .frame(height: 50)
+                    .padding(.bottom, 16)
+            }
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)

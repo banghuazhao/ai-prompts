@@ -14,10 +14,35 @@ import SwiftUI
 @MainActor
 class MeViewModel: HashableObject {
     @ObservationIgnored
+    @Shared(.appStorage("userName")) var userName: String = String(localized: "Your Name")
+    @ObservationIgnored
+    @Shared(.appStorage("userAvatar")) var userAvatar: String = "😀"
+
+    @ObservationIgnored
     @Dependency(\.themeManager) var themeManager
 
     @ObservationIgnored
     @Dependency(\.appRatingService) var appRatingService
+
+    @ObservationIgnored
+    @Dependency(\.purchaseManager) var purchaseManager
+
+    @ObservationIgnored
+    @FetchAll(Prompt.all) var allPrompts
+
+    @ObservationIgnored
+    @FetchAll(VibePrompt.all) var allVibePrompts
+
+    var showPurchaseSheet = false
+    var showEmojiPicker = false
+
+    var promptsCount: String {
+        "\(allPrompts.count)"
+    }
+
+    var vibePromptsCount: String {
+        "\(allVibePrompts.count)"
+    }
 
     var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
@@ -51,6 +76,18 @@ class MeViewModel: HashableObject {
     func onTapShareApp() -> URL? {
         URL(string: "https://itunes.apple.com/app/id\(Constants.AppID.thisAppID)")
     }
+
+    func onTapEmojiPicker() {
+        showEmojiPicker = true
+    }
+
+    var isPremiumUser: Bool {
+        purchaseManager.isPremiumUserPurchased
+    }
+
+    func onTapPurchase() {
+        showPurchaseSheet = true
+    }
 }
 
 struct MoreView: View {
@@ -59,14 +96,24 @@ struct MoreView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                ScrollView {
-                    VStack(spacing: AppSpacing.large) {
-                        moreFeatureView
-                        othersView
-                        // App info section (moved below othersView)
-                        VStack(spacing: 4) {
-                            Text("AI Prompts  |  AI Prompt Directory")
+            ScrollView {
+                VStack(spacing: AppSpacing.large) {
+                    meSection
+
+                    moreFeatureView
+
+                    othersView
+
+                    // App info section (moved below othersView)
+                    VStack(spacing: 4) {
+                        Text("AI Prompts  |  AI Prompt Directory")
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.gray)
+                        Button {
+                            model.onTapCheckForUpdates(openURL: openURL)
+                        } label: {
+                            Text("v\(model.appVersion)  Check for Updates")
                                 .font(.footnote)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.gray)
@@ -82,14 +129,98 @@ struct MoreView: View {
                     }
                     .padding(.vertical)
                 }
-                BannerView()
-                    .frame(height: 50)
-                    .padding(.bottom, AppSpacing.medium)
+                if !model.purchaseManager.isPremiumUserPurchased {
+                    BannerView()
+                        .frame(height: 50)
+                        .padding(.bottom, AppSpacing.medium)
+                }
             }
             .scrollDismissesKeyboard(.immediately)
             .navigationTitle("More")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $model.showPurchaseSheet) {
+                PurchaseSheet()
+            }
         }
+    }
+
+    private var meSection: some View {
+        // Me Section
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            HStack(spacing: AppSpacing.medium) {
+                Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onTapEmojiPicker()
+                }) {
+                    Text(model.userAvatar)
+                        .font(.system(size: 40))
+                        .frame(width: 50, height: 50)
+                        .background(model.themeManager.current.card)
+                        .clipShape(Circle())
+                }
+                .buttonStyle(PlainButtonStyle())
+                .sheet(isPresented: $model.showEmojiPicker) {
+                    EmojiPickerView(selectedEmoji: $model.userAvatar, title: String(localized: "Choose your avatar"))
+                        .presentationDetents([.medium])
+                        .presentationDragIndicator(.visible)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    TextField("Your Name", text: $model.userName)
+                        .font(AppFont.headline)
+                        .fontWeight(.bold)
+                        .padding(AppSpacing.small)
+                        .background(model.themeManager.current.background)
+                        .cornerRadius(AppCornerRadius.button)
+                        .lineLimit(1)
+                }
+                Spacer()
+            }
+            HStack {
+                VStack {
+                    Text(model.promptsCount)
+                        .font(.headline)
+                    Text("Prompts")
+                        .font(.caption)
+                }
+                Divider()
+                VStack {
+                    Text(model.vibePromptsCount)
+                        .font(.headline)
+                    Text("Vibe Prompts")
+                        .font(.caption)
+                }
+            }
+
+            if !model.isPremiumUser {
+                Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onTapPurchase()
+                }) {
+                    Text(String(localized: "Upgrade to Premium"))
+                        .appButtonStyle(theme: model.themeManager.current)
+                }
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "crown.fill")
+                        .foregroundColor(.yellow)
+                        .font(.title3)
+                    Text(String(localized: "Welcome, Premium user!"))
+                        .font(.headline)
+                        .foregroundColor(model.themeManager.current.primaryColor)
+                }
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+                .background(model.themeManager.current.card)
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppCornerRadius.button)
+                        .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
+                )
+                .cornerRadius(AppCornerRadius.button)
+                .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
+            }
+        }
+        .appCardStyle(theme: model.themeManager.current)
+        .padding(.horizontal)
     }
 
     private var moreFeatureView: some View {

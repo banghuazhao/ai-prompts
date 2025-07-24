@@ -91,7 +91,7 @@ struct VibePromptFormView: View {
                             .foregroundColor(.secondary)
                             .padding(.bottom, 2)
                         TextEditor(text: $model.prompt.prompt)
-                            .frame(minHeight: 100)
+                            .frame(minHeight: 300)
                             .padding(8)
                             .background(
                                 RoundedRectangle(cornerRadius: 10, style: .continuous)

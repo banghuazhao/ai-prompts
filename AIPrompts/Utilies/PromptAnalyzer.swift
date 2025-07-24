@@ -8,7 +8,7 @@ struct PromptIssue: Identifiable {
 }
 
 class PromptAnalyzer {
-    static let vagueWords = ["thing", "things", "stuff", "it", "something", "anything", "everything", "this", "that"]
+    static let vagueWords = ["thing", "things", "stuff", "something", "anything", "everything"]
     static let fillerWords = ["just", "basically", "kind of", "sort of", "actually", "really", "very"]
     static let leadingWords = ["obviously", "clearly", "everyone knows", "of course"]
     static let formatKeywords = ["in JSON", "as a list", "in table form", "as a table", "as a poem", "as a story"]
