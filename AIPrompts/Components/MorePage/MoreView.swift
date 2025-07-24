@@ -59,29 +59,32 @@ struct MoreView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: AppSpacing.large) {
-                    moreFeatureView
-
-                    othersView
-
-                    // App info section (moved below othersView)
-                    VStack(spacing: 4) {
-                        Text("AI Prompts  |  AI Prompt Directory")
-                            .font(.footnote)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
-                        Button {
-                            model.onTapCheckForUpdates(openURL: openURL)
-                        } label: {
-                            Text("v\(model.appVersion)  Check for Updates")
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(spacing: AppSpacing.large) {
+                        moreFeatureView
+                        othersView
+                        // App info section (moved below othersView)
+                        VStack(spacing: 4) {
+                            Text("AI Prompts  |  AI Prompt Directory")
                                 .font(.footnote)
+                                .fontWeight(.semibold)
                                 .foregroundColor(.gray)
-                                .underline()
+                            Button {
+                                model.onTapCheckForUpdates(openURL: openURL)
+                            } label: {
+                                Text("v\(model.appVersion)  Check for Updates")
+                                    .font(.footnote)
+                                    .foregroundColor(.gray)
+                                    .underline()
+                            }
                         }
                     }
+                    .padding(.vertical)
                 }
-                .padding(.vertical)
+                BannerView()
+                    .frame(height: 50)
+                    .padding(.bottom, AppSpacing.medium)
             }
             .scrollDismissesKeyboard(.immediately)
             .navigationTitle("More")
