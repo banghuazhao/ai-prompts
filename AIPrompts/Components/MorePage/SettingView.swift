@@ -18,34 +18,39 @@ struct SettingView: View {
     @Dependency(\.themeManager) var themeManager
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: AppSpacing.large) {
-                settingsSection(title: "Feedback") {
-                    Toggle(isOn: $vibrateEnabled) {
-                        Text(String(localized: "Vibrate"))
-                            .font(AppFont.body)
-                            .foregroundColor(themeManager.current.textPrimary)
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: AppSpacing.large) {
+                    settingsSection(title: "Feedback") {
+                        Toggle(isOn: $vibrateEnabled) {
+                            Text(String(localized: "Vibrate"))
+                                .font(AppFont.body)
+                                .foregroundColor(themeManager.current.textPrimary)
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
-                }
-                settingsSection(title: "Appearance") {
-                    Toggle(isOn: $darkModeEnabled) {
-                        Text(String(localized: "Dark Mode"))
-                            .font(AppFont.body)
-                            .foregroundColor(themeManager.current.textPrimary)
+                    settingsSection(title: "Appearance") {
+                        Toggle(isOn: $darkModeEnabled) {
+                            Text(String(localized: "Dark Mode"))
+                                .font(AppFont.body)
+                                .foregroundColor(themeManager.current.textPrimary)
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
-                }
-                settingsSection(title: "Prompt Creation") {
-                    Toggle(isOn: $showContextEngineeringTips) {
-                        Text(String(localized: "Show Context Engineering Tips"))
-                            .font(AppFont.body)
-                            .foregroundColor(themeManager.current.textPrimary)
+                    settingsSection(title: "Prompt Creation") {
+                        Toggle(isOn: $showContextEngineeringTips) {
+                            Text(String(localized: "Show Context Engineering Tips"))
+                                .font(AppFont.body)
+                                .foregroundColor(themeManager.current.textPrimary)
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                 }
+                .padding()
             }
-            .padding()
+            BannerView()
+                .frame(height: 50)
+                .padding(.bottom, 16)
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
