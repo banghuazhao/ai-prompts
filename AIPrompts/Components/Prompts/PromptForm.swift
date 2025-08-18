@@ -46,7 +46,6 @@ class PromptFormModel {
 
     func onTapSave() {
         withErrorReporting {
-            prompt.modifiedDate = Date()
             let newPrompt =
                 try database.write { db in
                     try Prompt
@@ -162,7 +161,7 @@ struct PromptFormView: View {
                                     Text("Context Engineering Tips")
                                         .font(AppFont.headline)
                                     Spacer()
-                                    Button{
+                                    Button {
                                         withAnimation {
                                             showContextEngineeringTips = false
                                         }

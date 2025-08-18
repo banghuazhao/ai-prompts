@@ -104,6 +104,13 @@ func appDatabase() throws -> any DatabaseWriter {
     }
 
     try migrator.migrate(database)
+    
+    try database.write { db in
+        try Prompt.createTemporaryTrigger(afterUpdateTouch: \.modifiedDate)
+            .execute(db)
+        try VibePrompt.createTemporaryTrigger(afterUpdateTouch: \.modifiedDate)
+            .execute(db)
+    }
 
     return database
 }

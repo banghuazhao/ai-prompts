@@ -29,7 +29,6 @@ class VibePromptFormModel {
 
     func onTapSave() {
         withErrorReporting {
-            prompt.modifiedDate = Date()
             let newPrompt =
                 try database.write { db in
                     try VibePrompt
