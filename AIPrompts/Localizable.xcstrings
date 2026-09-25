@@ -1,0 +1,2336 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "  Suggestion: %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "  建議：%@"
+          }
+        }
+      }
+    },
+    "%@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@ - %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
+    "%@ - Upgrade to Premium" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ - 升級至進階版"
+          }
+        }
+      }
+    },
+    "%lld characters" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 個字元"
+          }
+        }
+      }
+    },
+    "%lld new prompts added" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增了 %lld 個提示詞"
+          }
+        }
+      }
+    },
+    "1 new prompt added" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增了 1 個提示詞"
+          }
+        }
+      }
+    },
+    "A one-time purchase. No subscription." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一次購買，無需訂閱。"
+          }
+        }
+      }
+    },
+    "AI Prompts  |  AI Prompt Directory" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI 提示詞  |  AI 提示詞大全"
+          }
+        }
+      }
+    },
+    "Act/Role (e.g., 'Act as a iOS Developer')" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "角色（例如：「扮演 iOS 開發者」）"
+          }
+        }
+      }
+    },
+    "Activities" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "活動"
+          }
+        }
+      }
+    },
+    "Ad-free experience" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無廣告體驗"
+          }
+        }
+      }
+    },
+    "Add Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增提示詞"
+          }
+        }
+      }
+    },
+    "Add Vibe Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增 Vibe 提示詞"
+          }
+        }
+      }
+    },
+    "Add a bit more context if needed." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如有需要，請補充更多背景資訊。"
+          }
+        }
+      }
+    },
+    "Add a bit more detail to clarify your request." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "補充更多細節，讓需求更明確。"
+          }
+        }
+      }
+    },
+    "Add an example to clarify your request." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入範例，讓需求更清楚。"
+          }
+        }
+      }
+    },
+    "All" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部"
+          }
+        }
+      }
+    },
+    "Animals" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "動物"
+          }
+        }
+      }
+    },
+    "App Details" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App 詳細資訊"
+          }
+        }
+      }
+    },
+    "App Name" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App 名稱"
+          }
+        }
+      }
+    },
+    "Appearance" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外觀"
+          }
+        }
+      }
+    },
+    "Are you sure you want to delete %@? This action cannot be undone." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定要刪除「%@」嗎？此操作無法復原。"
+          }
+        }
+      }
+    },
+    "Audience" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "目標讀者"
+          }
+        }
+      }
+    },
+    "Best Practices:" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最佳實踐："
+          }
+        }
+      }
+    },
+    "Blue" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "藍色"
+          }
+        }
+      }
+    },
+    "Break your instructions into steps or a list if possible." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盡量將指示拆成步驟或清單。"
+          }
+        }
+      }
+    },
+    "By following these practices, you can craft prompts that are clear, effective, and more likely to yield the results you want from AI." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遵循這些做法，就能寫出清楚、有效的提示詞，更容易從 AI 得到想要的結果。"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "Categories" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分類"
+          }
+        }
+      }
+    },
+    "Category" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分類"
+          }
+        }
+      }
+    },
+    "Character Length ↑" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字元數 ↑"
+          }
+        }
+      }
+    },
+    "Character Length ↓" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字元數 ↓"
+          }
+        }
+      }
+    },
+    "Choose your avatar" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇你的頭像"
+          }
+        }
+      }
+    },
+    "Clarity" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清晰度"
+          }
+        }
+      }
+    },
+    "Clear" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關閉"
+          }
+        }
+      }
+    },
+    "Completeness" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完整性"
+          }
+        }
+      }
+    },
+    "Conciseness" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "簡潔度"
+          }
+        }
+      }
+    },
+    "Consider breaking complex tasks into steps." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "考慮將複雜任務拆成多個步驟。"
+          }
+        }
+      }
+    },
+    "Contact Support" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "聯絡客服"
+          }
+        }
+      }
+    },
+    "Context Engineering" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "情境工程"
+          }
+        }
+      }
+    },
+    "Context Engineering Tips" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "情境工程小技巧"
+          }
+        }
+      }
+    },
+    "Context engineering is the art and science of providing just the right information to an AI model for the best results. It goes beyond simple prompt writing—focusing on how to structure, prune, and optimize all the information (context) you give to the model. By applying context engineering, you can make your prompts clearer, more effective, and more efficient." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "情境工程是一門為 AI 模型提供恰到好處資訊、以取得最佳結果的藝術與科學。它不只是撰寫提示詞，而是著重於如何組織、精簡並最佳化你提供給模型的所有資訊（情境）。善用情境工程，能讓你的提示詞更清楚、更有效，也更有效率。"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繼續"
+          }
+        }
+      }
+    },
+    "Contributor (optional)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "貢獻者（選填）"
+          }
+        }
+      }
+    },
+    "Copied “%@”. Paste it into your AI chat." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拷貝「%@」，貼到你的 AI 對話中即可使用。"
+          }
+        }
+      }
+    },
+    "Copied!" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拷貝！"
+          }
+        }
+      }
+    },
+    "Copies a prompt to the clipboard so you can paste it into any AI chat." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將提示詞拷貝到剪貼簿，方便貼到任何 AI 對話中。"
+          }
+        }
+      }
+    },
+    "Copy" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝"
+          }
+        }
+      }
+    },
+    "Copy ${prompt}" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝 ${prompt}"
+          }
+        }
+      }
+    },
+    "Copy Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝提示詞"
+          }
+        }
+      }
+    },
+    "Customize & Use" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自訂並使用"
+          }
+        }
+      }
+    },
+    "Dark Mode" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "深色模式"
+          }
+        }
+      }
+    },
+    "Default" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除"
+          }
+        }
+      }
+    },
+    "Delete Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除提示詞"
+          }
+        }
+      }
+    },
+    "Delete Vibe Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除 Vibe 提示詞"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
+          }
+        }
+      }
+    },
+    "E.g., 'Explain for a beginner'." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如：「用初學者能懂的方式解釋」。"
+          }
+        }
+      }
+    },
+    "E.g., 'Respond in JSON'." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如：「以 JSON 格式回覆」。"
+          }
+        }
+      }
+    },
+    "Edit" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯"
+          }
+        }
+      }
+    },
+    "Edit Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯提示詞"
+          }
+        }
+      }
+    },
+    "Edit Vibe Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯 Vibe 提示詞"
+          }
+        }
+      }
+    },
+    "Enter your GitHub username (e.g., banghuazhao, which will link to https://github.com/banghuazhao). Optional." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "輸入你的 GitHub 使用者名稱（例如 banghuazhao，將連結至 https://github.com/banghuazhao）。選填。"
+          }
+        }
+      }
+    },
+    "Example: Swift, SwiftUI, iOS. Optional." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如：Swift, SwiftUI, iOS。選填。"
+          }
+        }
+      }
+    },
+    "Examples" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "範例"
+          }
+        }
+      }
+    },
+    "Favorite" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入最愛"
+          }
+        }
+      }
+    },
+    "Favorites" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最愛"
+          }
+        }
+      }
+    },
+    "Favorites Only" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "僅限最愛"
+          }
+        }
+      }
+    },
+    "Feedback" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "意見回饋"
+          }
+        }
+      }
+    },
+    "Fill in %lld blanks before copying or launching" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝或開啟前，先填寫 %lld 個空格"
+          }
+        }
+      }
+    },
+    "Fill in 1 blank before copying or launching" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝或開啟前，先填寫 1 個空格"
+          }
+        }
+      }
+    },
+    "Fill in the blanks" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "填空"
+          }
+        }
+      }
+    },
+    "Filter" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "篩選"
+          }
+        }
+      }
+    },
+    "Filter by Tech Stack" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "依技術棧篩選"
+          }
+        }
+      }
+    },
+    "Find prompts and vibe prompts by title, text, or tech stack." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "依標題、內容或技術棧搜尋提示詞與 Vibe 提示詞。"
+          }
+        }
+      }
+    },
+    "Food" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食物"
+          }
+        }
+      }
+    },
+    "For Developers" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "適合開發者"
+          }
+        }
+      }
+    },
+    "For longer prompts, consider adding more details (who, what, how, when, where)." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "較長的提示詞可考慮補充更多細節（誰、什麼、如何、何時、何地）。"
+          }
+        }
+      }
+    },
+    "For longer prompts, consider providing an example." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "較長的提示詞可考慮提供範例。"
+          }
+        }
+      }
+    },
+    "For longer prompts, consider specifying the desired output format." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "較長的提示詞可考慮指定想要的輸出格式。"
+          }
+        }
+      }
+    },
+    "For longer prompts, consider specifying the intended audience." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "較長的提示詞可考慮指定目標讀者。"
+          }
+        }
+      }
+    },
+    "Format/Output" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式／輸出"
+          }
+        }
+      }
+    },
+    "Get Random Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取得隨機提示詞"
+          }
+        }
+      }
+    },
+    "Get a random prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取得隨機提示詞"
+          }
+        }
+      }
+    },
+    "Go Premium" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "升級進階版"
+          }
+        }
+      }
+    },
+    "Green" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "綠色"
+          }
+        }
+      }
+    },
+    "How We Analyze Your Prompts:" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我們如何分析你的提示詞："
+          }
+        }
+      }
+    },
+    "Improve Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "改善提示詞"
+          }
+        }
+      }
+    },
+    "Instruction Type" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指令類型"
+          }
+        }
+      }
+    },
+    "Is for Developers" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "適合開發者"
+          }
+        }
+      }
+    },
+    "Key Principles:" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "核心原則："
+          }
+        }
+      }
+    },
+    "Learn more: [Context-Engineering Handbook](https://github.com/davidkimai/Context-Engineering)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解更多：[Context-Engineering Handbook](https://github.com/davidkimai/Context-Engineering)"
+          }
+        }
+      }
+    },
+    "Leave a field empty to keep the original text." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欄位留空則保留原文。"
+          }
+        }
+      }
+    },
+    "List the steps or details needed for the process." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "列出這個流程所需的步驟或細節。"
+          }
+        }
+      }
+    },
+    "Loading product..." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在載入商品⋯"
+          }
+        }
+      }
+    },
+    "Long prompt could be easier to follow if broken into steps." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "較長的提示詞若拆成步驟會更容易理解。"
+          }
+        }
+      }
+    },
+    "Long prompt could benefit from more structure (steps, lists, etc.)." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "較長的提示詞可以加入更多結構（步驟、清單等）。"
+          }
+        }
+      }
+    },
+    "Make your prompt a clear instruction or question." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "讓提示詞成為明確的指令或問題。"
+          }
+        }
+      }
+    },
+    "Modified Date" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改日期"
+          }
+        }
+      }
+    },
+    "More" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多"
+          }
+        }
+      }
+    },
+    "More Apps" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多 App"
+          }
+        }
+      }
+    },
+    "More Features" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多功能"
+          }
+        }
+      }
+    },
+    "NEW" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新"
+          }
+        }
+      }
+    },
+    "Neutrality" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中立性"
+          }
+        }
+      }
+    },
+    "New" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最新"
+          }
+        }
+      }
+    },
+    "New prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新提示詞"
+          }
+        }
+      }
+    },
+    "No Ads" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無廣告"
+          }
+        }
+      }
+    },
+    "No Favorite Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有最愛的提示詞"
+          }
+        }
+      }
+    },
+    "No Favorite Vibe Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有最愛的 Vibe 提示詞"
+          }
+        }
+      }
+    },
+    "No banners and no full-screen ads when you come back to the app." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有橫幅廣告，回到 App 時也不會出現全螢幕廣告。"
+          }
+        }
+      }
+    },
+    "No major issues detected. Your prompt looks good!" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有發現明顯問題，你的提示詞看起來很棒！"
+          }
+        }
+      }
+    },
+    "Note: When a category is deleted, all prompts in that category will be moved to '💬 All' category." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "注意：刪除分類後，該分類中的所有提示詞將移至「💬 全部」。"
+          }
+        }
+      }
+    },
+    "Objects" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "物品"
+          }
+        }
+      }
+    },
+    "Open ${prompt}" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟 ${prompt}"
+          }
+        }
+      }
+    },
+    "Open Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟提示詞"
+          }
+        }
+      }
+    },
+    "Opens a prompt in AI Prompts." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 AI 提示詞中開啟提示詞。"
+          }
+        }
+      }
+    },
+    "Orange" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "橘色"
+          }
+        }
+      }
+    },
+    "Others" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "其他"
+          }
+        }
+      }
+    },
+    "Pay Once, Keep Forever" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "買斷一次，永久使用"
+          }
+        }
+      }
+    },
+    "Picks a random prompt for inspiration and copies it to the clipboard." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隨機挑選一個提示詞帶來靈感，並拷貝到剪貼簿。"
+          }
+        }
+      }
+    },
+    "Pink" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粉紅色"
+          }
+        }
+      }
+    },
+    "Please describe your issue below" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請在下方描述你遇到的問題"
+          }
+        }
+      }
+    },
+    "Preview" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預覽"
+          }
+        }
+      }
+    },
+    "Privacy Policy" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隱私權政策"
+          }
+        }
+      }
+    },
+    "Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞"
+          }
+        }
+      }
+    },
+    "Prompt Creation" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建立提示詞"
+          }
+        }
+      }
+    },
+    "Prompt Details" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞詳細資訊"
+          }
+        }
+      }
+    },
+    "Prompt Engineering" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞工程"
+          }
+        }
+      }
+    },
+    "Prompt Engineering Best Practices" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞工程最佳實踐"
+          }
+        }
+      }
+    },
+    "Prompt Improvement Suggestions" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞改善建議"
+          }
+        }
+      }
+    },
+    "Prompt Text" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞內容"
+          }
+        }
+      }
+    },
+    "Prompt asks for a process but does not specify steps." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞要求一個流程，但沒有說明步驟。"
+          }
+        }
+      }
+    },
+    "Prompt contains repeated sentences or phrases." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞包含重複的句子或片語。"
+          }
+        }
+      }
+    },
+    "Prompt contains several filler words (e.g., 'just', 'basically')." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞包含多個贅字（例如「just」、「basically」）。"
+          }
+        }
+      }
+    },
+    "Prompt contains several leading or biased phrases." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞包含多個帶有引導或偏見的用語。"
+          }
+        }
+      }
+    },
+    "Prompt contains several vague words (e.g., 'things', 'something')." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞包含多個模糊字詞（例如「things」、「something」）。"
+          }
+        }
+      }
+    },
+    "Prompt is very long. Consider shortening if possible." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞很長，可以的話請考慮精簡。"
+          }
+        }
+      }
+    },
+    "Prompt is very short and may be too generic." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞很短，可能太過籠統。"
+          }
+        }
+      }
+    },
+    "Prompt is very short and may not be a clear instruction or question." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞很短，可能不是明確的指令或問題。"
+          }
+        }
+      }
+    },
+    "Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞"
+          }
+        }
+      }
+    },
+    "Prompts (%lld)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞（%lld）"
+          }
+        }
+      }
+    },
+    "Prompts and vibe prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞與 Vibe 提示詞"
+          }
+        }
+      }
+    },
+    "Prompts you favorite will appear here" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入最愛的提示詞會顯示在這裡"
+          }
+        }
+      }
+    },
+    "Purple" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紫色"
+          }
+        }
+      }
+    },
+    "Quick Launch" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快速開啟"
+          }
+        }
+      }
+    },
+    "Quick launch to %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快速開啟 %@"
+          }
+        }
+      }
+    },
+    "Random Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隨機提示詞"
+          }
+        }
+      }
+    },
+    "Rate Us" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "為我們評分"
+          }
+        }
+      }
+    },
+    "Redundancy" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重複性"
+          }
+        }
+      }
+    },
+    "Remove filler words for clarity." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除贅字，讓內容更清楚。"
+          }
+        }
+      }
+    },
+    "Remove repeated instructions to keep your prompt focused." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除重複的指示，讓提示詞更聚焦。"
+          }
+        }
+      }
+    },
+    "Remove unnecessary words for clarity." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除不必要的字詞，讓內容更清楚。"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重設"
+          }
+        }
+      }
+    },
+    "Restore Purchases" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "恢復購買"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜尋"
+          }
+        }
+      }
+    },
+    "Search Everything" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜尋全部"
+          }
+        }
+      }
+    },
+    "Search prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜尋提示詞"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        }
+      }
+    },
+    "Share App" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享 App"
+          }
+        }
+      }
+    },
+    "Show Context Engineering Tips" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示情境工程小技巧"
+          }
+        }
+      }
+    },
+    "Smileys" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表情"
+          }
+        }
+      }
+    },
+    "Sort" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排序"
+          }
+        }
+      }
+    },
+    "Sort & Filter" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排序與篩選"
+          }
+        }
+      }
+    },
+    "Sort By" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排序方式"
+          }
+        }
+      }
+    },
+    "Specificity" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "具體性"
+          }
+        }
+      }
+    },
+    "Stepwise Instructions" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分步指示"
+          }
+        }
+      }
+    },
+    "Structure" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結構"
+          }
+        }
+      }
+    },
+    "Support New Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持新提示詞"
+          }
+        }
+      }
+    },
+    "Support for future updates" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持未來更新"
+          }
+        }
+      }
+    },
+    "Tap to see what's new" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點一下查看新內容"
+          }
+        }
+      }
+    },
+    "Tech Stack" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "技術棧"
+          }
+        }
+      }
+    },
+    "Tech Stack (comma-separated, optional)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "技術棧（以逗號分隔，選填）"
+          }
+        }
+      }
+    },
+    "Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小技巧：用 {{雙大括號}} 包住文字（例如 {{topic}}），即可建立填空變數。"
+          }
+        }
+      }
+    },
+    "Title" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "標題"
+          }
+        }
+      }
+    },
+    "Try to be a bit more specific about what you want." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "試著更具體地說明你想要什麼。"
+          }
+        }
+      }
+    },
+    "Unfavorite" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移除最愛"
+          }
+        }
+      }
+    },
+    "Upgrade to Premium" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "升級至進階版"
+          }
+        }
+      }
+    },
+    "Use every prompt without interruptions." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用所有提示詞，不受打擾。"
+          }
+        }
+      }
+    },
+    "Use neutral language to avoid biasing the AI's response." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用中立的語言，避免影響 AI 的回答。"
+          }
+        }
+      }
+    },
+    "Vibe Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibe 提示詞"
+          }
+        }
+      }
+    },
+    "Vibe Prompts (%lld)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibe 提示詞（%lld）"
+          }
+        }
+      }
+    },
+    "Vibe prompts you favorite will appear here" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入最愛的 Vibe 提示詞會顯示在這裡"
+          }
+        }
+      }
+    },
+    "Vibrate" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "震動"
+          }
+        }
+      }
+    },
+    "Welcome, Premium user!" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "歡迎，進階版使用者！"
+          }
+        }
+      }
+    },
+    "Writing effective prompts is key to getting the best results from AI models. Here are some best practices, along with the rules our app uses to analyze your prompts:" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撰寫有效的提示詞，是從 AI 模型取得最佳結果的關鍵。以下是一些最佳實踐，以及本 App 分析提示詞時使用的規則："
+          }
+        }
+      }
+    },
+    "You are now Premium user!" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你已成為進階版使用者！"
+          }
+        }
+      }
+    },
+    "You have no favorite prompts yet. Try all prompts instead?" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你還沒有最愛的提示詞，要改從所有提示詞中挑選嗎？"
+          }
+        }
+      }
+    },
+    "You're All Set!" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一切就緒！"
+          }
+        }
+      }
+    },
+    "Your Name" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的名字"
+          }
+        }
+      }
+    },
+    "Your purchase funds the new prompts we keep adding to the library." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的購買將支持我們持續為資料庫加入新的提示詞。"
+          }
+        }
+      }
+    },
+    "v%@  Check for Updates" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@  檢查更新"
+          }
+        }
+      }
+    },
+    "“%@” is copied and ready to paste." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」已拷貝，可以直接貼上。"
+          }
+        }
+      }
+    },
+    "• %@: %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• %1$@：%2$@"
+          }
+        }
+      }
+    },
+    "• Add detail: Clarify who, what, how, when, and where if needed." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 補充細節：必要時說明誰、什麼、如何、何時、何地。"
+          }
+        }
+      }
+    },
+    "• Add only what the model demonstrably lacks." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 只補充模型確實缺少的資訊。"
+          }
+        }
+      }
+    },
+    "• Be clear and specific about the app or use case." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 清楚具體地描述 App 或使用情境。"
+          }
+        }
+      }
+    },
+    "• Be clear and specific about the task." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 清楚具體地描述任務。"
+          }
+        }
+      }
+    },
+    "• Be specific: Avoid vague words like 'things' or 'stuff'." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 具體明確：避免使用「東西」、「那些」等模糊字詞。"
+          }
+        }
+      }
+    },
+    "• Break complex tasks into steps." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 將複雜任務拆成步驟。"
+          }
+        }
+      }
+    },
+    "• Checks for missing details in long prompts." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 檢查長提示詞是否缺少細節。"
+          }
+        }
+      }
+    },
+    "• Detects repeated or redundant sentences." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 偵測重複或多餘的句子。"
+          }
+        }
+      }
+    },
+    "• Encourages clear instructions or questions, especially for short prompts." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 鼓勵使用明確的指令或問題，尤其是短提示詞。"
+          }
+        }
+      }
+    },
+    "• Flags vague or generic wording." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 標示模糊或籠統的用詞。"
+          }
+        }
+      }
+    },
+    "• Include only necessary information." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 只包含必要的資訊。"
+          }
+        }
+      }
+    },
+    "• Keep it concise: Remove filler and redundant information." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 保持簡潔：刪除贅字與多餘資訊。"
+          }
+        }
+      }
+    },
+    "• Looks for examples in long prompts." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 檢查長提示詞是否包含範例。"
+          }
+        }
+      }
+    },
+    "• Make your prompt a clear instruction or question." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 讓提示詞成為明確的指令或問題。"
+          }
+        }
+      }
+    },
+    "• Provide examples: Add sample outputs or clarifications." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 提供範例：加入範例輸出或補充說明。"
+          }
+        }
+      }
+    },
+    "• Prune irrelevant or redundant information." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 刪除無關或重複的資訊。"
+          }
+        }
+      }
+    },
+    "• Recommends breaking down complex tasks into steps." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 建議將複雜任務拆成步驟。"
+          }
+        }
+      }
+    },
+    "• Specify output: Indicate the desired format (e.g., JSON, list)." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 指定輸出：說明想要的格式（例如 JSON、清單）。"
+          }
+        }
+      }
+    },
+    "• Start with the fundamental context needed for the task." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 從任務所需的基本情境開始。"
+          }
+        }
+      }
+    },
+    "• State your audience: Mention if the response should be for beginners, experts, etc." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 說明目標讀者：註明回答是給初學者、專家或其他對象。"
+          }
+        }
+      }
+    },
+    "• Suggests adding structure for lengthy instructions." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 建議為冗長的指示加入結構。"
+          }
+        }
+      }
+    },
+    "• Suggests specifying output format and audience." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 建議指定輸出格式與目標讀者。"
+          }
+        }
+      }
+    },
+    "• Use neutral language: Avoid leading or biased phrases." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 使用中立語言：避免引導性或帶有偏見的用語。"
+          }
+        }
+      }
+    },
+    "• Use structure (lists, JSON, etc.) for clarity." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 使用結構（清單、JSON 等）讓內容更清楚。"
+          }
+        }
+      }
+    },
+    "• Use structure: Break complex tasks into steps or lists." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 使用結構：將複雜任務拆成步驟或清單。"
+          }
+        }
+      }
+    },
+    "• Warns if prompts are too long or contain filler words." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• 提示詞過長或含有贅字時發出提醒。"
+          }
+        }
+      }
+    },
+    "✍️ Writing" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✍️ 寫作"
+          }
+        }
+      }
+    },
+    "✨ Enter New Category" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✨ 輸入新分類"
+          }
+        }
+      }
+    },
+    "✨ General" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✨ 一般"
+          }
+        }
+      }
+    },
+    "✨ Thanks for unlocking the full experience." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✨ 感謝你解鎖完整體驗。"
+          }
+        }
+      }
+    },
+    "🎉 Fun" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎉 娛樂"
+          }
+        }
+      }
+    },
+    "💬 All" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💬 全部"
+          }
+        }
+      }
+    },
+    "💼 Productivity" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "💼 生產力"
+          }
+        }
+      }
+    },
+    "📚 Learning" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📚 學習"
+          }
+        }
+      }
+    },
+    "🗣️ Conversation" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🗣️ 對話"
+          }
+        }
+      }
+    },
+    "🤖 AI & Tech" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🤖 AI 與科技"
+          }
+        }
+      }
+    },
+    "🧠 Creativity" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠 創意"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

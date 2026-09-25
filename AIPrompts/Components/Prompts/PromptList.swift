@@ -17,6 +17,7 @@ class PromptListModel {
 
     enum FilterOption: String, CaseIterable, Identifiable {
         case all = "All"
+        case new = "New"
         case forDevelopers = "For Developers"
         var id: String { rawValue }
     }
@@ -58,7 +59,12 @@ class PromptListModel {
         }
         
         // Filter
-        if filterOption == .forDevelopers {
+        switch filterOption {
+        case .all:
+            break
+        case .new:
+            prompts = prompts.filter(\.isNew)
+        case .forDevelopers:
             prompts = prompts.filter { $0.forDevs }
         }
         // Search
@@ -89,6 +95,21 @@ class PromptListModel {
         }
     }
     
+    var newPromptsCount: Int {
+        prompts.filter(\.isNew).count
+    }
+
+    var showsNewPromptsBanner: Bool {
+        newPromptsCount > 0 && filterOption != .new && searchText.isEmpty
+    }
+
+    func onTapNewPromptsBanner() {
+        withAnimation {
+            filterOption = .new
+            $selectedCategory.withLock { $0 = nil }
+        }
+    }
+
     func onTapSelectCategory() {
         route = .selectCategory
     }
@@ -108,6 +129,7 @@ class PromptListModel {
         withErrorReporting {
             var updatedPrompt = prompt
             updatedPrompt.isFavorite.toggle()
+            PromptActions.favoriteToggled(isFavorite: updatedPrompt.isFavorite)
             try database.write { db in
                 try Prompt
                     .update(updatedPrompt)
@@ -162,34 +184,42 @@ struct PromptListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                List(model.filteredPrompts) { prompt in
-                    NavigationLink(
-                        destination: PromptDetailView(
-                            model: PromptDetailModel(prompt: prompt)
-                        )
-                    ) {
-                        PromptRowView(
-                            prompt: prompt,
-                            onFavorite: { model.onFavorite(prompt) }
-                        )
-                        .contextMenu {
-                            Button(action: {
-                                Haptics.shared.vibrateIfEnabled()
-                                model.onEdit(prompt)
-                            }) {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                            Button(action: {
-                                Haptics.shared.vibrateIfEnabled()
-                                model.onFavorite(prompt)
-                            }) {
-                                Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
-                            }
-                            Button(role: .destructive, action: {
-                                Haptics.shared.vibrateIfEnabled()
-                                model.onDeleteRequest(prompt)
-                            }) {
-                                Label("Delete", systemImage: "trash")
+                List {
+                    if model.showsNewPromptsBanner {
+                        NewPromptsBanner(count: model.newPromptsCount) {
+                            model.onTapNewPromptsBanner()
+                        }
+                        .listRowSeparator(.hidden)
+                    }
+                    ForEach(model.filteredPrompts) { prompt in
+                        NavigationLink(
+                            destination: PromptDetailView(
+                                model: PromptDetailModel(prompt: prompt)
+                            )
+                        ) {
+                            PromptRowView(
+                                prompt: prompt,
+                                onFavorite: { model.onFavorite(prompt) }
+                            )
+                            .contextMenu {
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onEdit(prompt)
+                                }) {
+                                    Label("Edit", systemImage: "pencil")
+                                }
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onFavorite(prompt)
+                                }) {
+                                    Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
+                                }
+                                Button(role: .destructive, action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onDeleteRequest(prompt)
+                                }) {
+                                    Label("Delete", systemImage: "trash")
+                                }
                             }
                         }
                     }
@@ -206,14 +236,14 @@ struct PromptListView: View {
                         Section(header: Text("Sort By")) {
                             Picker("Sort", selection: $model.sortOption) {
                                 ForEach(PromptListModel.SortOption.allCases) { option in
-                                    Text(option.rawValue).tag(option)
+                                    Text(LocalizedStringKey(option.rawValue)).tag(option)
                                 }
                             }
                         }
                         Section(header: Text("Filter")) {
                             Picker("Filter", selection: $model.filterOption) {
                                 ForEach(PromptListModel.FilterOption.allCases) { option in
-                                    Text(option.rawValue).tag(option)
+                                    Text(LocalizedStringKey(option.rawValue)).tag(option)
                                 }
                             }
                         }

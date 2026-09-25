@@ -9,6 +9,17 @@ import SharingGRDB
 
 private let logger = Logger(subsystem: "Events", category: "Database")
 
+/// Single database instance shared by the app UI, App Intents and widget snapshot writer.
+enum AppDatabase {
+    static let shared: any DatabaseWriter = {
+        do {
+            return try appDatabase()
+        } catch {
+            fatalError("Failed to open database: \(error)")
+        }
+    }()
+}
+
 func appDatabase() throws -> any DatabaseWriter {
     @Dependency(\.context) var context
 
@@ -90,16 +101,68 @@ func appDatabase() throws -> any DatabaseWriter {
         .execute(db)
     }
     
+    // Migrations must only touch the columns that exist at their point in history, so seed
+    // with explicit columns instead of full model drafts (which gain columns over time).
     migrator.registerMigration("Seed") { db in
-        try db.seed {
-            DataManager.shared.loadPromptsDraft()
-            DataManager.shared.loadVibePromptsDraft()
+        let now = Date()
+        for prompt in DataManager.shared.loadPromptsDraft() {
+            try db.execute(
+                sql: #"INSERT INTO "prompts" ("act", "prompt", "forDevs", "modifiedDate") VALUES (?, ?, ?, ?)"#,
+                arguments: [prompt.act, prompt.prompt, prompt.forDevs, now]
+            )
+        }
+        for vibePrompt in DataManager.shared.loadVibePromptsDraft() {
+            try db.execute(
+                sql: #"INSERT INTO "vibePrompts" ("app", "prompt", "contributor", "techstack", "modifiedDate") VALUES (?, ?, ?, ?, ?)"#,
+                arguments: [vibePrompt.app, vibePrompt.prompt, vibePrompt.contributor, vibePrompt.techstack, now]
+            )
         }
     }
     
     migrator.registerMigration("Seed Prompt Categories") { db in
         try db.seed {
             PromptCategoryStore.seed
+        }
+    }
+
+    migrator.registerMigration("Add content sync") { db in
+        try #sql(
+            """
+            CREATE TABLE "syncedContents" (
+                "key" TEXT PRIMARY KEY NOT NULL,
+                "syncedAt" TEXT NOT NULL DEFAULT ''
+            ) STRICT
+            """
+        )
+        .execute(db)
+        try #sql(
+            """
+            ALTER TABLE "prompts" ADD COLUMN "addedDate" TEXT
+            """
+        )
+        .execute(db)
+        try #sql(
+            """
+            ALTER TABLE "vibePrompts" ADD COLUMN "addedDate" TEXT
+            """
+        )
+        .execute(db)
+
+        // Everything bundled so far was already seeded for every existing install
+        // (the CSVs have not changed since v1.0.0), and anything currently in the
+        // database is known too. Mark all of it as synced so prompts the user
+        // deleted do not come back.
+        var keys = Set<String>()
+        keys.formUnion(DataManager.shared.loadPromptsDraft().map { ContentKey.prompt($0.act) })
+        keys.formUnion(DataManager.shared.loadVibePromptsDraft().map { ContentKey.vibePrompt($0.app) })
+        keys.formUnion(try String.fetchAll(db, sql: #"SELECT "act" FROM "prompts""#).map(ContentKey.prompt))
+        keys.formUnion(try String.fetchAll(db, sql: #"SELECT "app" FROM "vibePrompts""#).map(ContentKey.vibePrompt))
+        let now = Date()
+        for key in keys {
+            try db.execute(
+                sql: #"INSERT OR IGNORE INTO "syncedContents" ("key", "syncedAt") VALUES (?, ?)"#,
+                arguments: [key, now]
+            )
         }
     }
 

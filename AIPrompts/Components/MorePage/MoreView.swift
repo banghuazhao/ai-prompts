@@ -151,12 +151,12 @@ struct MoreView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 .sheet(isPresented: $model.showEmojiPicker) {
-                    EmojiPickerView(selectedEmoji: $model.userAvatar, title: String(localized: "Choose your avatar"))
+                    EmojiPickerView(selectedEmoji: Binding(model.$userAvatar), title: String(localized: "Choose your avatar"))
                         .presentationDetents([.medium])
                         .presentationDragIndicator(.visible)
                 }
                 VStack(alignment: .leading, spacing: 4) {
-                    TextField("Your Name", text: $model.userName)
+                    TextField("Your Name", text: Binding(model.$userName))
                         .font(AppFont.headline)
                         .fontWeight(.bold)
                         .padding(AppSpacing.small)

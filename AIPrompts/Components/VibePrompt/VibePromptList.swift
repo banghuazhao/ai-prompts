@@ -111,6 +111,7 @@ class VibePromptListModel {
         withErrorReporting {
             var updatedPrompt = prompt
             updatedPrompt.isFavorite.toggle()
+            PromptActions.favoriteToggled(isFavorite: updatedPrompt.isFavorite)
             try database.write { db in
                 try VibePrompt
                     .update(updatedPrompt)
@@ -231,7 +232,7 @@ struct VibePromptListView: View {
                         Menu {
                             Picker("Sort", selection: $model.sortOption) {
                                 ForEach(VibePromptListModel.SortOption.allCases) { option in
-                                    Text(option.rawValue).tag(option)
+                                    Text(LocalizedStringKey(option.rawValue)).tag(option)
                                 }
                             }
                         } label: {

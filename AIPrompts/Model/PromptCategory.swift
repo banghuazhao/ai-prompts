@@ -14,3 +14,10 @@ struct PromptCategory: Identifiable {
 }
 
 extension PromptCategory.Draft: Identifiable {}
+
+extension PromptCategory {
+    /// Default categories are translated; user-created ones are shown as typed.
+    var displayTitle: String {
+        Bundle.main.localizedString(forKey: title, value: title, table: nil)
+    }
+}

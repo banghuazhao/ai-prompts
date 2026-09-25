@@ -117,7 +117,7 @@ struct CategoryFormView: View {
                                 model.onSelect(category)
                             } label: {
                                 HStack {
-                                    Text(category.title)
+                                    Text(category.displayTitle)
                                     Spacer()
                                     if category.id == model.selectedCategory {
                                         Image(systemName: "checkmark")

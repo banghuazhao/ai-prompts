@@ -133,7 +133,7 @@ struct LLMQuickLaunchButton: View {
     var body: some View {
         if #available(iOS 26.0, *) {
             Button(action: {
-                UIApplication.shared.open(url)
+                PromptActions.open(url)
             }) {
                 labelContent
                     .font(AppFont.headline)
@@ -146,7 +146,7 @@ struct LLMQuickLaunchButton: View {
             .accessibilityLabel("Quick launch to \(label)")
         } else {
             Button(action: {
-                UIApplication.shared.open(url)
+                PromptActions.open(url)
             }) {
                 labelContent
             }

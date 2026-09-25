@@ -99,7 +99,7 @@ struct PromptFormView: View {
                             } label: {
                                 HStack {
                                     if let selectedCategory = model.allCategories.first(where: { $0.id == model.prompt.categoryID }) {
-                                        Text(selectedCategory.title)
+                                        Text(selectedCategory.displayTitle)
                                     } else {
                                         Text("💬 All")
                                     }

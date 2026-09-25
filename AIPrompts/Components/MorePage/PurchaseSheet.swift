@@ -78,23 +78,33 @@ struct PurchaseSheet: View {
                     .frame(width: 90, height: 90)
                     
                     // Title & description
-                    Text("Enjoy an ad-free experience with Premium!")
+                    Text("Go Premium")
                         .font(.title2)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
+                    Text("Use every prompt without interruptions.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
                         .padding(.bottom, 12)
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack(alignment: .top) {
-                            Text("• ").font(.title3).fontWeight(.semibold)
-                            Text("No Ads: ")
-                                .fontWeight(.semibold) + Text("Say goodbye to ads and hello to smoother event tracking.")
-                        }
-                        //HStack(alignment: .top) {
-                        //    Text("• ").font(.title3).fontWeight(.bold)
-                        //    Text("Unlimited Habits: ")
-                        //        .fontWeight(.semibold) + Text("Create and track as many healthy habits as you want—no limits.")
-                        //}
+                    VStack(alignment: .leading, spacing: 14) {
+                        PremiumBenefitRow(
+                            icon: "nosign",
+                            title: "No Ads",
+                            detail: "No banners and no full-screen ads when you come back to the app."
+                        )
+                        PremiumBenefitRow(
+                            icon: "sparkles",
+                            title: "Support New Prompts",
+                            detail: "Your purchase funds the new prompts we keep adding to the library."
+                        )
+                        PremiumBenefitRow(
+                            icon: "infinity",
+                            title: "Pay Once, Keep Forever",
+                            detail: "A one-time purchase. No subscription."
+                        )
                     }
                     .font(.body)
                     .padding(.horizontal)
@@ -360,5 +370,27 @@ private struct ContinueButtonStyle: ViewModifier {
         } else {
             content
         }
+    }
+}
+
+private struct PremiumBenefitRow: View {
+    let icon: String
+    let title: LocalizedStringKey
+    let detail: LocalizedStringKey
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundStyle(.orange)
+                .frame(width: 28)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .fontWeight(.semibold)
+                Text(detail)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

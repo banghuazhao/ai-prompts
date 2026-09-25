@@ -36,7 +36,7 @@ class PromptDetailModel {
     }
 
     func onCopy() {
-        UIPasteboard.general.string = prompt.prompt
+        PromptActions.copy(prompt.prompt)
         copiedToClipboard = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.copiedToClipboard = false
@@ -51,6 +51,7 @@ class PromptDetailModel {
                 try Prompt.update(updatedPrompt).execute(db)
             }
             prompt = updatedPrompt
+            PromptActions.favoriteToggled(isFavorite: updatedPrompt.isFavorite)
         }
     }
 
@@ -195,6 +196,7 @@ struct PromptDetailView: View {
                 ShareLink(item: "\(model.prompt.act)\n\n\(model.prompt.prompt)") {
                     Image(systemName: "square.and.arrow.up")
                 }
+                .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {

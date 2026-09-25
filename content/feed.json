@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "prompts": [
+    {
+      "title": "Meeting Notes to Action Items",
+      "prompt": "I want you to act as an executive assistant. I will paste raw meeting notes. Turn them into: 1) a three-sentence summary, 2) a list of decisions made, 3) a table of action items with owner, task and due date, and 4) open questions. Keep the tone ${Tone: concise and professional}. Here are the notes: {{meeting notes}}",
+      "forDevs": false,
+      "category": "💼 Productivity",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "title": "Explain Like I'm New to It",
+      "prompt": "Explain {{topic}} to me as if I am ${Audience: a curious beginner}. Start with a one-sentence definition, then use a simple analogy, then walk through how it works step by step. End with three common misconceptions and a short quiz of three questions so I can check my understanding.",
+      "forDevs": false,
+      "category": "📚 Learning",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "title": "Cold Email That Gets Replies",
+      "prompt": "Write a cold email to {{recipient role}} at {{company}}. I am offering {{what you offer}}. Keep it under 120 words, open with a specific observation about their company, state one clear benefit, and end with a low-friction question instead of a meeting request. Give me three subject line options.",
+      "forDevs": false,
+      "category": "✍️ Writing",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "title": "Senior Code Review",
+      "prompt": "I want you to act as a senior {{language}} engineer doing a code review. Review the code I paste for correctness bugs first, then security issues, then readability. For each finding give the line, why it matters, and a concrete fix. Do not comment on formatting a linter would catch. Code: {{code}}",
+      "forDevs": true,
+      "category": "🤖 AI & Tech",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "title": "Agent Task Brief",
+      "prompt": "Write a task brief for an AI coding agent. Goal: {{goal}}. Include: context the agent needs about the codebase, explicit acceptance criteria, files or areas it must not touch, how to verify the change (commands to run), and when it should stop and ask for help. Format it as Markdown with short sections.",
+      "forDevs": true,
+      "category": "🤖 AI & Tech",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "title": "Image Prompt Designer",
+      "prompt": "I want you to act as a prompt designer for AI image generators. Turn my idea into three detailed image prompts, each with subject, setting, composition, lighting, color palette, lens or art style, and mood. Vary the style between the three. My idea: {{image idea}}",
+      "forDevs": false,
+      "category": "🧠 Creativity",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "title": "Weekly Plan Coach",
+      "prompt": "Act as a productivity coach. My goals for this week are: {{goals}}. My fixed commitments are: {{commitments}}. Build a realistic day-by-day plan with focus blocks, buffer time and one rest block per day. Flag anything that will not fit and suggest what to drop or delegate.",
+      "forDevs": false,
+      "category": "💼 Productivity",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "title": "Language Conversation Partner",
+      "prompt": "Be my conversation partner to practice ${Language: Spanish} at a ${Level: beginner} level. Talk about {{topic}}. Keep each reply to two or three sentences, ask me a question every time, and after each of my messages add a short 'Corrections' section that fixes my mistakes and explains them in English.",
+      "forDevs": false,
+      "category": "🗣️ Conversation",
+      "addedAt": "2026-09-25"
+    }
+  ],
+  "vibePrompts": [
+    {
+      "app": "Pomodoro Focus Timer",
+      "prompt": "Build a Pomodoro focus timer as a single-page web app. Include configurable work and break lengths, a circular progress ring, a task list where each task tracks completed pomodoros, desktop notifications when a session ends, and a daily stats view. Persist everything in localStorage and support dark mode.",
+      "contributor": "@banghuazhao",
+      "techstack": "HTML,CSS,JavaScript",
+      "addedAt": "2026-09-25"
+    },
+    {
+      "app": "Group Expense Splitter",
+      "prompt": "Create an expense splitter for trips with friends. Users create a group, add members and expenses with who paid and who shared, and the app shows balances and the minimum set of transfers to settle up. Support multiple currencies with manual exchange rates, and make it work offline as a PWA.",
+      "contributor": "@banghuazhao",
+      "techstack": "React,TypeScript,PWA",
+      "addedAt": "2026-09-25"
+    }
+  ]
+}

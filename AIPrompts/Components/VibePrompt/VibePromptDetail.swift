@@ -26,7 +26,7 @@ class VibePromptDetailModel {
     }
 
     func onCopy() {
-        UIPasteboard.general.string = vibePrompt.prompt
+        PromptActions.copy(vibePrompt.prompt)
         copiedToClipboard = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.copiedToClipboard = false
@@ -41,11 +41,12 @@ class VibePromptDetailModel {
                 try VibePrompt.update(updatedPrompt).execute(db)
             }
             vibePrompt = updatedPrompt
+            PromptActions.favoriteToggled(isFavorite: updatedPrompt.isFavorite)
         }
     }
 
     var template: PromptTemplate {
-        PromptTemplate(prompt.prompt)
+        PromptTemplate(vibePrompt.prompt)
     }
 
     func onCustomize() {
@@ -198,6 +199,7 @@ struct VibePromptDetailView: View {
                 ShareLink(item: "\(model.vibePrompt.app)\n\n\(model.vibePrompt.prompt)") {
                     Image(systemName: "square.and.arrow.up")
                 }
+                .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {

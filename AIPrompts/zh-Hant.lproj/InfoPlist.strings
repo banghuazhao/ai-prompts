@@ -1,0 +1,7 @@
+/*
+  InfoPlist.strings
+  AIPrompts
+*/
+
+"CFBundleDisplayName" = "AI提示詞";
+"NSUserTrackingUsageDescription" = "此識別碼將用於向你提供個人化廣告。";

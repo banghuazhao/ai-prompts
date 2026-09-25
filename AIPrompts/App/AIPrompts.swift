@@ -15,8 +15,9 @@ struct AIPrompts: App {
         UITableView.appearance().backgroundColor = .clear
         UITableViewCell.appearance().backgroundColor = .clear
         MobileAds.shared.start(completionHandler: nil)
+        AppUsage.registerLaunch()
         prepareDependencies {
-            $0.defaultDatabase = try! appDatabase()
+            $0.defaultDatabase = AppDatabase.shared
         }
     }
 
@@ -24,6 +25,11 @@ struct AIPrompts: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(darkModeEnabled ? .dark : .light)
+                .task {
+                    await ContentSync.run(database: AppDatabase.shared)
+                    WidgetSnapshotWriter.update(database: AppDatabase.shared)
+                    AIPromptsShortcuts.updateAppShortcutParameters()
+                }
                 .onChange(of: scenePhase) { _, newPhase in
                     print("scenePhase: \(newPhase)")
                     if newPhase == .active {
@@ -33,6 +39,9 @@ struct AIPrompts: App {
                         openAd.appHasEnterBackgroundBefore = false
                     } else if newPhase == .background {
                         openAd.appHasEnterBackgroundBefore = true
+                        AppUsage.noteDidEnterBackground()
+                        // Favorites may have changed while the app was open.
+                        WidgetSnapshotWriter.update(database: AppDatabase.shared)
                     }
                 }
         }

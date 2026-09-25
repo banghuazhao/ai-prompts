@@ -1,0 +1,66 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "A new AI prompt every day. Tap to open it." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每天一個新的 AI 提示詞，點一下即可開啟。"
+          }
+        }
+      }
+    },
+    "Favorite Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最愛的提示詞"
+          }
+        }
+      }
+    },
+    "Prompt of the Day" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每日提示詞"
+          }
+        }
+      }
+    },
+    "Tap ♥ on any prompt to pin it here for one-tap access." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在任何提示詞上點 ♥，就能釘選到這裡，一點即用。"
+          }
+        }
+      }
+    },
+    "Today's Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日提示詞"
+          }
+        }
+      }
+    },
+    "Your favorite prompts, one tap away." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你最愛的提示詞，一點即達。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

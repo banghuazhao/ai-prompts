@@ -47,8 +47,8 @@ enum LLMProvider: String, CaseIterable, Identifiable {
     private var baseURL: String {
         switch self {
         case .chatGPT: "https://chatgpt.com/?prompt="
-        case .grok: "https://grok.x.ai/?q="
-        case .claude: "https://claude.ai/chat?prompt="
+        case .grok: "https://grok.com/?q="
+        case .claude: "https://claude.ai/new?q="
         case .perplexity: "https://www.perplexity.ai/?q="
         case .gemini: "https://gemini.google.com/app?prompt="
         }

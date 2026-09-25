@@ -64,7 +64,7 @@ struct SettingView: View {
         }
     }
 
-    private func settingsSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+    private func settingsSection<Content: View>(title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: AppSpacing.small) {
             Text(title)
                 .appSectionHeader(theme: themeManager.current)
