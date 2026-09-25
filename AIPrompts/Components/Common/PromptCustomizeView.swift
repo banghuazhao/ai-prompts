@@ -59,7 +59,8 @@ struct PromptCustomizeView: View {
                         Label(copied ? "Copied!" : "Copy Prompt", systemImage: copied ? "checkmark" : "doc.on.doc")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .glassButtonStyle(prominent: true)
+                    .controlSize(.large)
                     .tint(copied ? Color.green : Color.accentColor)
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
@@ -140,11 +141,8 @@ struct PromptCustomizeCard: View {
                     .foregroundColor(.secondary)
             }
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color(.systemBackground))
-                    .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
-            )
+            .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .glassCard(interactive: true, fallback: Color(.systemBackground))
         }
         .buttonStyle(.plain)
     }

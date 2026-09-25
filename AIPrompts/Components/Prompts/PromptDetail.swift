@@ -119,9 +119,7 @@ struct PromptDetailView: View {
                                 .foregroundColor(model.prompt.isFavorite ? .red : .gray)
                                 .font(.title2)
                                 .padding(8)
-                                .background(Color(.systemGray6))
-                                .clipShape(Circle())
-                                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+                                .glassCircle(interactive: true, fallback: Color(.systemGray6))
                         }
                     }
                 }
@@ -169,7 +167,7 @@ struct PromptDetailView: View {
                                 }
                             }
                         }
-                        .buttonStyle(.bordered)
+                        .glassButtonStyle()
                         .tint(.blue)
                         .disabled(model.copiedToClipboard)
                     }

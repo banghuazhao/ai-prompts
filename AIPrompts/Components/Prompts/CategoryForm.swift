@@ -160,6 +160,7 @@ struct CategoryFormView: View {
             .navigationTitle("Categories")
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.immediately)
+            .glassSheetBackground()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {

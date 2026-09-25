@@ -167,28 +167,31 @@ struct VibePromptListView: View {
                 List {
                     if !model.selectedTechStacks.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                ForEach(model.selectedTechStacks, id: \.self) { techStack in
-                                    Button(action: {
-                                        Haptics.shared.vibrateIfEnabled()
-                                        model.onDeselectTechStack(techStack)
-                                    }) {
-                                        HStack(spacing: 4) {
-                                            Text(techStack)
-                                                .font(.callout)
-                                                .foregroundColor(.blue)
-                                            Image(systemName: "xmark.circle.fill")
-                                                .foregroundColor(.blue)
+                            GlassGroup(spacing: 8) {
+                                HStack(spacing: 8) {
+                                    ForEach(model.selectedTechStacks, id: \.self) { techStack in
+                                        Button(action: {
+                                            Haptics.shared.vibrateIfEnabled()
+                                            model.onDeselectTechStack(techStack)
+                                        }) {
+                                            HStack(spacing: 4) {
+                                                Text(techStack)
+                                                    .font(.callout)
+                                                    .foregroundColor(.blue)
+                                                Image(systemName: "xmark.circle.fill")
+                                                    .foregroundColor(.blue)
+                                            }
+                                            .padding(.vertical, 6)
+                                            .padding(.horizontal, 10)
+                                            .glassCapsule(tint: Color.blue.opacity(0.15), interactive: true, fallback: Color.blue.opacity(0.15))
                                         }
-                                        .padding(.vertical, 6)
-                                        .padding(.horizontal, 10)
-                                        .background(Color.blue.opacity(0.15))
-                                        .clipShape(Capsule())
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
                                 }
+                                .padding(.vertical, 4)
                             }
                         }
+                        .scrollClipDisabled()
                     }
                     ForEach(model.filteredVibePrompts) { vibePrompt in
                         NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
@@ -285,8 +288,11 @@ struct VibePromptListView: View {
                                     }
                                     .padding(.vertical, 6)
                                     .padding(.horizontal, 10)
-                                    .background(model.selectedTechStacks.contains(techStack) ? Color.blue.opacity(0.15) : Color(.systemGray6))
-                                    .clipShape(Capsule())
+                                    .glassCapsule(
+                                        tint: model.selectedTechStacks.contains(techStack) ? Color.blue.opacity(0.25) : nil,
+                                        interactive: true,
+                                        fallback: model.selectedTechStacks.contains(techStack) ? Color.blue.opacity(0.15) : Color(.systemGray6)
+                                    )
                                 }
                                 .buttonStyle(.plain)
                             }

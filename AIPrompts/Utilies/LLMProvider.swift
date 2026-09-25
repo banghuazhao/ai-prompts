@@ -75,21 +75,25 @@ struct LLMQuickLaunchSection: View {
                 .foregroundColor(.secondary)
                 .padding(.bottom, 2)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppSpacing.small) {
-                    ForEach(LLMProvider.allCases) { provider in
-                        if let url = provider.url(for: prompt) {
-                            LLMQuickLaunchButton(
-                                icon: provider.icon,
-                                label: provider.label,
-                                background: provider.background,
-                                foreground: provider.foreground,
-                                url: url
-                            )
+                GlassGroup(spacing: AppSpacing.small) {
+                    HStack(spacing: AppSpacing.small) {
+                        ForEach(LLMProvider.allCases) { provider in
+                            if let url = provider.url(for: prompt) {
+                                LLMQuickLaunchButton(
+                                    icon: provider.icon,
+                                    label: provider.label,
+                                    background: provider.background,
+                                    foreground: provider.foreground,
+                                    url: url
+                                )
+                            }
                         }
                     }
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 2)
                 }
-                .padding(.vertical, 2)
             }
+            .scrollClipDisabled()
         }
     }
 }
