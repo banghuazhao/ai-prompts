@@ -14,6 +14,7 @@ class PromptDetailModel {
     @CasePathable
     enum Route {
         case editingPrompt
+        case customizing
         case showingDeleteAlert(Prompt)
     }
 
@@ -51,6 +52,14 @@ class PromptDetailModel {
             }
             prompt = updatedPrompt
         }
+    }
+
+    var template: PromptTemplate {
+        PromptTemplate(prompt.prompt)
+    }
+
+    func onCustomize() {
+        route = .customizing
     }
 
     func onEdit() {
@@ -123,53 +132,16 @@ struct PromptDetailView: View {
                         .shadow(color: .black.opacity(0.07), radius: 6, x: 0, y: 2)
                 )
                 
-                // Quick Launch LLMs
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Quick Launch")
-                        .font(AppFont.headline)
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 2)
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: AppSpacing.small) {
-                            LLMQuickLaunchButton(
-                                icon: "message.fill",
-                                label: "ChatGPT",
-                                background: .chatGPT,
-                                foreground: .white,
-                                url: URL(string: "https://chatgpt.com/?prompt=\(model.prompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
-                            )
-                            LLMQuickLaunchButton(
-                                icon: "bolt.fill",
-                                label: "Grok",
-                                background: .grok,
-                                foreground: .white,
-                                url: URL(string: "https://grok.x.ai/?q=\(model.prompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
-                            )
-                            LLMQuickLaunchButton(
-                                icon: "sun.max.fill",
-                                label: "Claude",
-                                background: .claude,
-                                foreground: .black,
-                                url: URL(string: "https://claude.ai/chat?prompt=\(model.prompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
-                            )
-                            LLMQuickLaunchButton(
-                                icon: "questionmark.circle.fill",
-                                label: "Perplexity",
-                                background: .perplexity,
-                                foreground: .white,
-                                url: URL(string: "https://www.perplexity.ai/?q=\(model.prompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
-                            )
-                            LLMQuickLaunchButton(
-                                icon: "sparkles",
-                                label: "Gemini",
-                                background: .gemini,
-                                foreground: .white,
-                                url: URL(string: "https://gemini.google.com/app?prompt=\(model.prompt.prompt.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")!
-                            )
-                        }
-                        .padding(.vertical, 2)
+                // Fill-in-the-blank variables
+                let template = model.template
+                if template.hasVariables {
+                    PromptCustomizeCard(variableCount: template.variables.count) {
+                        model.onCustomize()
                     }
                 }
+
+                // Quick Launch LLMs
+                LLMQuickLaunchSection(prompt: model.prompt.prompt)
 
                 // Prompt Content Card
                 VStack(alignment: .leading, spacing: 12) {
@@ -234,6 +206,9 @@ struct PromptDetailView: View {
                     Image(systemName: "pencil")
                 }
             }
+        }
+        .sheet(isPresented: Binding($model.route.customizing)) {
+            PromptCustomizeView(title: model.prompt.act, prompt: model.prompt.prompt)
         }
         .sheet(isPresented: Binding($model.route.editingPrompt)) {
             PromptFormView(

@@ -63,7 +63,7 @@ class PromptListModel {
         }
         // Search
         if !searchText.isEmpty {
-            prompts = searchPrompts(query: searchText)
+            prompts = searchPrompts(prompts, query: searchText)
         }
         // Sort
         switch sortOption {
@@ -79,7 +79,7 @@ class PromptListModel {
         return prompts
     }
 
-    func searchPrompts(query: String) -> [Prompt] {
+    func searchPrompts(_ prompts: [Prompt], query: String) -> [Prompt] {
         guard !query.isEmpty else { return prompts }
 
         let lowercasedQuery = query.lowercased()
@@ -140,38 +140,19 @@ class PromptListModel {
 
     func loadCorpusIfNeeded() {
         guard !corpusLoaded else { return }
-        if let url = Bundle.main.url(forResource: "prompts", withExtension: "csv"),
-           let content = try? String(contentsOf: url) {
-            let lines = content.components(separatedBy: "\n").dropFirst() // skip header
-            let prompts = lines.compactMap { line -> String? in
-                let parts = line.components(separatedBy: ",")
-                if parts.count > 1 {
-                    return parts[1].trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\"", with: "")
-                }
-                return nil
-            }.filter { !$0.isEmpty }
-            markovGenerator = MarkovTextGenerator(corpus: prompts)
-            corpusLoaded = true
-        }
+        let corpus = DataManager.shared.loadPromptsDraft().map(\.prompt)
+        markovGenerator = MarkovTextGenerator(corpus: corpus)
+        corpusLoaded = true
     }
 
     func generateMarkovPrompt() {
         loadCorpusIfNeeded()
-        if let generator = markovGenerator {
-            if let url = Bundle.main.url(forResource: "prompts", withExtension: "csv"),
-               let content = try? String(contentsOf: url) {
-                let act = "AI Generated Act"
-                let generated = generator.generatePrompt()
-                let draft = Prompt.Draft(act: act, prompt: generated)
-                route = .showingMarkovAddPrompt(draft)
-            } else {
-                let draft = Prompt.Draft(act: "AI Generated Act", prompt: "Failed to load corpus.")
-                route = .showingMarkovAddPrompt(draft)
-            }
-        } else {
-            let draft = Prompt.Draft(act: "AI Generated Act", prompt: "Failed to load corpus.")
-            route = .showingMarkovAddPrompt(draft)
-        }
+        let generated = markovGenerator?.generatePrompt() ?? ""
+        let draft = Prompt.Draft(
+            act: "AI Generated Act",
+            prompt: generated.isEmpty ? "Failed to load corpus." : generated
+        )
+        route = .showingMarkovAddPrompt(draft)
     }
 }
 

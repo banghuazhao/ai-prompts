@@ -85,6 +85,9 @@ struct PromptFormView: View {
                         TextField("Prompt Text", text: $model.prompt.prompt, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                             .lineLimit(5 ... 10)
+                        Text("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         // Category Selection
                         HStack {
                             Text("Category")

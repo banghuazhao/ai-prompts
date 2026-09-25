@@ -37,37 +37,19 @@ class VibePromptListModel {
 
     func loadCorpusIfNeeded() {
         guard !corpusLoaded else { return }
-        if let url = Bundle.main.url(forResource: "vibeprompts", withExtension: "csv"),
-           let content = try? String(contentsOf: url) {
-            let lines = content.components(separatedBy: "\n").dropFirst() // skip header
-            let prompts = lines.compactMap { line -> String? in
-                let parts = line.components(separatedBy: ",")
-                if parts.count > 1 {
-                    return parts[1].trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "\"", with: "")
-                }
-                return nil
-            }.filter { !$0.isEmpty }
-            markovGenerator = MarkovTextGenerator(corpus: prompts)
-            corpusLoaded = true
-        }
+        let corpus = DataManager.shared.loadVibePromptsDraft().map(\.prompt)
+        markovGenerator = MarkovTextGenerator(corpus: corpus)
+        corpusLoaded = true
     }
 
     func generateMarkovPrompt() {
         loadCorpusIfNeeded()
-        if let generator = markovGenerator {
-            if let url = Bundle.main.url(forResource: "vibeprompts", withExtension: "csv"),
-               let content = try? String(contentsOf: url) {
-                let generated = generator.generatePrompt()
-                let draft = VibePrompt.Draft(app: "AI Generated App", prompt: generated)
-                route = .showingAddMarkovPrompt(draft)
-            } else {
-                let draft = VibePrompt.Draft(app: "AI Generated App", prompt: "Failed to load corpus.")
-                route = .showingAddMarkovPrompt(draft)
-            }
-        } else {
-            let draft = VibePrompt.Draft(app: "AI Generated App", prompt: "Failed to load corpus.")
-            route = .showingAddMarkovPrompt(draft)
-        }
+        let generated = markovGenerator?.generatePrompt() ?? ""
+        let draft = VibePrompt.Draft(
+            app: "AI Generated App",
+            prompt: generated.isEmpty ? "Failed to load corpus." : generated
+        )
+        route = .showingAddMarkovPrompt(draft)
     }
 
     @CasePathable

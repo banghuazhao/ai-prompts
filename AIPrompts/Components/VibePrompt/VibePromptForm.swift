@@ -96,6 +96,9 @@ struct VibePromptFormView: View {
                                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                                     .fill(Color(.systemGray6))
                             )
+                        Text("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         // --- Analyzer Button ---
                         if !model.prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                             Button(action: {
