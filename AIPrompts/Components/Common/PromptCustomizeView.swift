@@ -13,7 +13,7 @@ struct PromptCustomizeView: View {
         self.title = title
         let template = PromptTemplate(prompt)
         self.template = template
-        _values = State(initialValue: template.defaultValues)
+        _values = State(initialValue: PromptVariableMemory.initialValues(for: template))
     }
 
     private var renderedPrompt: String {
@@ -72,6 +72,9 @@ struct PromptCustomizeView: View {
             }
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
+            .onDisappear {
+                PromptVariableMemory.save(values, for: template)
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Reset") {
@@ -99,7 +102,7 @@ struct PromptCustomizeView: View {
     }
 
     private func onCopy() {
-        UIPasteboard.general.string = renderedPrompt
+        PromptActions.copy(renderedPrompt)
         withAnimation {
             copied = true
         }

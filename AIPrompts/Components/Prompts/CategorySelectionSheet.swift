@@ -41,7 +41,7 @@ struct CategorySelectionSheet: View {
                     onSelect(category)
                 } label: {
                     HStack {
-                        Text(category.title)
+                        Text(category.displayTitle)
                         Spacer()
                         if category.id == selectedCategory {
                             Image(systemName: "checkmark")

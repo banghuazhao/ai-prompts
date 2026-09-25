@@ -26,6 +26,10 @@ struct PromptRowView: View {
                     .fontWeight(.semibold)
                     .lineLimit(2)
 
+                if prompt.isNew {
+                    NewBadge()
+                }
+
                 Spacer()
 
                 GlassGroup {
@@ -42,7 +46,7 @@ struct PromptRowView: View {
 
                         Button(action: {
                             Haptics.shared.vibrateIfEnabled()
-                            UIPasteboard.general.string = prompt.prompt
+                            PromptActions.copy(prompt.prompt)
                             copied = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 copied = false

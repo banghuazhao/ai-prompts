@@ -81,6 +81,7 @@ struct SearchView: View {
         withErrorReporting {
             var updated = prompt
             updated.isFavorite.toggle()
+            PromptActions.favoriteToggled(isFavorite: updated.isFavorite)
             try database.write { db in
                 try Prompt.update(updated).execute(db)
             }
@@ -91,6 +92,7 @@ struct SearchView: View {
         withErrorReporting {
             var updated = vibePrompt
             updated.isFavorite.toggle()
+            PromptActions.favoriteToggled(isFavorite: updated.isFavorite)
             try database.write { db in
                 try VibePrompt.update(updated).execute(db)
             }

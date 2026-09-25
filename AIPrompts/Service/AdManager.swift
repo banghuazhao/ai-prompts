@@ -52,7 +52,6 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
     var appOpenAd: AppOpenAd?
     var loadTime = Date()
     var appHasEnterBackgroundBefore = false
-    var bypassAdThisTime = false
 
     func requestAppOpenAd() {
         print("[DEBUG] requestAppOpenAd called")
@@ -76,23 +75,34 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
 
     func tryToPresentAd() {
         print("[DEBUG] tryToPresentAd called")
-        if let gOpenAd = appOpenAd, wasLoadTimeLessThanNHoursAgo(thresholdN: 4) {
-            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-            let window = windowScene?.windows.first
-            if bypassAdThisTime {
-                bypassAdThisTime = false
-                return
-            }
-            if appHasEnterBackgroundBefore {
-                print("[DEBUG] Presenting App Open Ad")
-                gOpenAd.present(from: (window?.rootViewController)!)
-            } else {
-                print("[DEBUG] appHasEnterBackgroundBefore is false, not presenting ad")
-            }
-        } else {
+        guard let gOpenAd = appOpenAd, wasLoadTimeLessThanNHoursAgo(thresholdN: 4) else {
             print("[DEBUG] No ad loaded or ad expired, requesting new ad")
             requestAppOpenAd()
+            return
         }
+        guard appHasEnterBackgroundBefore else {
+            print("[DEBUG] appHasEnterBackgroundBefore is false, not presenting ad")
+            return
+        }
+        // Give a widget / Shortcut deep link a moment to register before deciding.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.presentIfAllowed(gOpenAd)
+        }
+    }
+
+    private func presentIfAllowed(_ gOpenAd: AppOpenAd) {
+        guard AppUsage.shouldShowAppOpenAd else {
+            print("[DEBUG] App open ad skipped by ad policy")
+            return
+        }
+        guard var presenter = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
+            .windows.first?.rootViewController else { return }
+        while let presented = presenter.presentedViewController {
+            presenter = presented
+        }
+        print("[DEBUG] Presenting App Open Ad")
+        gOpenAd.present(from: presenter)
+        AppUsage.noteAppOpenAdPresented()
     }
 
     func wasLoadTimeLessThanNHoursAgo(thresholdN: Int) -> Bool {

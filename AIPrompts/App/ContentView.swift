@@ -2,12 +2,42 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = 0
+    @State private var router = DeepLinkRouter.shared
 
     var body: some View {
-        if #available(iOS 26.0, *) {
-            glassTabView
-        } else {
-            legacyTabView
+        Group {
+            if #available(iOS 26.0, *) {
+                glassTabView
+            } else {
+                legacyTabView
+            }
+        }
+        .onOpenURL { url in
+            router.handle(url)
+        }
+        .onChange(of: router.requestedTab) { _, tab in
+            guard let tab else { return }
+            selectedTab = tab
+            router.requestedTab = nil
+        }
+        .sheet(item: $router.destination) { destination in
+            NavigationStack {
+                Group {
+                    switch destination {
+                    case let .prompt(prompt):
+                        PromptDetailView(model: PromptDetailModel(prompt: prompt))
+                    case let .vibePrompt(vibePrompt):
+                        VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))
+                    }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Done") {
+                            router.destination = nil
+                        }
+                    }
+                }
+            }
         }
     }
 

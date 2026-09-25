@@ -14,6 +14,10 @@ struct VibePromptRowView: View {
                     .fontWeight(.semibold)
                     .lineLimit(2)
 
+                if vibePrompt.isNew {
+                    NewBadge()
+                }
+
                 Spacer()
 
                 GlassGroup {
@@ -30,7 +34,7 @@ struct VibePromptRowView: View {
 
                         Button(action: {
                             Haptics.shared.vibrateIfEnabled()
-                            UIPasteboard.general.string = vibePrompt.prompt
+                            PromptActions.copy(vibePrompt.prompt)
                             copied = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 copied = false

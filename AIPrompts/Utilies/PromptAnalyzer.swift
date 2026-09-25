@@ -24,26 +24,26 @@ class PromptAnalyzer {
         let vagueCount = vagueWords.filter { lower.contains($0) }.count
         if vagueCount >= 2 {
             issues.append(PromptIssue(
-                type: "Clarity",
-                description: "Prompt contains several vague words (e.g., 'things', 'something').",
-                suggestion: "Try to be a bit more specific about what you want."
+                type: String(localized: "Clarity"),
+                description: String(localized: "Prompt contains several vague words (e.g., 'things', 'something')."),
+                suggestion: String(localized: "Try to be a bit more specific about what you want.")
             ))
         }
         // Only flag generic verbs if prompt is very short and only uses them
         if lower.range(of: #"\b(do|make|fix|get|improve|help)\b"#, options: .regularExpression) != nil && prompt.count < 30 {
             issues.append(PromptIssue(
-                type: "Clarity",
-                description: "Prompt is very short and may be too generic.",
-                suggestion: "Add a bit more detail to clarify your request."
+                type: String(localized: "Clarity"),
+                description: String(localized: "Prompt is very short and may be too generic."),
+                suggestion: String(localized: "Add a bit more detail to clarify your request.")
             ))
         }
 
         // Heuristic for missing details (only for long prompts)
         if (!lower.contains("who") && !lower.contains("what") && !lower.contains("how") && !lower.contains("when") && !lower.contains("where")) && prompt.count > 120 {
             issues.append(PromptIssue(
-                type: "Specificity",
-                description: "For longer prompts, consider adding more details (who, what, how, when, where).",
-                suggestion: "Add a bit more context if needed."
+                type: String(localized: "Specificity"),
+                description: String(localized: "For longer prompts, consider adding more details (who, what, how, when, where)."),
+                suggestion: String(localized: "Add a bit more context if needed.")
             ))
         }
 
@@ -51,9 +51,9 @@ class PromptAnalyzer {
         if !lower.contains("- ") && !lower.contains("1.") && !lower.contains("step") && !lower.contains("list") && !lower.contains("json") {
             if prompt.count > 200 {
                 issues.append(PromptIssue(
-                    type: "Structure",
-                    description: "Long prompt could benefit from more structure (steps, lists, etc.).",
-                    suggestion: "Break your instructions into steps or a list if possible."
+                    type: String(localized: "Structure"),
+                    description: String(localized: "Long prompt could benefit from more structure (steps, lists, etc.)."),
+                    suggestion: String(localized: "Break your instructions into steps or a list if possible.")
                 ))
             }
         }
@@ -65,27 +65,27 @@ class PromptAnalyzer {
         }
         if !hasStep && prompt.count > 200 {
             issues.append(PromptIssue(
-                type: "Stepwise Instructions",
-                description: "Long prompt could be easier to follow if broken into steps.",
-                suggestion: "Consider breaking complex tasks into steps."
+                type: String(localized: "Stepwise Instructions"),
+                description: String(localized: "Long prompt could be easier to follow if broken into steps."),
+                suggestion: String(localized: "Consider breaking complex tasks into steps.")
             ))
         }
 
         // 5. Conciseness (flag only if very long)
         if prompt.split(separator: " ").count > 200 {
             issues.append(PromptIssue(
-                type: "Conciseness",
-                description: "Prompt is very long. Consider shortening if possible.",
-                suggestion: "Remove unnecessary words for clarity."
+                type: String(localized: "Conciseness"),
+                description: String(localized: "Prompt is very long. Consider shortening if possible."),
+                suggestion: String(localized: "Remove unnecessary words for clarity.")
             ))
         }
         // Filler words: only flag if 2+ present
         let fillerCount = fillerWords.filter { lower.contains($0) }.count
         if fillerCount >= 2 {
             issues.append(PromptIssue(
-                type: "Conciseness",
-                description: "Prompt contains several filler words (e.g., 'just', 'basically').",
-                suggestion: "Remove filler words for clarity."
+                type: String(localized: "Conciseness"),
+                description: String(localized: "Prompt contains several filler words (e.g., 'just', 'basically')."),
+                suggestion: String(localized: "Remove filler words for clarity.")
             ))
         }
 
@@ -94,9 +94,9 @@ class PromptAnalyzer {
         let uniqueSentences = Set(sentences.map { $0.trimmingCharacters(in: .whitespaces) })
         if uniqueSentences.count < sentences.count && prompt.count > 120 {
             issues.append(PromptIssue(
-                type: "Redundancy",
-                description: "Prompt contains repeated sentences or phrases.",
-                suggestion: "Remove repeated instructions to keep your prompt focused."
+                type: String(localized: "Redundancy"),
+                description: String(localized: "Prompt contains repeated sentences or phrases."),
+                suggestion: String(localized: "Remove repeated instructions to keep your prompt focused.")
             ))
         }
 
@@ -107,9 +107,9 @@ class PromptAnalyzer {
         }
         if !hasFormat && prompt.count > 120 {
             issues.append(PromptIssue(
-                type: "Format/Output",
-                description: "For longer prompts, consider specifying the desired output format.",
-                suggestion: "E.g., 'Respond in JSON'."
+                type: String(localized: "Format/Output"),
+                description: String(localized: "For longer prompts, consider specifying the desired output format."),
+                suggestion: String(localized: "E.g., 'Respond in JSON'.")
             ))
         }
 
@@ -120,18 +120,18 @@ class PromptAnalyzer {
         }
         if !hasAudience && prompt.count > 120 {
             issues.append(PromptIssue(
-                type: "Audience",
-                description: "For longer prompts, consider specifying the intended audience.",
-                suggestion: "E.g., 'Explain for a beginner'."
+                type: String(localized: "Audience"),
+                description: String(localized: "For longer prompts, consider specifying the intended audience."),
+                suggestion: String(localized: "E.g., 'Explain for a beginner'.")
             ))
         }
 
         // 9. Task Completeness (heuristic, only for long prompts)
         if lower.contains("process") && !lower.contains("step") && prompt.count > 120 {
             issues.append(PromptIssue(
-                type: "Completeness",
-                description: "Prompt asks for a process but does not specify steps.",
-                suggestion: "List the steps or details needed for the process."
+                type: String(localized: "Completeness"),
+                description: String(localized: "Prompt asks for a process but does not specify steps."),
+                suggestion: String(localized: "List the steps or details needed for the process.")
             ))
         }
 
@@ -139,9 +139,9 @@ class PromptAnalyzer {
         let leadingCount = leadingWords.filter { lower.contains($0) }.count
         if leadingCount >= 2 {
             issues.append(PromptIssue(
-                type: "Neutrality",
-                description: "Prompt contains several leading or biased phrases.",
-                suggestion: "Use neutral language to avoid biasing the AI's response."
+                type: String(localized: "Neutrality"),
+                description: String(localized: "Prompt contains several leading or biased phrases."),
+                suggestion: String(localized: "Use neutral language to avoid biasing the AI's response.")
             ))
         }
 
@@ -152,18 +152,18 @@ class PromptAnalyzer {
         }
         if !hasExample && prompt.count > 120 {
             issues.append(PromptIssue(
-                type: "Examples",
-                description: "For longer prompts, consider providing an example.",
-                suggestion: "Add an example to clarify your request."
+                type: String(localized: "Examples"),
+                description: String(localized: "For longer prompts, consider providing an example."),
+                suggestion: String(localized: "Add an example to clarify your request.")
             ))
         }
 
         // 12. Instruction/Question Type (soften: only flag if prompt is not a question or command and is very short)
         if !prompt.hasSuffix("?") && !lower.starts(with: "please ") && !lower.starts(with: "write ") && !lower.starts(with: "generate ") && !lower.starts(with: "create ") && prompt.count < 30 {
             issues.append(PromptIssue(
-                type: "Instruction Type",
-                description: "Prompt is very short and may not be a clear instruction or question.",
-                suggestion: "Make your prompt a clear instruction or question."
+                type: String(localized: "Instruction Type"),
+                description: String(localized: "Prompt is very short and may not be a clear instruction or question."),
+                suggestion: String(localized: "Make your prompt a clear instruction or question.")
             ))
         }
 

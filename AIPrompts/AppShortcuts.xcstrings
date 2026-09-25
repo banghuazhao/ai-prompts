@@ -1,0 +1,74 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Copy a prompt from ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Copy a prompt from ${applicationName}",
+              "Copy ${prompt} from ${applicationName}"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "用${applicationName}拷貝提示詞",
+              "從${applicationName}拷貝提示詞",
+              "用${applicationName}拷貝${prompt}"
+            ]
+          }
+        }
+      }
+    },
+    "Give me a random prompt from ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Give me a random prompt from ${applicationName}",
+              "Inspire me with ${applicationName}"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "從${applicationName}給我一個隨機提示詞",
+              "用${applicationName}給我靈感"
+            ]
+          }
+        }
+      }
+    },
+    "Open a prompt in ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Open a prompt in ${applicationName}",
+              "Open ${prompt} in ${applicationName}"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在${applicationName}中開啟提示詞",
+              "用${applicationName}開啟提示詞",
+              "在${applicationName}中開啟${prompt}"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

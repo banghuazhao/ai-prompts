@@ -14,7 +14,7 @@ struct BadgeView: View {
             if let icon = icon {
                 Image(systemName: icon)
             }
-            Text(text)
+            Text(Bundle.main.localizedString(forKey: text, value: text, table: nil))
                 .font(.caption)
         }
         .padding(.horizontal, 8)

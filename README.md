@@ -15,6 +15,10 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 📚 **Curated Prompts**: Browse a collection of high-quality AI prompts, including a special "Vibe Prompts" section for app-specific or mood-based prompts.
 - ✨ **AI-Powered Prompt Generation (Offline)**: Instantly generate new, unique prompts using an on-device Markov chain model trained on the existing prompt corpus. Works for both Prompts and Vibe Prompts, with no internet required.
 - ❤️ **Favorites**: Mark prompts as favorites for quick access.
+- 🆕 **Fresh Prompts Without an Update**: New prompts published to [`content/feed.json`](content/feed.json) reach every install on next launch, marked **NEW** with a "new prompts added" banner. Deleted prompts never come back.
+- 📱 **Widgets**: *Prompt of the Day* (Home Screen and Lock Screen) and *Favorite Prompts*. Tap to open the prompt.
+- 🗣️ **Siri & Shortcuts**: Copy, open, or get a random prompt with App Shortcuts, Siri, and Spotlight.
+- 🌏 **Traditional Chinese**: Full zh-Hant localization of the app, widgets, and Siri phrases.
 - 🧩 **Fill-in-the-Blank Templates**: Prompts with variables (`{{topic}}`, `${Name: default}`, or a trailing `My first request is "..."`) get a **Customize & Use** sheet. Fill in the blanks, preview the result live, then copy it or launch it straight into ChatGPT, Claude, Gemini, Grok, or Perplexity.
 - 🔍 **Prompt Details**: View detailed information for each prompt, including contributor and tech stack.
 - 🖥️ **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
@@ -54,6 +58,9 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - `AIPrompts/Service/` – Data management, CSV loading, and app services
 - `AIPrompts/Modules/MoreApps/` – Modular feature for app recommendations (with localization)
 - `AIPrompts/Doc/` – CSV files for prompt data
+- `AIPromptsWidgets/` – WidgetKit extension (Prompt of the Day, Favorite Prompts)
+- `Shared/` – Code compiled into both the app and the widget extension
+- `content/feed.json` – Remote prompt feed fetched by the app (see below)
 - `AIPrompts/Assets.xcassets/` – App icons and assets
 
 ## 📝 Data Model Example
@@ -69,6 +76,26 @@ struct VibePrompt: Identifiable, Hashable {
     // ...
 }
 ```
+
+## 🆕 Publishing New Prompts
+
+The app downloads `content/feed.json` from the `main` branch (at most every 6 hours) and inserts any prompt whose title it has not seen before. To ship new prompts, add entries and push:
+
+```json
+{
+  "title": "Weekly Plan Coach",
+  "prompt": "Act as a productivity coach. My goals for this week are: {{goals}}. ...",
+  "forDevs": false,
+  "category": "💼 Productivity",
+  "addedAt": "2026-09-25"
+}
+```
+
+- `title` is the identity: reusing an existing title (bundled or remote) is ignored, so pick a new one.
+- `category` matches a category by name, with or without its emoji.
+- Prompts show as **NEW** for 14 days after `addedAt`.
+- `vibePrompts` entries take `app`, `prompt`, `contributor`, `techstack` and `addedAt`.
+- To try a local copy in a Debug build, serve the folder (`python3 -m http.server 8000` in `content/`) and set the scheme environment variable `CONTENT_FEED_URL=http://localhost:8000/feed.json`.
 
 ## 🤝 Contributing
 
