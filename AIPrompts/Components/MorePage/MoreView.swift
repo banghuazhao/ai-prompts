@@ -115,16 +115,8 @@ struct MoreView: View {
                         } label: {
                             Text("v\(model.appVersion)  Check for Updates")
                                 .font(.footnote)
-                                .fontWeight(.semibold)
                                 .foregroundColor(.gray)
-                            Button {
-                                model.onTapCheckForUpdates(openURL: openURL)
-                            } label: {
-                                Text("v\(model.appVersion)  Check for Updates")
-                                    .font(.footnote)
-                                    .foregroundColor(.gray)
-                                    .underline()
-                            }
+                                .underline()
                         }
                     }
                     .padding(.vertical)
@@ -155,8 +147,7 @@ struct MoreView: View {
                     Text(model.userAvatar)
                         .font(.system(size: 40))
                         .frame(width: 50, height: 50)
-                        .background(model.themeManager.current.card)
-                        .clipShape(Circle())
+                        .glassCircle(interactive: true, fallback: model.themeManager.current.card)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .sheet(isPresented: $model.showEmojiPicker) {
@@ -192,12 +183,25 @@ struct MoreView: View {
             }
 
             if !model.isPremiumUser {
-                Button(action: {
-                    Haptics.shared.vibrateIfEnabled()
-                    model.onTapPurchase()
-                }) {
-                    Text(String(localized: "Upgrade to Premium"))
-                        .appButtonStyle(theme: model.themeManager.current)
+                if #available(iOS 26.0, *) {
+                    Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapPurchase()
+                    }) {
+                        Text(String(localized: "Upgrade to Premium"))
+                            .font(AppFont.headline)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .tint(model.themeManager.current.primaryColor)
+                    .controlSize(.large)
+                } else {
+                    Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapPurchase()
+                    }) {
+                        Text(String(localized: "Upgrade to Premium"))
+                            .appButtonStyle(theme: model.themeManager.current)
+                    }
                 }
             } else {
                 HStack(spacing: 8) {
@@ -227,15 +231,17 @@ struct MoreView: View {
         VStack(alignment: .leading, spacing: AppSpacing.medium) {
             Text(String(localized: "More Features"))
                 .appSectionHeader(theme: model.themeManager.current)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
-                NavigationLink(destination: SettingView()) {
-                    featureItem(icon: "gear", title: String(localized: "Settings"))
-                }
-                NavigationLink(destination: ContextEngineeringInfoView()) {
-                    moreItem(icon: "brain.head.profile", title: String(localized: "Context Engineering"))
-                }
-                NavigationLink(destination: PromptEngineeringBestPracticesView()) {
-                    moreItem(icon: "lightbulb", title: String(localized: "Prompt Engineering"))
+            GlassGroup {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
+                    NavigationLink(destination: SettingView()) {
+                        featureItem(icon: "gear", title: String(localized: "Settings"))
+                    }
+                    NavigationLink(destination: ContextEngineeringInfoView()) {
+                        moreItem(icon: "brain.head.profile", title: String(localized: "Context Engineering"))
+                    }
+                    NavigationLink(destination: PromptEngineeringBestPracticesView()) {
+                        moreItem(icon: "lightbulb", title: String(localized: "Prompt Engineering"))
+                    }
                 }
             }
         }
@@ -248,23 +254,25 @@ struct MoreView: View {
                 .font(.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
-                NavigationLink(destination: MoreAppsView()) {
-                    moreItem(icon: "storefront", title: String(localized: "More Apps"))
-                }
-                Button {
-                    model.onTapRateUs(openURL: openURL)
-                } label: {
-                    moreItem(icon: "star.fill", title: String(localized: "Rate Us"))
-                }
-                Button {
-                    model.onTapFeedback(openURL: openURL)
-                } label: {
-                    moreItem(icon: "envelope.fill", title: String(localized: "Feedback"))
-                }
-                if let appURL = model.onTapShareApp() {
-                    ShareLink(item: appURL) {
-                        moreItem(icon: "square.and.arrow.up", title: String(localized: "Share App"))
+            GlassGroup {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
+                    NavigationLink(destination: MoreAppsView()) {
+                        moreItem(icon: "storefront", title: String(localized: "More Apps"))
+                    }
+                    Button {
+                        model.onTapRateUs(openURL: openURL)
+                    } label: {
+                        moreItem(icon: "star.fill", title: String(localized: "Rate Us"))
+                    }
+                    Button {
+                        model.onTapFeedback(openURL: openURL)
+                    } label: {
+                        moreItem(icon: "envelope.fill", title: String(localized: "Feedback"))
+                    }
+                    if let appURL = model.onTapShareApp() {
+                        ShareLink(item: appURL) {
+                            moreItem(icon: "square.and.arrow.up", title: String(localized: "Share App"))
+                        }
                     }
                 }
             }
@@ -285,9 +293,7 @@ struct MoreView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(AppSpacing.small)
-        .background(model.themeManager.current.card)
-        .cornerRadius(AppCornerRadius.card)
-        .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
+        .glassCard(cornerRadius: AppCornerRadius.card, interactive: true, fallback: model.themeManager.current.card)
     }
 
     private func featureItem(icon: String, title: String) -> some View {
@@ -305,9 +311,7 @@ struct MoreView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(AppSpacing.small)
-        .background(model.themeManager.current.card)
-        .cornerRadius(AppCornerRadius.card)
-        .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
+        .glassCard(cornerRadius: AppCornerRadius.card, interactive: true, fallback: model.themeManager.current.card)
     }
 }
 

@@ -72,9 +72,7 @@ struct SettingView: View {
                 content()
             }
             .padding()
-            .background(themeManager.current.card)
-            .cornerRadius(AppCornerRadius.card)
-            .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
+            .glassCard(cornerRadius: AppCornerRadius.card, fallback: themeManager.current.card)
         }
     }
 }

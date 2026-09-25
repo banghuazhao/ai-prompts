@@ -28,32 +28,38 @@ struct PromptRowView: View {
 
                 Spacer()
 
-                Button(action: {
-                    Haptics.shared.vibrateIfEnabled()
-                    onFavorite()
-                }) {
-                    Image(systemName: prompt.isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(prompt.isFavorite ? .red : .gray)
-                }
-                .buttonStyle(.plain)
+                GlassGroup {
+                    HStack {
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            onFavorite()
+                        }) {
+                            Image(systemName: prompt.isFavorite ? "heart.fill" : "heart")
+                                .foregroundColor(prompt.isFavorite ? .red : .gray)
+                                .glassIcon()
+                        }
+                        .buttonStyle(.plain)
 
-                Button(action: {
-                    Haptics.shared.vibrateIfEnabled()
-                    UIPasteboard.general.string = prompt.prompt
-                    copied = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        copied = false
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            UIPasteboard.general.string = prompt.prompt
+                            copied = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                copied = false
+                            }
+                        }) {
+                            ZStack {
+                                Image(systemName: "doc.on.doc")
+                                    .opacity(copied ? 0 : 1)
+                                Image(systemName: "checkmark")
+                                    .opacity(copied ? 1 : 0)
+                            }
+                            .foregroundColor(copied ? .green : .gray)
+                            .glassIcon()
+                        }
+                        .buttonStyle(.plain)
                     }
-                }) {
-                    ZStack {
-                        Image(systemName: "doc.on.doc")
-                            .opacity(copied ? 0 : 1)
-                        Image(systemName: "checkmark")
-                            .opacity(copied ? 1 : 0)
-                    }
-                    .foregroundColor(copied ? .green : .gray)
                 }
-                .buttonStyle(.plain)
             }
 
             Text(prompt.prompt)
@@ -81,19 +87,7 @@ struct PromptRowView: View {
             }
         }
         .padding()
-        .background(
-            ZStack {
-                Rectangle().fill(.ultraThinMaterial)
-                LinearGradient(
-                    colors: [Color.purple.opacity(0.10), Color.cyan.opacity(0.08), Color.pink.opacity(0.08), Color.white.opacity(0.18)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            }
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: Color.white.opacity(0.07), radius: 3, x: -3, y: -3)
-        .shadow(color: Color.black.opacity(0.10), radius: 3, x: 3, y: 3)
+        .promptRowSurface()
     }
 }
 

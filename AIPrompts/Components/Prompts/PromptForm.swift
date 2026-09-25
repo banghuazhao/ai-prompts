@@ -85,6 +85,9 @@ struct PromptFormView: View {
                         TextField("Prompt Text", text: $model.prompt.prompt, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                             .lineLimit(5 ... 10)
+                        Text("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                         // Category Selection
                         HStack {
                             Text("Category")
@@ -112,10 +115,8 @@ struct PromptFormView: View {
                             }) {
                                 Label("Improve Prompt", systemImage: "wand.and.stars")
                                     .font(.subheadline)
-                                    .padding(8)
-                                    .background(Color.accentColor.opacity(0.1))
-                                    .cornerRadius(8)
                             }
+                            .glassButtonStyle()
                             .padding(.top, 4)
                         }
                         // --- Analyzer Feedback Panel ---
@@ -207,19 +208,31 @@ struct PromptFormView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.onTapSave()
-                    }) {
-                        Text("Save")
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty ? Color(.systemGray4) : Color.accentColor)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
+                    if #available(iOS 26.0, *) {
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onTapSave()
+                        }) {
+                            Text("Save")
+                                .fontWeight(.semibold)
+                        }
+                        .buttonStyle(.glassProminent)
+                        .disabled(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty)
+                    } else {
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onTapSave()
+                        }) {
+                            Text("Save")
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty ? Color(.systemGray4) : Color.accentColor)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .disabled(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty)
                     }
-                    .disabled(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty)
                 }
             }
             .sheet(isPresented: Binding($model.route.selectCategory)) {

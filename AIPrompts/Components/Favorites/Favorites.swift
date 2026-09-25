@@ -247,23 +247,11 @@ struct EmptyFavoritesView: View {
     let systemImage: String
 
     var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: systemImage)
-                .font(.system(size: 60))
-                .foregroundColor(.gray)
-
-            Text(title)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .foregroundColor(.primary)
-
-            Text(message)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
-        }
+        ContentUnavailableView(
+            title,
+            systemImage: systemImage,
+            description: Text(message)
+        )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.gray.opacity(0.05))
     }
 }

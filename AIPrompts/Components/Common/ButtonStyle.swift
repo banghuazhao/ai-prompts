@@ -131,15 +131,34 @@ struct LLMQuickLaunchButton: View {
     let url: URL
     
     var body: some View {
-        Button(action: {
-            UIApplication.shared.open(url)
-        }) {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                Text(label)
+        if #available(iOS 26.0, *) {
+            Button(action: {
+                UIApplication.shared.open(url)
+            }) {
+                labelContent
+                    .font(AppFont.headline)
+                    .foregroundStyle(foreground)
+                    .padding(.vertical, AppSpacing.small)
+                    .padding(.horizontal, AppSpacing.smallMedium)
+                    .glassEffect(Glass.regular.tint(background).interactive(), in: Capsule())
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Quick launch to \(label)")
+        } else {
+            Button(action: {
+                UIApplication.shared.open(url)
+            }) {
+                labelContent
+            }
+            .buttonStyle(.llmQuickLaunch(background: background, foreground: foreground))
+            .accessibilityLabel("Quick launch to \(label)")
         }
-        .buttonStyle(.llmQuickLaunch(background: background, foreground: foreground))
-        .accessibilityLabel("Quick launch to \(label)")
+    }
+
+    private var labelContent: some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+            Text(label)
+        }
     }
 }

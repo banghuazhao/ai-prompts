@@ -22,14 +22,27 @@ struct PurchaseSheet: View {
                 VStack(spacing: 24) {
                     // Close button
                     HStack {
-                        Button(action: { 
-                            Haptics.shared.vibrateIfEnabled()
-                            dismiss() 
-                        }) {
-                            Image(systemName: "xmark")
-                        
+                        if #available(iOS 26.0, *) {
+                            Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
+                                dismiss()
+                            }) {
+                                Image(systemName: "xmark")
+                                    .font(AppFont.headline)
+                                    .frame(width: 28, height: 28)
+                            }
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                            .accessibilityLabel("Close")
+                        } else {
+                            Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
+                                dismiss()
+                            }) {
+                                Image(systemName: "xmark")
+                            }
+                            .buttonStyle(.appCircular)
                         }
-                        .buttonStyle(.appCircular)
                         Spacer()
                     }
                     .padding(.top, 12)
@@ -96,37 +109,9 @@ struct PurchaseSheet: View {
                                 .padding(.horizontal)
                                 .padding(.bottom, 12)
                         } else {
-                            Button(action: {
-                                Haptics.shared.vibrateIfEnabled()
-                                Task {
-                                    isPurchasing = true
-                                    let result = await purchaseManager.purchasePremium()
-                                    switch result {
-                                    case .success:
-                                        showSuccessModal = true
-                                    case .failure(let error):
-                                        print("Purchase failed: \(error.localizedDescription)")
-                                    }
-                                    isPurchasing = false
-                                }
-                            }) {
-                                HStack {
-                                    if isPurchasing {
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                            .scaleEffect(0.8)
-                                    }
-                                    Text("\(product.displayPrice) - Upgrade to Premium")
-                                        .font(.subheadline)
-                                }
-                                .padding(.vertical, 12)
-                                .padding(.horizontal, 20)
-                                .background(themeManager.current.primaryColor)
-                                .foregroundColor(.white)
-                                .cornerRadius(16)
-                            }
-                            .padding(.horizontal)
-                            .disabled(isPurchasing)
+                            purchaseButton(product.displayPrice)
+                                .padding(.horizontal)
+                                .disabled(isPurchasing)
                         }
                     } else {
                         ProgressView()
@@ -177,6 +162,56 @@ struct PurchaseSheet: View {
             isPurchasing = false
         }
     }
+
+    @ViewBuilder
+    private func purchaseButton(_ displayPrice: String) -> some View {
+        if #available(iOS 26.0, *) {
+            Button(action: purchase) {
+                purchaseLabel(displayPrice)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+            }
+            .buttonStyle(.glassProminent)
+            .tint(themeManager.current.primaryColor)
+            .controlSize(.large)
+        } else {
+            Button(action: purchase) {
+                purchaseLabel(displayPrice)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 20)
+                    .background(themeManager.current.primaryColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(16)
+            }
+        }
+    }
+
+    private func purchaseLabel(_ displayPrice: String) -> some View {
+        HStack {
+            if isPurchasing {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .scaleEffect(0.8)
+            }
+            Text("\(displayPrice) - Upgrade to Premium")
+                .font(.subheadline)
+        }
+    }
+
+    private func purchase() {
+        Haptics.shared.vibrateIfEnabled()
+        Task {
+            isPurchasing = true
+            let result = await purchaseManager.purchasePremium()
+            switch result {
+            case .success:
+                showSuccessModal = true
+            case .failure(let error):
+                print("Purchase failed: \(error.localizedDescription)")
+            }
+            isPurchasing = false
+        }
+    }
 }
 
 struct ConfettiDot: Identifiable {
@@ -201,6 +236,30 @@ struct PremiumSuccessView: View {
             color: [Color.pink.opacity(0.7), Color.mint, Color.indigo, Color.teal, Color.orange.opacity(0.7)].randomElement()!,
             size: CGFloat.random(in: 8...14)
         )
+    }
+
+    @ViewBuilder
+    private var continueLabel: some View {
+        if #available(iOS 26.0, *) {
+            Text("Continue")
+                .font(.headline)
+                .padding(.horizontal, 28)
+        } else {
+            Text("Continue")
+                .font(.headline)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 44)
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.teal, Color.indigo]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .foregroundColor(.white)
+                .cornerRadius(18)
+                .shadow(radius: 4)
+        }
     }
 
     var body: some View {
@@ -273,28 +332,12 @@ struct PremiumSuccessView: View {
                         dismiss()
                     }
                 } label: {
-                    Text("Continue")
-                        .font(.headline)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 44)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.teal, Color.indigo]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(18)
-                        .shadow(radius: 4)
+                    continueLabel
                 }
+                .modifier(ContinueButtonStyle())
             }
             .padding(36)
-            .background(
-                RoundedRectangle(cornerRadius: 26)
-                    .fill(Color.white.opacity(0.95))
-            )
-            .shadow(radius: 20)
+            .glassCard(cornerRadius: 26, fallback: Color.white.opacity(0.95))
             .padding(.horizontal, 24)
             .onAppear { animate = true }
         }
@@ -304,4 +347,18 @@ struct PremiumSuccessView: View {
 
 #Preview {
     PurchaseSheet()
+}
+
+private struct ContinueButtonStyle: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .buttonStyle(.glassProminent)
+                .tint(.indigo)
+                .controlSize(.large)
+        } else {
+            content
+        }
+    }
 }

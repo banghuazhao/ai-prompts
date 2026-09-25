@@ -53,5 +53,6 @@ struct CategorySelectionSheet: View {
                 .buttonStyle(.plain)
             }
         }
+        .glassSheetBackground()
     }
 }
