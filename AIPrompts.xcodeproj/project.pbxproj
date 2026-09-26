@@ -49,6 +49,8 @@
 		99442AAA2E2895BD004A205C /* Exceptions for "AIPrompts" folder in "AIPrompts" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Config/Debug.xcconfig,
+				Config/Release.xcconfig,
 				Info.plist,
 				AIPrompts.entitlements,
 				Modules/MoreApps,
@@ -419,13 +421,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AIPrompts/AIPrompts.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0.0;
+				CURRENT_PROJECT_VERSION = 1.2.0.1;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AIPrompts/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your device's advertising identifier is used only to choose which ads to show in this app, for example ads for AI tools and productivity apps that match your interests. If you tap Ask App Not to Track, you will still see ads, but they will be less relevant.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -452,13 +455,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AIPrompts/AIPrompts.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0.0;
+				CURRENT_PROJECT_VERSION = 1.2.0.1;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AIPrompts/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your device's advertising identifier is used only to choose which ads to show in this app, for example ads for AI tools and productivity apps that match your interests. If you tap Ask App Not to Track, you will still see ads, but they will be less relevant.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -484,7 +488,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AIPromptsWidgets/AIPromptsWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0.0;
+				CURRENT_PROJECT_VERSION = 1.2.0.1;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AIPromptsWidgets/Info.plist;
@@ -512,7 +516,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AIPromptsWidgets/AIPromptsWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.0.0;
+				CURRENT_PROJECT_VERSION = 1.2.0.1;
 				DEVELOPMENT_TEAM = F694X76A5X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AIPromptsWidgets/Info.plist;

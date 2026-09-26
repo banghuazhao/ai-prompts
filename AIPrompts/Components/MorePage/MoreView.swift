@@ -96,6 +96,7 @@ struct MoreView: View {
 
     var body: some View {
         NavigationStack {
+            VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: AppSpacing.large) {
                     meSection
@@ -121,13 +122,14 @@ struct MoreView: View {
                     }
                     .padding(.vertical)
                 }
-                if !model.purchaseManager.isPremiumUserPurchased {
-                    BannerView()
-                        .frame(height: 50)
-                        .padding(.bottom, AppSpacing.medium)
-                }
             }
             .scrollDismissesKeyboard(.immediately)
+            if !model.purchaseManager.isPremiumUserPurchased {
+                BannerView()
+                    .frame(height: 50)
+                    .padding(.bottom, AppSpacing.medium)
+            }
+            }
             .navigationTitle("More")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $model.showPurchaseSheet) {

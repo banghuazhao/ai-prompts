@@ -47,9 +47,6 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             Tab("Prompts", systemImage: "text.bubble", value: 0) {
                 PromptListView()
-                    .onAppear {
-                        AdManager.requestATTPermission(with: 3)
-                    }
             }
 
             Tab("Vibe Prompts", systemImage: "laptopcomputer", value: 1) {
@@ -62,9 +59,6 @@ struct ContentView: View {
 
             Tab("More", systemImage: "ellipsis.circle", value: 3) {
                 MoreView()
-                    .onAppear {
-                        AdManager.requestATTPermission(with: 1)
-                    }
             }
 
             Tab(value: 4, role: .search) {
@@ -84,9 +78,6 @@ struct ContentView: View {
                     Label("Prompts", systemImage: "text.bubble")
                 }
                 .tag(0)
-                .onAppear {
-                    AdManager.requestATTPermission(with: 3)
-                }
 
             VibePromptListView()
                 .tabItem {
@@ -105,9 +96,6 @@ struct ContentView: View {
                     Label("More", systemImage: "ellipsis.circle")
                 }
                 .tag(3)
-                .onAppear {
-                    AdManager.requestATTPermission(with: 1)
-                }
         }
         .onChange(of: selectedTab) { _ in
             Haptics.shared.vibrateIfEnabled()

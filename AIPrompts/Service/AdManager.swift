@@ -5,58 +5,32 @@
 //  Created by Lulin Yang on 2025/7/11.
 //
 
-import AdSupport
-import AppTrackingTransparency
 import GoogleMobileAds
 import SwiftUI
 
-class AdManager {
-    static var isAuthorized = false
-
+enum AdManager {
+    /// Production IDs come from the Release build settings. Google test IDs exist in Debug only;
+    /// Release never falls back to them (an unresolved ID stays empty and no ad is requested).
     struct GoogleAdsID {
+        #if DEBUG
         static let bannerViewAdUnitID = Bundle.main.object(forInfoDictionaryKey: "bannerViewAdUnitID") as? String ?? "ca-app-pub-3940256099942544/2934735716"
-        static let appOpenAdID = Bundle.main.object(forInfoDictionaryKey: "appOpenAdID") as? String ?? "ca-app-pub-3940256099942544/5575463023" 
-    }
-
-    static func requestATTPermission(with time: TimeInterval = 0) {
-        guard !isAuthorized else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                switch status {
-                case .authorized:
-                    // Tracking authorization dialog was shown
-                    // and we are authorized
-                    print("Authorized")
-                    isAuthorized = true
-    
-                    // Now that we are authorized we can get the IDFA
-                    print(ASIdentifierManager.shared().advertisingIdentifier)
-                case .denied:
-                    // Tracking authorization dialog was
-                    // shown and permission is denied
-                    print("Denied")
-                case .notDetermined:
-                    // Tracking authorization dialog has not been shown
-                    print("Not Determined")
-                case .restricted:
-                    print("Restricted")
-                @unknown default:
-                    print("Unknown")
-                }
-            }
-        }
+        static let appOpenAdID = Bundle.main.object(forInfoDictionaryKey: "appOpenAdID") as? String ?? "ca-app-pub-3940256099942544/5575463023"
+        #else
+        static let bannerViewAdUnitID = Bundle.main.object(forInfoDictionaryKey: "bannerViewAdUnitID") as? String ?? ""
+        static let appOpenAdID = Bundle.main.object(forInfoDictionaryKey: "appOpenAdID") as? String ?? ""
+        #endif
     }
 }
 
+@MainActor
 final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
     var appOpenAd: AppOpenAd?
     var loadTime = Date()
     var appHasEnterBackgroundBefore = false
 
     func requestAppOpenAd() {
-        print("[DEBUG] requestAppOpenAd called")
-        let request = Request()
-        request.scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        guard ConsentManager.shared.adsReady, !AdManager.GoogleAdsID.appOpenAdID.isEmpty else { return }
+        let request = ConsentManager.shared.makeRequest()
         AppOpenAd.load(
             with: AdManager.GoogleAdsID.appOpenAdID,
             request: request,
@@ -125,6 +99,7 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
 }
 
 struct BannerView: UIViewControllerRepresentable {
+    @ObservedObject private var consent = ConsentManager.shared
     @State var viewWidth: CGFloat = .zero
     private let bannerView = GoogleMobileAds.BannerView()
     private let adUnitID = AdManager.GoogleAdsID.bannerViewAdUnitID
@@ -148,12 +123,10 @@ struct BannerView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        guard viewWidth != .zero else { return }
+        guard viewWidth != .zero, consent.adsReady, !adUnitID.isEmpty else { return }
 
         bannerView.adSize = currentOrientationAnchoredAdaptiveBanner(width: viewWidth)
-        let request = Request()
-        request.scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        bannerView.load(request)
+        bannerView.load(consent.makeRequest())
     }
 
     func makeCoordinator() -> Coordinator {

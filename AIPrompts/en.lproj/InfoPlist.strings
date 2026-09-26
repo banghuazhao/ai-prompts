@@ -7,4 +7,4 @@
 */
 
 "CFBundleDisplayName" = "AI Prompts";
-"NSUserTrackingUsageDescription" = "This identifier will be used to deliver personalized ads to you.";
+"NSUserTrackingUsageDescription" = "Your device's advertising identifier is used only to choose which ads to show in this app, for example ads for AI tools and productivity apps that match your interests. If you tap Ask App Not to Track, you will still see ads, but they will be less relevant.";

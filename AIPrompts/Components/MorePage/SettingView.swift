@@ -18,6 +18,8 @@ struct SettingView: View {
     @Dependency(\.themeManager) var themeManager
     
     @Dependency(\.purchaseManager) var purchaseManager
+    @ObservedObject private var consent = ConsentManager.shared
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         VStack(spacing: 0) {
@@ -47,6 +49,22 @@ struct SettingView: View {
                         }
                         .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     }
+                    settingsSection(title: "Privacy") {
+                        if consent.privacyOptionsRequired {
+                            Button {
+                                consent.presentPrivacyOptions()
+                            } label: {
+                                privacyRow("Privacy Settings")
+                            }
+                        }
+                        Button {
+                            if let url = URL(string: "https://apps-bay.github.io/Apps-Bay-Website/privacy/") {
+                                openURL(url)
+                            }
+                        } label: {
+                            privacyRow("Privacy Policy")
+                        }
+                    }
                 }
                 .padding()
             }
@@ -62,6 +80,19 @@ struct SettingView: View {
         .onChange(of: darkModeEnabled) { _, newValue in
             themeManager.updateTheme(darkMode: newValue)
         }
+    }
+
+    private func privacyRow(_ title: LocalizedStringKey) -> some View {
+        HStack {
+            Text(title)
+                .font(AppFont.body)
+                .foregroundColor(themeManager.current.textPrimary)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.footnote)
+                .foregroundColor(themeManager.current.textPrimary.opacity(0.5))
+        }
+        .contentShape(Rectangle())
     }
 
     private func settingsSection<Content: View>(title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
