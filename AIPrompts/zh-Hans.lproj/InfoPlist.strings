@@ -7,4 +7,4 @@
 */
 
 "CFBundleDisplayName" = "AI提示词";
-"NSUserTrackingUsageDescription" = "该标识符将用于向您投放个性化广告。";
+"NSUserTrackingUsageDescription" = "您设备的广告标识符仅用于决定在本应用中显示哪些广告，例如与您兴趣相符的 AI 工具和效率类应用广告。如果您点击“要求App不跟踪”，您仍会看到广告，但相关度会降低。";

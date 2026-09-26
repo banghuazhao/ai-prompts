@@ -14,7 +14,6 @@ struct AIPrompts: App {
         // Make all List (UITableView) backgrounds transparent globally
         UITableView.appearance().backgroundColor = .clear
         UITableViewCell.appearance().backgroundColor = .clear
-        MobileAds.shared.start(completionHandler: nil)
         AppUsage.registerLaunch()
         prepareDependencies {
             $0.defaultDatabase = AppDatabase.shared
@@ -25,6 +24,10 @@ struct AIPrompts: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(darkModeEnabled ? .dark : .light)
+                .task {
+                    await ConsentManager.shared.gatherConsentAndStartAds()
+                    openAd.requestAppOpenAd()
+                }
                 .task {
                     await ContentSync.run(database: AppDatabase.shared)
                     WidgetSnapshotWriter.update(database: AppDatabase.shared)
