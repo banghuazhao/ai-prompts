@@ -15,6 +15,7 @@ class PromptDetailModel {
     enum Route {
         case editingPrompt
         case customizing
+        case runningOnDevice
         case showingDeleteAlert(Prompt)
     }
 
@@ -61,6 +62,11 @@ class PromptDetailModel {
 
     func onCustomize() {
         route = .customizing
+    }
+
+    /// Runs the prompt right away when every blank has a value, otherwise asks for them first.
+    func onRunOnDevice() {
+        route = template.runnablePrompt == nil ? .customizing : .runningOnDevice
     }
 
     func onEdit() {
@@ -139,6 +145,12 @@ struct PromptDetailView: View {
                     }
                 }
 
+                if OnDeviceAI.isSupported {
+                    RunOnDeviceCard {
+                        model.onRunOnDevice()
+                    }
+                }
+
                 // Quick Launch LLMs
                 LLMQuickLaunchSection(prompt: model.prompt.prompt)
 
@@ -209,6 +221,9 @@ struct PromptDetailView: View {
         }
         .sheet(isPresented: Binding($model.route.customizing)) {
             PromptCustomizeView(title: model.prompt.act, prompt: model.prompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.runningOnDevice)) {
+            PromptRunSheet(title: model.prompt.act, prompt: model.template.runnablePrompt ?? model.prompt.prompt)
         }
         .sheet(isPresented: Binding($model.route.editingPrompt)) {
             PromptFormView(

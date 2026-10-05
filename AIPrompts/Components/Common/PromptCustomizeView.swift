@@ -7,6 +7,7 @@ struct PromptCustomizeView: View {
 
     @State private var values: [String: String]
     @State private var copied = false
+    @State private var isRunningOnDevice = false
     @Environment(\.dismiss) private var dismiss
 
     init(title: String, prompt: String) {
@@ -65,6 +66,23 @@ struct PromptCustomizeView: View {
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
 
+                    if OnDeviceAI.isSupported {
+                        Button {
+                            Haptics.shared.vibrateIfEnabled()
+                            PromptVariableMemory.save(values, for: template)
+                            isRunningOnDevice = true
+                        } label: {
+                            Label("Run on Device", systemImage: "sparkles")
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .glassButtonStyle(prominent: true)
+                        .controlSize(.large)
+                        .tint(.purple)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
+                    }
+
                     LLMQuickLaunchSection(prompt: renderedPrompt)
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
@@ -74,6 +92,9 @@ struct PromptCustomizeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onDisappear {
                 PromptVariableMemory.save(values, for: template)
+            }
+            .sheet(isPresented: $isRunningOnDevice) {
+                PromptRunSheet(title: title, prompt: renderedPrompt)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

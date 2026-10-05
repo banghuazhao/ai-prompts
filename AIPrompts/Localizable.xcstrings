@@ -2362,6 +2362,256 @@
           }
         }
       }
+    },
+    "Apple Intelligence can't help with this prompt. Try it in another assistant instead." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 無法處理這個提示詞，請改用其他 AI 助理試試。"
+          }
+        }
+      }
+    },
+    "This conversation is too long for the on-device model. Start a new chat to keep going." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這段對話對裝置端模型來說太長了，請開始新的對話繼續。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence doesn't support this language yet." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 尚未支援此語言。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence is still getting ready. Try again in a moment." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 仍在準備中，請稍後再試。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence is busy. Try again in a moment." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 忙碌中，請稍後再試。"
+          }
+        }
+      }
+    },
+    "Start Over" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新開始"
+          }
+        }
+      }
+    },
+    "Share Conversation" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享對話"
+          }
+        }
+      }
+    },
+    "Ask a follow-up" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繼續提問"
+          }
+        }
+      }
+    },
+    "Stop" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停止"
+          }
+        }
+      }
+    },
+    "Send" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送"
+          }
+        }
+      }
+    },
+    "On-Device AI" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "裝置端 AI"
+          }
+        }
+      }
+    },
+    "Thinking…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "思考中…"
+          }
+        }
+      }
+    },
+    "Share" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
+        }
+      }
+    },
+    "Start New Chat" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始新對話"
+          }
+        }
+      }
+    },
+    "Try Again" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再試一次"
+          }
+        }
+      }
+    },
+    "On-Device AI Unavailable" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法使用裝置端 AI"
+          }
+        }
+      }
+    },
+    "Turn on Apple Intelligence in Settings › Apple Intelligence & Siri to run prompts for free, right on your iPhone." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在「設定」›「Apple Intelligence 與 Siri」中開啟 Apple Intelligence，即可在 iPhone 上免費執行提示詞。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence is still downloading. Try again once it's ready." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 仍在下載中，準備好後再試一次。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence doesn't support your current language yet." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 尚未支援你目前使用的語言。"
+          }
+        }
+      }
+    },
+    "Running prompts on device needs an iPhone that supports Apple Intelligence." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在裝置上執行提示詞需要支援 Apple Intelligence 的 iPhone。"
+          }
+        }
+      }
+    },
+    "Run on Device" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在裝置上執行"
+          }
+        }
+      }
+    },
+    "Free and private with Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 Apple Intelligence 提供，免費且保護隱私"
+          }
+        }
+      }
+    },
+    "No Chats Yet" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚無對話"
+          }
+        }
+      }
+    },
+    "Open any prompt and tap Run on Device. Your conversations are saved here and never leave your iPhone." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開任一提示詞並點一下「在裝置上執行」。你的對話會儲存在這裡，且絕不會離開你的 iPhone。"
+          }
+        }
+      }
+    },
+    "Chats (%lld)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "對話（%lld）"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

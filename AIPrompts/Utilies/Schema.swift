@@ -166,8 +166,23 @@ func appDatabase() throws -> any DatabaseWriter {
         }
     }
 
+    migrator.registerMigration("Add AI chats") { db in
+        try #sql(
+            """
+            CREATE TABLE "aiChats" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "title" TEXT NOT NULL DEFAULT '',
+                "messagesJSON" TEXT NOT NULL DEFAULT '[]',
+                "createdDate" TEXT NOT NULL DEFAULT '',
+                "modifiedDate" TEXT NOT NULL DEFAULT ''
+            ) STRICT
+            """
+        )
+        .execute(db)
+    }
+
     try migrator.migrate(database)
-    
+
     try database.write { db in
         try Prompt.createTemporaryTrigger(afterUpdateTouch: \.modifiedDate)
             .execute(db)

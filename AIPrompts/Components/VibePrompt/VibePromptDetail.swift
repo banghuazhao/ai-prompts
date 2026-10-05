@@ -15,6 +15,7 @@ class VibePromptDetailModel {
     enum Route {
         case editingPrompt
         case customizing
+        case runningOnDevice
         case showingDeleteAlert(VibePrompt)
     }
 
@@ -51,6 +52,11 @@ class VibePromptDetailModel {
 
     func onCustomize() {
         route = .customizing
+    }
+
+    /// Runs the prompt right away when every blank has a value, otherwise asks for them first.
+    func onRunOnDevice() {
+        route = template.runnablePrompt == nil ? .customizing : .runningOnDevice
     }
 
     func onEdit() {
@@ -142,6 +148,12 @@ struct VibePromptDetailView: View {
                     }
                 }
 
+                if OnDeviceAI.isSupported {
+                    RunOnDeviceCard {
+                        model.onRunOnDevice()
+                    }
+                }
+
                 // Quick Launch LLMs
                 LLMQuickLaunchSection(prompt: model.vibePrompt.prompt)
 
@@ -212,6 +224,9 @@ struct VibePromptDetailView: View {
         }
         .sheet(isPresented: Binding($model.route.customizing)) {
             PromptCustomizeView(title: model.vibePrompt.app, prompt: model.vibePrompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.runningOnDevice)) {
+            PromptRunSheet(title: model.vibePrompt.app, prompt: model.template.runnablePrompt ?? model.vibePrompt.prompt)
         }
         .sheet(isPresented: Binding($model.route.editingPrompt)) {
             VibePromptFormView(

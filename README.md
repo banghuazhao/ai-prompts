@@ -20,6 +20,7 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🗣️ **Siri & Shortcuts**: Copy, open, or get a random prompt with App Shortcuts, Siri, and Spotlight.
 - 🌏 **Traditional Chinese**: Full zh-Hant localization of the app, widgets, and Siri phrases.
 - 🧩 **Fill-in-the-Blank Templates**: Prompts with variables (`{{topic}}`, `${Name: default}`, or a trailing `My first request is "..."`) get a **Customize & Use** sheet. Fill in the blanks, preview the result live, then copy it or launch it straight into ChatGPT, Claude, Gemini, Grok, or Perplexity.
+- 🍎 **Run on Device with Apple Intelligence**: On iOS 26 devices with Apple Intelligence, run any prompt right in the app with Apple's on-device Foundation Models: free, private and offline. Replies stream in, you can ask follow-ups, and conversations are saved under **Favorites › Chats**. If the model declines a prompt, the app offers Quick Launch instead. Other devices keep the existing Copy and Quick Launch flow.
 - 🔍 **Prompt Details**: View detailed information for each prompt, including contributor and tech stack.
 - 🖥️ **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
 - 🫧 **Liquid Glass Design**: On iOS 26 the app uses Liquid Glass throughout: a floating tab bar that shrinks while you scroll, a dedicated Search tab that searches prompts and vibe prompts together, and glass buttons, chips, quick launch pills, and cards. iOS 17–25 keep the original look.
