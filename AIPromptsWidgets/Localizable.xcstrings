@@ -60,6 +60,46 @@
           }
         }
       }
+    },
+    "Open Random Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟隨機提示詞"
+          }
+        }
+      }
+    },
+    "Opens AI Prompts on a random prompt for inspiration." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟 AI提示詞 並顯示一個隨機提示詞，給你靈感。"
+          }
+        }
+      }
+    },
+    "Random Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隨機提示詞"
+          }
+        }
+      }
+    },
+    "Open AI Prompts on a random prompt for inspiration." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟 AI提示詞 並顯示一個隨機提示詞，給你靈感。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

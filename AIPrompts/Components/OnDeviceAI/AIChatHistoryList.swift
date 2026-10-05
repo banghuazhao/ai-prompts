@@ -75,7 +75,7 @@ private struct AIChatDetailView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 16) {
                 ForEach(chat.messages) { message in
-                    AIMessageView(message: message)
+                    AIMessageView(message: message, title: chat.title)
                 }
             }
             .padding()

@@ -53,7 +53,7 @@
             "state" : "new",
             "values" : [
               "Open a prompt in ${applicationName}",
-              "Open ${prompt} in ${applicationName}"
+              "Open ${target} in ${applicationName}"
             ]
           }
         },
@@ -63,7 +63,7 @@
             "values" : [
               "在${applicationName}中開啟提示詞",
               "用${applicationName}開啟提示詞",
-              "在${applicationName}中開啟${prompt}"
+              "在${applicationName}中開啟${target}"
             ]
           }
         }

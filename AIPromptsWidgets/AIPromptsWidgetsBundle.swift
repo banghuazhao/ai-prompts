@@ -11,6 +11,9 @@ struct AIPromptsWidgetsBundle: WidgetBundle {
     var body: some Widget {
         PromptOfTheDayWidget()
         FavoritePromptsWidget()
+        if #available(iOS 18.0, *) {
+            RandomPromptControl()
+        }
     }
 }
 

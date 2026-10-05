@@ -429,6 +429,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your device's advertising identifier is used only to choose which ads to show in this app, for example ads for AI tools and productivity apps that match your interests. If you tap Ask App Not to Track, you will still see ads, but they will be less relevant.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "AI Prompts saves the images and share cards you create to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -463,6 +464,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your device's advertising identifier is used only to choose which ads to show in this app, for example ads for AI tools and productivity apps that match your interests. If you tap Ask App Not to Track, you will still see ads, but they will be less relevant.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "AI Prompts saves the images and share cards you create to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

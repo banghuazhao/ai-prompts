@@ -5,3 +5,4 @@
 
 "CFBundleDisplayName" = "AI提示詞";
 "NSUserTrackingUsageDescription" = "你裝置的廣告識別碼僅用於決定在本 App 中顯示哪些廣告，例如符合你興趣的 AI 工具和生產力 App 廣告。如果你點選「要求 App 不要追蹤」，你仍會看到廣告，但相關度會降低。";
+"NSPhotoLibraryAddUsageDescription" = "AI提示詞會將你建立的圖片和分享卡片儲存到照片圖庫。";

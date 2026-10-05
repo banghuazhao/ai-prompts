@@ -57,6 +57,7 @@ struct OnDeviceChatView: View {
                     ForEach(chat.messages) { message in
                         AIMessageView(
                             message: message,
+                            title: title,
                             isStreaming: chat.isResponding && message.id == chat.messages.last?.id
                         )
                     }
@@ -196,10 +197,13 @@ extension AIMessage {
 
 struct AIMessageView: View {
     let message: AIMessage
+    /// The prompt's title, used on share cards and created images.
+    let title: String
     var isStreaming = false
 
     @State private var isExpanded = false
     @State private var copied = false
+    @State private var shareCard: ShareCardContent?
 
     var body: some View {
         switch message.role {
@@ -251,10 +255,23 @@ struct AIMessageView: View {
                     } label: {
                         Label(copied ? "Copied!" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc")
                     }
-                    ShareLink(item: message.text) {
+                    Menu {
+                        ShareLink(item: message.text) {
+                            Label("Share Text", systemImage: "text.alignleft")
+                        }
+                        .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
+                        Button("Share as Image", systemImage: "photo") {
+                            Haptics.shared.vibrateIfEnabled()
+                            shareCard = ShareCardContent(
+                                title: title,
+                                body: message.text,
+                                note: String(localized: "Answered on device by Apple Intelligence")
+                            )
+                        }
+                    } label: {
                         Label("Share", systemImage: "square.and.arrow.up")
                     }
-                    .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
+                    CreateImageButton(text: message.text, title: title)
                 }
                 .font(.footnote)
                 .labelStyle(.iconOnly)
@@ -265,6 +282,9 @@ struct AIMessageView: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .sheet(item: $shareCard) { content in
+            ShareCardSheet(content: content)
+        }
     }
 
     private func onCopy() {

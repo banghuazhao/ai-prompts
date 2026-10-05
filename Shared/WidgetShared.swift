@@ -57,7 +57,11 @@ enum WidgetShared {
     enum Kind {
         static let promptOfTheDay = "PromptOfTheDayWidget"
         static let favorites = "FavoritePromptsWidget"
+        static let randomPromptControl = "RandomPromptControl"
     }
+
+    /// Set by the app at launch. Intents that open the app hand their deep link to it.
+    @MainActor static var openDeepLink: ((URL) -> Void)?
 
     private static var snapshotURL: URL? {
         FileManager.default

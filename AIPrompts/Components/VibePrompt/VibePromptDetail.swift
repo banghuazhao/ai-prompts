@@ -16,6 +16,7 @@ class VibePromptDetailModel {
         case editingPrompt
         case customizing
         case runningOnDevice
+        case sharingCard
         case showingDeleteAlert(VibePrompt)
     }
 
@@ -154,6 +155,13 @@ struct VibePromptDetailView: View {
                     }
                 }
 
+                if "\(model.vibePrompt.app) \(model.vibePrompt.prompt)".looksLikeImagePrompt {
+                    CreateImageButton(text: model.vibePrompt.prompt, title: model.vibePrompt.app) {
+                        ImagePlaygroundCardLabel()
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 // Quick Launch LLMs
                 LLMQuickLaunchSection(prompt: model.vibePrompt.prompt)
 
@@ -205,10 +213,18 @@ struct VibePromptDetailView: View {
                 .tint(.red)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                ShareLink(item: "\(model.vibePrompt.app)\n\n\(model.vibePrompt.prompt)") {
+                Menu {
+                    ShareLink(item: "\(model.vibePrompt.app)\n\n\(model.vibePrompt.prompt)") {
+                        Label("Share Text", systemImage: "text.alignleft")
+                    }
+                    .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
+                    Button("Share as Image", systemImage: "photo") {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.route = .sharingCard
+                    }
+                } label: {
                     Image(systemName: "square.and.arrow.up")
                 }
-                .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
@@ -224,6 +240,9 @@ struct VibePromptDetailView: View {
         }
         .sheet(isPresented: Binding($model.route.runningOnDevice)) {
             PromptRunSheet(title: model.vibePrompt.app, prompt: model.template.runnablePrompt ?? model.vibePrompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.sharingCard)) {
+            ShareCardSheet(content: ShareCardContent(title: model.vibePrompt.app, body: model.vibePrompt.prompt))
         }
         .sheet(isPresented: Binding($model.route.editingPrompt)) {
             VibePromptFormView(

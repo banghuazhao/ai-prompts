@@ -17,7 +17,11 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - ❤️ **Favorites**: Mark prompts as favorites for quick access.
 - 🆕 **Fresh Prompts Without an Update**: New prompts published to [`content/feed.json`](content/feed.json) reach every install on next launch, marked **NEW** with a "new prompts added" banner. Deleted prompts never come back.
 - 📱 **Widgets**: *Prompt of the Day* (Home Screen and Lock Screen) and *Favorite Prompts*. Tap to open the prompt.
-- 🗣️ **Siri & Shortcuts**: Copy, open, or get a random prompt with App Shortcuts, Siri, and Spotlight.
+- 🗣️ **Siri & Shortcuts**: Copy, open, or get a random prompt with App Shortcuts, Siri, and Spotlight. On iOS 26 with Apple Intelligence, the **Run Prompt with Apple Intelligence** action runs a prompt (optionally with your own input) on device and returns the answer, which is also saved to Chats.
+- 🔦 **Spotlight**: Every prompt is indexed in Spotlight (iOS 18+). Tapping a result opens it in the app.
+- 🎛️ **Control Center**: A **Random Prompt** control (iOS 18+) for Control Center, the Lock Screen and the Action button.
+- 🎨 **Image Playground**: Turn image prompts, or any on-device answer, into a picture (iOS 18.1+, Apple Intelligence devices).
+- 🖼️ **Share as Image**: Share any prompt or answer as a branded card that links to the App Store.
 - 🌏 **Traditional Chinese**: Full zh-Hant localization of the app, widgets, and Siri phrases.
 - 🧩 **Fill-in-the-Blank Templates**: Prompts with variables (`{{topic}}`, `${Name: default}`, or a trailing `My first request is "..."`) get a **Customize & Use** sheet. Fill in the blanks, preview the result live, then copy it or launch it straight into ChatGPT, Claude, Gemini, Grok, or Perplexity.
 - 🍎 **Run on Device with Apple Intelligence**: On iOS 26 devices with Apple Intelligence, run any prompt right in the app with Apple's on-device Foundation Models: free, private and offline. Replies stream in, you can ask follow-ups, and conversations are saved under **Favorites › Chats**. If the model declines a prompt, the app offers Quick Launch instead. Other devices keep the existing Copy and Quick Launch flow.

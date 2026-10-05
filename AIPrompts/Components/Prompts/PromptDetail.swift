@@ -16,6 +16,7 @@ class PromptDetailModel {
         case editingPrompt
         case customizing
         case runningOnDevice
+        case sharingCard
         case showingDeleteAlert(Prompt)
     }
 
@@ -151,6 +152,13 @@ struct PromptDetailView: View {
                     }
                 }
 
+                if "\(model.prompt.act) \(model.prompt.prompt)".looksLikeImagePrompt {
+                    CreateImageButton(text: model.prompt.prompt, title: model.prompt.act) {
+                        ImagePlaygroundCardLabel()
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 // Quick Launch LLMs
                 LLMQuickLaunchSection(prompt: model.prompt.prompt)
 
@@ -202,10 +210,18 @@ struct PromptDetailView: View {
                 .tint(.red)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                ShareLink(item: "\(model.prompt.act)\n\n\(model.prompt.prompt)") {
+                Menu {
+                    ShareLink(item: "\(model.prompt.act)\n\n\(model.prompt.prompt)") {
+                        Label("Share Text", systemImage: "text.alignleft")
+                    }
+                    .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
+                    Button("Share as Image", systemImage: "photo") {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.route = .sharingCard
+                    }
+                } label: {
                     Image(systemName: "square.and.arrow.up")
                 }
-                .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
@@ -221,6 +237,9 @@ struct PromptDetailView: View {
         }
         .sheet(isPresented: Binding($model.route.runningOnDevice)) {
             PromptRunSheet(title: model.prompt.act, prompt: model.template.runnablePrompt ?? model.prompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.sharingCard)) {
+            ShareCardSheet(content: ShareCardContent(title: model.prompt.act, body: model.prompt.prompt))
         }
         .sheet(isPresented: Binding($model.route.editingPrompt)) {
             PromptFormView(

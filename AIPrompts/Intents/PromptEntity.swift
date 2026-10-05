@@ -4,6 +4,7 @@
 //
 
 import AppIntents
+import CoreSpotlight
 import SharingGRDB
 
 /// A prompt or vibe prompt exposed to Shortcuts, Siri and Spotlight.
@@ -42,6 +43,18 @@ extension PromptEntity {
             try Prompt.all.fetchAll(db).map(PromptEntity.init) +
                 VibePrompt.all.fetchAll(db).map(PromptEntity.init)
         }
+    }
+}
+
+/// Indexed so prompts show up in Spotlight; tapping one runs `OpenPromptIntent`.
+@available(iOS 18.0, *)
+extension PromptEntity: IndexedEntity {
+    var attributeSet: CSSearchableItemAttributeSet {
+        let attributes = defaultAttributeSet
+        attributes.title = title
+        attributes.contentDescription = String(text.prefix(300))
+        attributes.keywords = [title, String(localized: "Prompt"), "AI"]
+        return attributes
     }
 }
 
