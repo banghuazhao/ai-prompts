@@ -93,43 +93,32 @@ class MeViewModel: HashableObject {
 struct MoreView: View {
     @State private var model = MeViewModel()
     @Environment(\.openURL) private var openURL
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private var gridColumns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: 12), count: dynamicTypeSize.isAccessibilitySize ? 1 : 2)
+    }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: AppSpacing.large) {
-                    meSection
-
-                    moreFeatureView
-
-                    othersView
-
-                    // App info section (moved below othersView)
-                    VStack(spacing: 4) {
-                        Text("AI Prompts  |  AI Prompt Directory")
-                            .font(.footnote)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
-                        Button {
-                            model.onTapCheckForUpdates(openURL: openURL)
-                        } label: {
-                            Text("v\(model.appVersion)  Check for Updates")
-                                .font(.footnote)
-                                .foregroundColor(.gray)
-                                .underline()
-                        }
+                ScrollView {
+                    VStack(spacing: 28) {
+                        meSection
+                        moreFeatureView
+                        othersView
+                        appInfo
                     }
-                    .padding(.vertical)
+                    .padding(.vertical, 16)
+                }
+                .scrollDismissesKeyboard(.immediately)
+                if !model.purchaseManager.isPremiumUserPurchased {
+                    BannerView()
+                        .frame(height: 50)
+                        .padding(.bottom, AppSpacing.medium)
                 }
             }
-            .scrollDismissesKeyboard(.immediately)
-            if !model.purchaseManager.isPremiumUserPurchased {
-                BannerView()
-                    .frame(height: 50)
-                    .padding(.bottom, AppSpacing.medium)
-            }
-            }
+            .background(AIStudioPalette.canvas.ignoresSafeArea())
             .navigationTitle("More")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $model.showPurchaseSheet) {
@@ -139,181 +128,192 @@ struct MoreView: View {
     }
 
     private var meSection: some View {
-        // Me Section
-        VStack(alignment: .leading, spacing: AppSpacing.medium) {
-            HStack(spacing: AppSpacing.medium) {
-                Button(action: {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack(alignment: .center, spacing: 14) {
+                Button {
                     Haptics.shared.vibrateIfEnabled()
                     model.onTapEmojiPicker()
-                }) {
+                } label: {
                     Text(model.userAvatar)
-                        .font(.system(size: 40))
-                        .frame(width: 50, height: 50)
-                        .glassCircle(interactive: true, fallback: model.themeManager.current.card)
+                        .font(.system(size: 32))
+                        .frame(width: 58, height: 58)
+                        .background(.white.opacity(0.15), in: RoundedRectangle(cornerRadius: 19))
+                        .overlay(RoundedRectangle(cornerRadius: 19).strokeBorder(.white.opacity(0.18), lineWidth: 1))
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
+                .accessibilityLabel("Choose your avatar")
                 .sheet(isPresented: $model.showEmojiPicker) {
                     EmojiPickerView(selectedEmoji: Binding(model.$userAvatar), title: String(localized: "Choose your avatar"))
                         .presentationDetents([.medium])
                         .presentationDragIndicator(.visible)
                 }
-                VStack(alignment: .leading, spacing: 4) {
-                    TextField("Your Name", text: Binding(model.$userName))
-                        .font(AppFont.headline)
-                        .fontWeight(.bold)
-                        .padding(AppSpacing.small)
-                        .background(model.themeManager.current.background)
-                        .cornerRadius(AppCornerRadius.button)
-                        .lineLimit(1)
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("YOUR SPACE")
+                        .font(.caption2.weight(.bold))
+                        .tracking(1.4)
+                        .foregroundStyle(AIStudioPalette.cyan)
+                    TextField(
+                        "Your Name",
+                        text: Binding(model.$userName),
+                        prompt: Text("Your Name").foregroundColor(.white.opacity(0.9))
+                    )
+                    .font(.system(.title3, design: .rounded, weight: .bold))
+                    .foregroundStyle(.white)
+                    .tint(.white)
+                    .textInputAutocapitalization(.words)
+                    .submitLabel(.done)
+                    .accessibilityLabel("Your Name")
                 }
-                Spacer()
+                Spacer(minLength: 0)
             }
-            HStack {
-                VStack {
-                    Text(model.promptsCount)
-                        .font(.headline)
-                    Text("Prompts")
-                        .font(.caption)
-                }
-                Divider()
-                VStack {
-                    Text(model.vibePromptsCount)
-                        .font(.headline)
-                    Text("Vibe Prompts")
-                        .font(.caption)
-                }
+
+            HStack(spacing: 12) {
+                collectionStat(value: model.promptsCount, title: "Prompts")
+                collectionStat(value: model.vibePromptsCount, title: "Vibe prompts")
             }
 
             if !model.isPremiumUser {
-                if #available(iOS 26.0, *) {
-                    Button(action: {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.onTapPurchase()
-                    }) {
-                        Text(String(localized: "Upgrade to Premium"))
-                            .font(AppFont.headline)
-                    }
-                    .buttonStyle(.glassProminent)
-                    .tint(model.themeManager.current.primaryColor)
-                    .controlSize(.large)
-                } else {
-                    Button(action: {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.onTapPurchase()
-                    }) {
-                        Text(String(localized: "Upgrade to Premium"))
-                            .appButtonStyle(theme: model.themeManager.current)
-                    }
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onTapPurchase()
+                } label: {
+                    Label("Upgrade to Premium", systemImage: "sparkles")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(AIStudioPalette.ink)
+                        .frame(maxWidth: .infinity, minHeight: 46)
+                        .background(.white, in: Capsule())
                 }
+                .buttonStyle(.plain)
             } else {
-                HStack(spacing: 8) {
-                    Image(systemName: "crown.fill")
-                        .foregroundColor(.yellow)
-                        .font(.title3)
-                    Text(String(localized: "Welcome, Premium user!"))
-                        .font(.headline)
-                        .foregroundColor(model.themeManager.current.primaryColor)
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 16)
-                .background(model.themeManager.current.card)
-                .overlay(
-                    RoundedRectangle(cornerRadius: AppCornerRadius.button)
-                        .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
-                )
-                .cornerRadius(AppCornerRadius.button)
-                .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
+                Label("Welcome, Premium user!", systemImage: "crown.fill")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 16)
+                    .frame(minHeight: 44)
+                    .background(.white.opacity(0.15), in: Capsule())
             }
         }
-        .appCardStyle(theme: model.themeManager.current)
-        .padding(.horizontal)
+        .padding(22)
+        .background(AIStudioPalette.heroGradient, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .padding(.horizontal, 16)
+    }
+
+    private func collectionStat(value: String, title: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(value)
+                .font(.system(.title3, design: .rounded, weight: .bold))
+                .foregroundStyle(.white)
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.9))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(.white.opacity(0.11), in: RoundedRectangle(cornerRadius: 17))
+        .accessibilityElement(children: .combine)
     }
 
     private var moreFeatureView: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.medium) {
-            Text(String(localized: "More Features"))
-                .appSectionHeader(theme: model.themeManager.current)
-            GlassGroup {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
-                    NavigationLink(destination: SettingView()) {
-                        featureItem(icon: "gear", title: String(localized: "Settings"))
-                    }
-                    NavigationLink(destination: ContextEngineeringInfoView()) {
-                        moreItem(icon: "brain.head.profile", title: String(localized: "Context Engineering"))
-                    }
-                    NavigationLink(destination: PromptEngineeringBestPracticesView()) {
-                        moreItem(icon: "lightbulb", title: String(localized: "Prompt Engineering"))
-                    }
+        VStack(alignment: .leading, spacing: 14) {
+            sectionHeading("Explore", subtitle: "Tools for better prompts")
+            LazyVGrid(columns: gridColumns, spacing: 12) {
+                NavigationLink(destination: SettingView()) {
+                    moreItem(icon: "gearshape", title: String(localized: "Settings"))
                 }
+                .buttonStyle(.plain)
+                NavigationLink(destination: ContextEngineeringInfoView()) {
+                    moreItem(icon: "brain.head.profile", title: String(localized: "Context Engineering"))
+                }
+                .buttonStyle(.plain)
+                NavigationLink(destination: PromptEngineeringBestPracticesView()) {
+                    moreItem(icon: "lightbulb", title: String(localized: "Prompt Engineering"))
+                }
+                .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
     }
 
     private var othersView: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Others")
-                .font(.headline)
-                .fontWeight(.semibold)
-                .foregroundColor(.primary)
-            GlassGroup {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
-                    NavigationLink(destination: MoreAppsView()) {
-                        moreItem(icon: "storefront", title: String(localized: "More Apps"))
+        VStack(alignment: .leading, spacing: 14) {
+            sectionHeading("Connect", subtitle: "Share and support")
+            LazyVGrid(columns: gridColumns, spacing: 12) {
+                NavigationLink(destination: MoreAppsView()) {
+                    moreItem(icon: "square.grid.2x2", title: String(localized: "More Apps"))
+                }
+                .buttonStyle(.plain)
+                Button {
+                    model.onTapRateUs(openURL: openURL)
+                } label: {
+                    moreItem(icon: "star", title: String(localized: "Rate Us"))
+                }
+                .buttonStyle(.plain)
+                Button {
+                    model.onTapFeedback(openURL: openURL)
+                } label: {
+                    moreItem(icon: "envelope", title: String(localized: "Feedback"))
+                }
+                .buttonStyle(.plain)
+                if let appURL = model.onTapShareApp() {
+                    ShareLink(item: appURL) {
+                        moreItem(icon: "square.and.arrow.up", title: String(localized: "Share App"))
                     }
-                    Button {
-                        model.onTapRateUs(openURL: openURL)
-                    } label: {
-                        moreItem(icon: "star.fill", title: String(localized: "Rate Us"))
-                    }
-                    Button {
-                        model.onTapFeedback(openURL: openURL)
-                    } label: {
-                        moreItem(icon: "envelope.fill", title: String(localized: "Feedback"))
-                    }
-                    if let appURL = model.onTapShareApp() {
-                        ShareLink(item: appURL) {
-                            moreItem(icon: "square.and.arrow.up", title: String(localized: "Share App"))
-                        }
-                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
+    }
+
+    private func sectionHeading(_ title: LocalizedStringKey, subtitle: LocalizedStringKey) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .font(.system(.title3, design: .rounded, weight: .bold))
+            Text(subtitle)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
     }
 
     private func moreItem(icon: String, title: String) -> some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 14) {
             Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(model.themeManager.current.primaryColor)
-                .frame(width: 36, height: 36)
-                .clipShape(Circle())
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(model.themeManager.current.primaryColor)
+                .frame(width: 46, height: 46)
+                .background(model.themeManager.current.primaryColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 15))
+                .accessibilityHidden(true)
             Text(title)
-                .font(.caption)
-                .foregroundColor(model.themeManager.current.textPrimary)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity)
-        .padding(AppSpacing.small)
-        .glassCard(cornerRadius: AppCornerRadius.card, interactive: true, fallback: model.themeManager.current.card)
+        .frame(maxWidth: .infinity, minHeight: 110, alignment: .topLeading)
+        .padding(16)
+        .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 21, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 21, style: .continuous).strokeBorder(AIStudioPalette.border, lineWidth: 1))
+        .contentShape(RoundedRectangle(cornerRadius: 21, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 
-    private func featureItem(icon: String, title: String) -> some View {
-        VStack(spacing: AppSpacing.small) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(model.themeManager.current.primaryColor)
-                .frame(width: 36, height: 36)
-                .clipShape(Circle())
-            Text(title)
-                .font(AppFont.caption)
-                .foregroundColor(model.themeManager.current.textPrimary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
+    private var appInfo: some View {
+        VStack(spacing: 3) {
+            Text("AI Prompts  ·  AI Prompt Directory")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Button {
+                model.onTapCheckForUpdates(openURL: openURL)
+            } label: {
+                Text("Version \(model.appVersion) · Check for Updates")
+                    .font(.footnote)
+                    .foregroundStyle(model.themeManager.current.primaryColor)
+                    .frame(minHeight: 44)
+            }
+            .buttonStyle(.plain)
         }
         .frame(maxWidth: .infinity)
-        .padding(AppSpacing.small)
-        .glassCard(cornerRadius: AppCornerRadius.card, interactive: true, fallback: model.themeManager.current.card)
+        .padding(.horizontal, 16)
     }
 }
 

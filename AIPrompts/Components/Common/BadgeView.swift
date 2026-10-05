@@ -10,17 +10,17 @@ struct BadgeView: View {
     let icon: String?
     let text: String
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 5) {
             if let icon = icon {
                 Image(systemName: icon)
             }
             Text(Bundle.main.localizedString(forKey: text, value: text, table: nil))
-                .font(.caption)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(Color(.systemGray5))
-        .foregroundColor(.primary)
-        .cornerRadius(8)
+        .font(.caption.weight(.semibold))
+        .lineLimit(1)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .foregroundStyle(AIStudioPalette.violet)
+        .background(AIStudioPalette.violet.opacity(0.10), in: Capsule())
     }
 }

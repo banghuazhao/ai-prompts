@@ -6,76 +6,90 @@ struct VibePromptRowView: View {
 
     @State private var copied = false
 
+    private var visibleTech: [String] {
+        Array(vibePrompt.techstackArray.prefix(2))
+    }
+
+    private var hiddenTechCount: Int {
+        max(0, vibePrompt.techstackArray.count - visibleTech.count)
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(vibePrompt.app)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "laptopcomputer.and.iphone")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(AIStudioPalette.violet)
+                    .frame(width: 44, height: 44)
+                    .background(AIStudioPalette.violet.opacity(0.10), in: RoundedRectangle(cornerRadius: 14))
+                    .accessibilityHidden(true)
 
-                if vibePrompt.isNew {
-                    NewBadge()
-                }
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(vibePrompt.app)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                        .lineLimit(2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                GlassGroup {
-                    HStack {
-                        Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                            onFavorite()
-                        }) {
-                            Image(systemName: vibePrompt.isFavorite ? "heart.fill" : "heart")
-                                .foregroundColor(vibePrompt.isFavorite ? .red : .gray)
-                                .glassIcon()
-                        }
-                        .buttonStyle(.plain)
-
-                        Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                            PromptActions.copy(vibePrompt.prompt)
-                            copied = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                copied = false
-                            }
-                        }) {
-                            ZStack {
-                                Image(systemName: "doc.on.doc")
-                                    .opacity(copied ? 0 : 1)
-                                Image(systemName: "checkmark")
-                                    .opacity(copied ? 1 : 0)
-                            }
-                            .foregroundColor(copied ? .green : .gray)
-                            .glassIcon()
-                        }
-                        .buttonStyle(.plain)
+                    if vibePrompt.isNew {
+                        NewBadge()
                     }
                 }
+
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    onFavorite()
+                } label: {
+                    Image(systemName: vibePrompt.isFavorite ? "heart.fill" : "heart")
+                        .font(.title3)
+                        .foregroundStyle(vibePrompt.isFavorite ? Color.red : Color.secondary)
+                        .frame(width: 44, height: 44)
+                        .background(vibePrompt.isFavorite ? Color.red.opacity(0.10) : AIStudioPalette.canvas, in: Circle())
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(vibePrompt.isFavorite ? "Remove from favorites" : "Add to favorites")
             }
 
             Text(vibePrompt.prompt)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .lineLimit(3)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
                 .multilineTextAlignment(.leading)
 
-            // Tech Stack as badges
-            if !vibePrompt.techstack.isEmpty {
-                HStack(spacing: 8) {
-                    ForEach(vibePrompt.techstackArray, id: \.self) { tech in
-                        Text(tech)
-                            .font(.caption)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color(.systemGray5))
-                            .foregroundColor(.primary)
-                            .cornerRadius(8)
-                    }
+            HStack(spacing: 6) {
+                ForEach(visibleTech, id: \.self) { tech in
+                    BadgeView(icon: nil, text: tech)
                 }
+
+                if hiddenTechCount > 0 {
+                    Text("+\(hiddenTechCount)")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel("\(hiddenTechCount) more technologies")
+                }
+
+                Spacer(minLength: 0)
+
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    PromptActions.copy(vibePrompt.prompt)
+                    copied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        copied = false
+                    }
+                } label: {
+                    Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(copied ? Color.green : AIStudioPalette.violet)
+                        .padding(.horizontal, 14)
+                        .frame(minHeight: 44)
+                        .background(AIStudioPalette.violet.opacity(0.09), in: Capsule())
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(copied ? "Prompt copied" : "Copy prompt")
             }
         }
-        .padding()
+        .padding(16)
         .promptRowSurface()
     }
 }

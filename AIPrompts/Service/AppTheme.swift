@@ -53,7 +53,7 @@ enum ThemeColor: String, CaseIterable {
     var primaryColor: Color {
         switch self {
         case .default:
-            return Color(red: 0.914, green: 0.420, blue: 0.369)
+            return AIStudioPalette.violet
         case .blue:
             return Color(red: 0.0, green: 0.48, blue: 1.0) // #007AFF - Blue
         case .green:
@@ -70,7 +70,7 @@ enum ThemeColor: String, CaseIterable {
     var backgroundColor: Color {
         switch self {
         case .default:
-            return Color(red: 0.98, green: 0.95, blue: 0.94) // Light warm background
+            return AIStudioPalette.canvas
         case .blue:
             return Color(red: 0.95, green: 0.97, blue: 1.0) // Light blue background
         case .green:
@@ -83,6 +83,25 @@ enum ThemeColor: String, CaseIterable {
             return Color(red: 1.0, green: 0.97, blue: 0.94) // Light orange background
         }
     }
+}
+
+// MARK: - AI Studio palette
+
+/// Shared brand colors for the library, prompt details, and discovery screens.
+/// The surface colors are asset-backed so cards remain legible in both appearances.
+enum AIStudioPalette {
+    static let ink = Color(red: 0.075, green: 0.080, blue: 0.19)
+    static let violet = Color(red: 0.40, green: 0.31, blue: 0.89)
+    static let cyan = Color(red: 0.39, green: 0.88, blue: 0.96)
+    static let pink = Color(red: 0.96, green: 0.51, blue: 0.77)
+    static let canvas = Color("StudioCanvas")
+    static let surface = Color("StudioSurface")
+    static let border = Color("StudioBorder")
+    static let heroGradient = LinearGradient(
+        colors: [ink, Color(red: 0.20, green: 0.15, blue: 0.46), violet],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
 }
 
 // MARK: - Base Theme

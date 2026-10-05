@@ -101,44 +101,10 @@ struct PromptDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                // Header Card
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(model.prompt.act)
-                                .font(.title.bold())
-                                .foregroundColor(.primary)
-                                .lineLimit(3)
-                                .minimumScaleFactor(0.5)
-                            HStack {
-                                if let category = model.category {
-                                    BadgeView(icon: nil, text: category.title)
-                                }
-                                
-                                if model.prompt.forDevs {
-                                    BadgeView(icon: "laptopcomputer", text: "For Developers")
-                                }
-                            }
-                        }
-                        Spacer()
-                        Button(action: { model.onFavorite() }) {
-                            Image(systemName: model.prompt.isFavorite ? "heart.fill" : "heart")
-                                .foregroundColor(model.prompt.isFavorite ? .red : .gray)
-                                .font(.title2)
-                                .padding(8)
-                                .glassCircle(interactive: true, fallback: Color(.systemGray6))
-                        }
-                    }
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(Color(.systemBackground))
-                        .shadow(color: .black.opacity(0.07), radius: 6, x: 0, y: 2)
-                )
-                
-                // Fill-in-the-blank variables
+            VStack(alignment: .leading, spacing: 20) {
+                hero
+                promptCard
+
                 let template = model.template
                 if template.hasVariables {
                     PromptCustomizeCard(variableCount: template.variables.count) {
@@ -159,45 +125,25 @@ struct PromptDetailView: View {
                     .buttonStyle(.plain)
                 }
 
-                // Quick Launch LLMs
                 LLMQuickLaunchSection(prompt: model.prompt.prompt)
-
-                // Prompt Content Card
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Prompt")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                            model.onCopy()
-                        }) {
-                            ZStack {
-                                HStack {
-                                    Image(systemName: "doc.on.doc")
-                                        .opacity(model.copiedToClipboard ? 0 : 1)
-                                    Text("Copy")
-                                        .opacity(model.copiedToClipboard ? 0 : 1)
-                                }
-                                HStack {
-                                    Image(systemName: "checkmark")
-                                        .opacity(model.copiedToClipboard ? 1 : 0)
-                                    Text("Copied!")
-                                        .opacity(model.copiedToClipboard ? 1 : 0)
-                                }
-                            }
-                        }
-                        .glassButtonStyle()
-                        .tint(.blue)
-                        .disabled(model.copiedToClipboard)
-                    }
-                    TranslatablePromptText(text: model.prompt.prompt)
-                }
             }
-            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 20)
+            .padding(.top, 16)
+            .padding(.bottom, 32)
         }
-        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .background {
+            ZStack {
+                AIStudioPalette.canvas
+                RadialGradient(
+                    colors: [AIStudioPalette.violet.opacity(0.12), .clear],
+                    center: .topLeading,
+                    startRadius: 12,
+                    endRadius: 480
+                )
+            }
+            .ignoresSafeArea()
+        }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -208,6 +154,7 @@ struct PromptDetailView: View {
                     Image(systemName: "trash")
                 }
                 .tint(.red)
+                .accessibilityLabel("Delete Prompt")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
@@ -222,6 +169,7 @@ struct PromptDetailView: View {
                 } label: {
                     Image(systemName: "square.and.arrow.up")
                 }
+                .accessibilityLabel("Share Prompt")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
@@ -230,6 +178,7 @@ struct PromptDetailView: View {
                 }) {
                     Image(systemName: "pencil")
                 }
+                .accessibilityLabel("Edit Prompt")
             }
         }
         .sheet(isPresented: Binding($model.route.customizing)) {
@@ -270,6 +219,121 @@ struct PromptDetailView: View {
                 Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")
             }
         )
+    }
+
+    private var hero: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            HStack(alignment: .top) {
+                Label("AI Prompt", systemImage: "sparkles")
+                    .font(.caption.bold())
+                    .textCase(.uppercase)
+                    .tracking(1)
+                    .foregroundStyle(AIStudioPalette.cyan)
+
+                Spacer(minLength: 12)
+
+                Button(action: model.onFavorite) {
+                    Image(systemName: model.prompt.isFavorite ? "heart.fill" : "heart")
+                        .font(.title3)
+                        .foregroundStyle(.white)
+                        .frame(width: 48, height: 48)
+                        .background(.white.opacity(0.16), in: Circle())
+                        .overlay(Circle().strokeBorder(.white.opacity(0.25)))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(model.prompt.isFavorite ? "Remove from Favorites" : "Add to Favorites")
+            }
+
+            Text(model.prompt.act)
+                .font(.largeTitle.bold())
+                .foregroundStyle(.white)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if let category = model.category {
+                Label(Bundle.main.localizedString(forKey: category.title, value: category.title, table: nil), systemImage: "square.grid.2x2.fill")
+                    .font(.subheadline)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.white.opacity(0.16), in: Capsule())
+            }
+
+            if model.prompt.forDevs {
+                Label("For Developers", systemImage: "chevron.left.forwardslash.chevron.right")
+                    .font(.subheadline)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.white.opacity(0.16), in: Capsule())
+            }
+        }
+        .padding(22)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            ZStack(alignment: .topTrailing) {
+                RoundedRectangle(cornerRadius: 28)
+                    .fill(AIStudioPalette.heroGradient)
+
+                Circle()
+                    .fill(AIStudioPalette.cyan.opacity(0.22))
+                    .frame(width: 160, height: 160)
+                    .blur(radius: 36)
+                    .offset(x: 55, y: -55)
+                    .accessibilityHidden(true)
+
+                Image(systemName: "sparkles")
+                    .font(.system(size: 118, weight: .ultraLight))
+                    .foregroundStyle(.white.opacity(0.10))
+                    .rotationEffect(.degrees(-16))
+                    .offset(x: 20, y: 60)
+                    .accessibilityHidden(true)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 28))
+        }
+        .shadow(color: AIStudioPalette.violet.opacity(0.20), radius: 20, x: 0, y: 10)
+    }
+
+    private var promptCard: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack(alignment: .firstTextBaseline) {
+                Label("Prompt", systemImage: "text.alignleft")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+
+                Spacer(minLength: 12)
+
+                Text("\(model.prompt.prompt.count) characters")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            TranslatablePromptText(text: model.prompt.prompt)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Button {
+                Haptics.shared.vibrateIfEnabled()
+                model.onCopy()
+            } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: model.copiedToClipboard ? "checkmark" : "doc.on.doc")
+                    Text(model.copiedToClipboard ? "Copied!" : "Copy Prompt")
+                    Spacer(minLength: 8)
+                    Image(systemName: model.copiedToClipboard ? "checkmark.circle.fill" : "arrow.right")
+                }
+                .font(.headline)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 18)
+                .frame(minHeight: 54)
+                .background(AIStudioPalette.heroGradient, in: RoundedRectangle(cornerRadius: 16))
+            }
+            .buttonStyle(.plain)
+            .disabled(model.copiedToClipboard)
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(AIStudioPalette.border))
+        .shadow(color: AIStudioPalette.ink.opacity(0.06), radius: 18, x: 0, y: 8)
     }
 }
 

@@ -97,26 +97,16 @@ extension View {
 // MARK: - Content
 
 extension View {
-    /// Card behind a prompt row. Rows are scrolling content, so on iOS 26 they sit on a plain
-    /// surface underneath the glass controls instead of imitating glass themselves.
-    @ViewBuilder
+    /// Solid, adaptive content card. Glass remains reserved for floating controls.
     func promptRowSurface() -> some View {
-        if #available(iOS 26.0, *) {
-            background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        } else {
-            background(
-                ZStack {
-                    Rectangle().fill(.ultraThinMaterial)
-                    LinearGradient(
-                        colors: [Color.purple.opacity(0.10), Color.cyan.opacity(0.08), Color.pink.opacity(0.08), Color.white.opacity(0.18)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
+        background {
+            RoundedRectangle(cornerRadius: 22)
+                .fill(AIStudioPalette.surface)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 22)
+                        .strokeBorder(AIStudioPalette.border, lineWidth: 1)
                 }
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .shadow(color: Color.white.opacity(0.07), radius: 3, x: -3, y: -3)
-            .shadow(color: Color.black.opacity(0.10), radius: 3, x: 3, y: 3)
+                .shadow(color: AIStudioPalette.ink.opacity(0.06), radius: 12, x: 0, y: 5)
         }
     }
 }

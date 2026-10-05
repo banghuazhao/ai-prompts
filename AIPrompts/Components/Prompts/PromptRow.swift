@@ -19,78 +19,76 @@ struct PromptRowView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(prompt.act)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: prompt.forDevs ? "chevron.left.forwardslash.chevron.right" : "text.quote")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(AIStudioPalette.violet)
+                    .frame(width: 44, height: 44)
+                    .background(AIStudioPalette.violet.opacity(0.10), in: RoundedRectangle(cornerRadius: 14))
+                    .accessibilityHidden(true)
 
-                if prompt.isNew {
-                    NewBadge()
-                }
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(prompt.act)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                        .lineLimit(2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                GlassGroup {
-                    HStack {
-                        Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                            onFavorite()
-                        }) {
-                            Image(systemName: prompt.isFavorite ? "heart.fill" : "heart")
-                                .foregroundColor(prompt.isFavorite ? .red : .gray)
-                                .glassIcon()
-                        }
-                        .buttonStyle(.plain)
-
-                        Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                            PromptActions.copy(prompt.prompt)
-                            copied = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                copied = false
-                            }
-                        }) {
-                            ZStack {
-                                Image(systemName: "doc.on.doc")
-                                    .opacity(copied ? 0 : 1)
-                                Image(systemName: "checkmark")
-                                    .opacity(copied ? 1 : 0)
-                            }
-                            .foregroundColor(copied ? .green : .gray)
-                            .glassIcon()
-                        }
-                        .buttonStyle(.plain)
+                    if prompt.isNew {
+                        NewBadge()
                     }
                 }
+
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    onFavorite()
+                } label: {
+                    Image(systemName: prompt.isFavorite ? "heart.fill" : "heart")
+                        .font(.title3)
+                        .foregroundStyle(prompt.isFavorite ? .red : .secondary)
+                        .frame(width: 44, height: 44)
+                        .background(prompt.isFavorite ? Color.red.opacity(0.10) : AIStudioPalette.canvas, in: Circle())
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(prompt.isFavorite ? "Remove from favorites" : "Add to favorites")
             }
 
             Text(prompt.prompt)
-                .font(.body)
-                .foregroundColor(.secondary)
-                .lineLimit(3)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
                 .multilineTextAlignment(.leading)
 
-            HStack {
-                VStack(alignment: .leading) {
-                    if let category {
-                        BadgeView(icon: nil, text: category.title)
-                    }
-
-                    if prompt.forDevs {
-                        BadgeView(icon: "laptopcomputer", text: "For Developers")
-                    }
+            HStack(spacing: 8) {
+                if let category {
+                    BadgeView(icon: nil, text: category.title)
+                } else if prompt.forDevs {
+                    BadgeView(icon: "laptopcomputer", text: "For Developers")
                 }
 
-                Spacer()
+                Spacer(minLength: 8)
 
-                Text("\(prompt.prompt.count) characters")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    PromptActions.copy(prompt.prompt)
+                    copied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        copied = false
+                    }
+                } label: {
+                    Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(copied ? .green : AIStudioPalette.violet)
+                        .padding(.horizontal, 14)
+                        .frame(minHeight: 44)
+                        .background(AIStudioPalette.violet.opacity(0.09), in: Capsule())
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(copied ? "Prompt copied" : "Copy prompt")
             }
         }
-        .padding()
+        .padding(16)
         .promptRowSurface()
     }
 }

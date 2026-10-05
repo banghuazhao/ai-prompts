@@ -122,23 +122,26 @@ struct FavoritesView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Tab Picker
+                collectionHeader
+
                 Picker("Favorites", selection: $model.selectedTab) {
-                    Text("Prompts (\(model.favoritePrompts.count))").tag(0)
-                    Text("Vibe Prompts (\(model.favoriteVibePrompts.count))").tag(1)
+                    Text("Prompts").tag(0)
+                    Text("Vibe").accessibilityLabel("Vibe Prompts").tag(1)
                     if model.showsAIChats {
-                        Text("Chats (\(model.aiChats.count))").tag(2)
+                        Text("Chats").tag(2)
                     }
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 14)
+                .accessibilityLabel("Saved item type")
 
                 // Content based on selected tab
                 if model.selectedTab == 0 {
                     if model.favoritePrompts.isEmpty {
                         EmptyFavoritesView(
                             title: "No Favorite Prompts",
-                            message: "Prompts you favorite will appear here",
+                            message: "Tap the heart on a prompt to keep it close at hand.",
                             systemImage: "heart"
                         )
                     } else {
@@ -163,8 +166,11 @@ struct FavoritesView: View {
                                     }
                                 }
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                         }
-                        .listStyle(PlainListStyle())
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
                     }
                 } else if model.selectedTab == 2 {
                     AIChatHistoryList(chats: model.aiChats)
@@ -172,7 +178,7 @@ struct FavoritesView: View {
                     if model.favoriteVibePrompts.isEmpty {
                         EmptyFavoritesView(
                             title: "No Favorite Vibe Prompts",
-                            message: "Vibe prompts you favorite will appear here",
+                            message: "Tap the heart on a vibe prompt to save your ideas here.",
                             systemImage: "sparkles"
                         )
                     } else {
@@ -197,8 +203,11 @@ struct FavoritesView: View {
                                     }
                                 }
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                         }
-                        .listStyle(PlainListStyle())
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
                     }
                 }
                 if !model.purchaseManager.isPremiumUserPurchased {
@@ -207,6 +216,7 @@ struct FavoritesView: View {
                         .padding(.bottom, 16)
                 }
             }
+            .background(AIStudioPalette.canvas.ignoresSafeArea())
             .navigationTitle("Favorites")
             .navigationBarTitleDisplayMode(.inline)
             // Prompt sheets/alerts
@@ -252,6 +262,31 @@ struct FavoritesView: View {
             )
         }
     }
+
+    private var collectionHeader: some View {
+        HStack(spacing: 14) {
+            Image(systemName: "heart.text.square.fill")
+                .font(.title2)
+                .foregroundStyle(AIStudioPalette.violet)
+                .frame(width: 50, height: 50)
+                .background(AIStudioPalette.violet.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Your collection")
+                    .font(.system(.headline, design: .rounded, weight: .bold))
+                Text("\(model.favoritePrompts.count + model.favoriteVibePrompts.count + model.aiChats.count) saved items")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(16)
+        .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).strokeBorder(AIStudioPalette.border, lineWidth: 1))
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+    }
 }
 
 struct EmptyFavoritesView: View {
@@ -260,11 +295,35 @@ struct EmptyFavoritesView: View {
     let systemImage: String
 
     var body: some View {
-        ContentUnavailableView(
-            title,
-            systemImage: systemImage,
-            description: Text(message)
-        )
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack(alignment: .leading, spacing: 18) {
+            Image(systemName: systemImage)
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 58, height: 58)
+                .background(.white.opacity(0.16), in: RoundedRectangle(cornerRadius: 19))
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("YOUR IDEAS, READY WHEN YOU ARE")
+                    .font(.caption2.weight(.bold))
+                    .tracking(1.2)
+                    .foregroundStyle(AIStudioPalette.cyan)
+                Text(title)
+                    .font(.system(.title2, design: .rounded, weight: .bold))
+                    .foregroundStyle(.white)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.94))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.heroGradient, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .padding(.horizontal, 20)
+        .padding(.top, 18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .accessibilityElement(children: .combine)
     }
 }

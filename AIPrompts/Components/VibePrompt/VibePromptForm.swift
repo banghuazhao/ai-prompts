@@ -83,147 +83,24 @@ struct VibePromptFormView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 24) {
-                    // App Details Card
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("App Details")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 2)
-                        TextField("App Name", text: $model.prompt.app)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("Contributor (optional)", text: $model.prompt.contributor)
-                            .textFieldStyle(.roundedBorder)
-                        Text("Enter your GitHub username (e.g., banghuazhao, which will link to https://github.com/banghuazhao). Optional.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        TextField("Tech Stack (comma-separated, optional)", text: $model.prompt.techstack)
-                            .textFieldStyle(.roundedBorder)
-                        Text("Example: Swift, SwiftUI, iOS. Optional.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(.systemBackground))
-                            .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
-                    )
+                VStack(alignment: .leading, spacing: 20) {
+                    introduction
+                    appDetailsCard
+                    promptCard
 
-                    // Prompt Card
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Prompt")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 2)
-                        TextEditor(text: $model.prompt.prompt)
-                            .frame(minHeight: 300)
-                            .padding(8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                    .fill(Color(.systemGray6))
-                            )
-                        Text("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        if model.canSuggestDetails {
-                            AISuggestButton(
-                                title: "Suggest App Name & Tech Stack",
-                                isLoading: model.isSuggestingDetails,
-                                failure: model.detailsFailure
-                            ) {
-                                model.onSuggestDetails()
-                            }
-                        }
-                        // --- Analyzer Button ---
-                        if !model.prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            Button(action: {
-                                analyzerIssues = PromptAnalyzer.analyze(model.prompt.prompt)
-                                showAnalyzerFeedback = true
-                            }) {
-                                Label("Improve Prompt", systemImage: "wand.and.stars")
-                                    .font(.subheadline)
-                            }
-                            .glassButtonStyle()
-                            .padding(.top, 4)
-                        }
-                        // --- Analyzer Feedback Panel ---
-                        if showAnalyzerFeedback {
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    Text("Prompt Improvement Suggestions")
-                                        .font(.headline)
-                                    Spacer()
-                                    Button(action: { showAnalyzerFeedback = false }) {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .foregroundColor(.secondary)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                                if analyzerIssues.isEmpty {
-                                    Text("No major issues detected. Your prompt looks good!")
-                                        .font(.caption)
-                                        .foregroundColor(.green)
-                                } else {
-                                    ForEach(analyzerIssues) { issue in
-                                        VStack(alignment: .leading, spacing: 2) {
-                                            Text("• \(issue.type): \(issue.description)")
-                                                .font(.caption)
-                                                .foregroundColor(.orange)
-                                            if let suggestion = issue.suggestion {
-                                                Text("  Suggestion: \(suggestion)")
-                                                    .font(.caption2)
-                                                    .foregroundColor(.secondary)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            .padding(8)
-                            .background(Color.yellow.opacity(0.1))
-                            .cornerRadius(10)
-                        }
+                    if showAnalyzerFeedback {
+                        analyzerFeedbackCard
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(.systemBackground))
-                            .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
-                    )
-
                     if showContextEngineeringTips {
-                        VStack(alignment: .leading, spacing: AppSpacing.small) {
-                            HStack {
-                                Text("Context Engineering Tips")
-                                    .font(AppFont.headline)
-                                Spacer()
-                                Button(
-                                    action: {
-                                        withAnimation {
-                                            showContextEngineeringTips = false
-                                        }
-                                    }
-                                ) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.secondary)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            Text("• Be clear and specific about the app or use case.")
-                                .font(AppFont.caption)
-                            Text("• Include only necessary information.")
-                                .font(AppFont.caption)
-                            Text("• Use structure (lists, JSON, etc.) for clarity.")
-                                .font(AppFont.caption)
-                            Text("• Break complex tasks into steps.")
-                                .font(AppFont.caption)
-                        }
-                        .appInfoSection()
+                        contextTipsCard
                     }
                 }
-                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 32)
             }
-            .background(Color(.systemGroupedBackground).ignoresSafeArea())
+            .background(AIStudioPalette.canvas.ignoresSafeArea())
             .navigationTitle(
                 model.isEdit ?
                     "Edit Vibe Prompt" :
@@ -238,33 +115,221 @@ struct VibePromptFormView: View {
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    if #available(iOS 26.0, *) {
-                        Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                            model.onTapSave()
-                        }) {
-                            Text("Save")
-                                .fontWeight(.semibold)
-                        }
-                        .buttonStyle(.glassProminent)
-                        .disabled(model.prompt.app.isEmpty || model.prompt.prompt.isEmpty)
+                    Button("Save") {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapSave()
+                    }
+                    .font(.headline)
+                    .glassButtonStyle(prominent: true)
+                    .tint(AIStudioPalette.violet)
+                    .disabled(model.prompt.app.isEmpty || model.prompt.prompt.isEmpty)
+                }
+            }
+        }
+    }
+
+    private var introduction: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Image(systemName: "curlybraces")
+                .font(.title2)
+                .foregroundStyle(AIStudioPalette.cyan)
+                .frame(width: 48, height: 48)
+                .background(.white.opacity(0.14), in: RoundedRectangle(cornerRadius: 14))
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Group {
+                    if model.isEdit {
+                        Text("Refine your build")
                     } else {
-                        Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                            model.onTapSave()
-                        }) {
-                            Text("Save")
-                                .fontWeight(.semibold)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                                .background(model.prompt.app.isEmpty || model.prompt.prompt.isEmpty ? Color(.systemGray4) : Color.accentColor)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                        Text("Create a vibe prompt")
+                    }
+                }
+                .font(.caption.bold())
+                .textCase(.uppercase)
+                .tracking(1)
+                .foregroundStyle(AIStudioPalette.cyan)
+                Text("Define the app, then describe what to build.")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.heroGradient, in: RoundedRectangle(cornerRadius: 24))
+    }
+
+    private var appDetailsCard: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Label("App Details", systemImage: "square.stack.3d.up")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("App Name")
+                    .font(.subheadline.bold())
+                TextField("Name your app", text: $model.prompt.app)
+                    .font(.body)
+                    .padding(.horizontal, 14)
+                    .frame(minHeight: 52)
+                    .background(AIStudioPalette.canvas, in: RoundedRectangle(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(AIStudioPalette.border))
+                    .accessibilityLabel("App Name")
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Contributor (optional)")
+                    .font(.subheadline.bold())
+                TextField("GitHub username", text: $model.prompt.contributor)
+                    .font(.body)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .padding(.horizontal, 14)
+                    .frame(minHeight: 52)
+                    .background(AIStudioPalette.canvas, in: RoundedRectangle(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(AIStudioPalette.border))
+                    .accessibilityLabel("Contributor")
+                Text("Your GitHub username links to your profile (for example, banghuazhao).")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Tech Stack (optional)")
+                    .font(.subheadline.bold())
+                TextField("Swift, SwiftUI, iOS", text: $model.prompt.techstack)
+                    .font(.body)
+                    .padding(.horizontal, 14)
+                    .frame(minHeight: 52)
+                    .background(AIStudioPalette.canvas, in: RoundedRectangle(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(AIStudioPalette.border))
+                    .accessibilityLabel("Tech Stack")
+                Text("Separate technologies with commas, for example Swift, SwiftUI, iOS.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(AIStudioPalette.border))
+    }
+
+    private var promptCard: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Label("Prompt", systemImage: "text.quote")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Prompt Text")
+                    .font(.subheadline.bold())
+                TextEditor(text: $model.prompt.prompt)
+                    .font(.body)
+                    .scrollContentBackground(.hidden)
+                    .frame(minHeight: 260)
+                    .padding(10)
+                    .background(AIStudioPalette.canvas, in: RoundedRectangle(cornerRadius: 14))
+                    .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(AIStudioPalette.border))
+                    .accessibilityLabel("Prompt Text")
+                Label("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.", systemImage: "lightbulb")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+
+            if model.canSuggestDetails {
+                AISuggestButton(
+                    title: "Suggest App Name & Tech Stack",
+                    isLoading: model.isSuggestingDetails,
+                    failure: model.detailsFailure
+                ) {
+                    model.onSuggestDetails()
+                }
+            }
+
+            if !model.prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                Button {
+                    analyzerIssues = PromptAnalyzer.analyze(model.prompt.prompt)
+                    showAnalyzerFeedback = true
+                } label: {
+                    Label("Improve Prompt", systemImage: "wand.and.stars")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(AIStudioPalette.violet)
+                        .frame(minHeight: 44)
+                        .padding(.horizontal, 14)
+                        .background(AIStudioPalette.violet.opacity(0.10), in: Capsule())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(AIStudioPalette.border))
+    }
+
+    private var analyzerFeedbackCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 8) {
+                Label("Prompt Improvement Suggestions", systemImage: "wand.and.stars")
+                    .font(.headline)
+                Spacer(minLength: 8)
+                Button("Dismiss suggestions", systemImage: "xmark") {
+                    showAnalyzerFeedback = false
+                }
+                .labelStyle(.iconOnly)
+                .frame(width: 44, height: 44)
+                .background(AIStudioPalette.canvas, in: Circle())
+            }
+            if analyzerIssues.isEmpty {
+                Text("No major issues detected. Your prompt looks good!")
+                    .font(.footnote)
+                    .foregroundStyle(.primary)
+            } else {
+                ForEach(analyzerIssues) { issue in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("• \(issue.type): \(issue.description)")
+                            .font(.footnote)
+                        if let suggestion = issue.suggestion {
+                            Text("Suggestion: \(suggestion)")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
                         }
-                        .disabled(model.prompt.app.isEmpty || model.prompt.prompt.isEmpty)
                     }
                 }
             }
         }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(AIStudioPalette.border))
+    }
+
+    private var contextTipsCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 8) {
+                Label("Context Engineering Tips", systemImage: "lightbulb")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Spacer(minLength: 8)
+                Button("Dismiss tips", systemImage: "xmark") {
+                    withAnimation {
+                        showContextEngineeringTips = false
+                    }
+                }
+                .labelStyle(.iconOnly)
+                .frame(width: 44, height: 44)
+                .background(AIStudioPalette.canvas, in: Circle())
+            }
+            Text("• Be clear and specific about the app or use case.")
+            Text("• Include only necessary information.")
+            Text("• Use structure (lists, JSON, etc.) for clarity.")
+            Text("• Break complex tasks into steps.")
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.violet.opacity(0.08), in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(AIStudioPalette.border))
     }
 }

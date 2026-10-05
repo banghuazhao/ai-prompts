@@ -166,6 +166,21 @@ struct VibePromptListView: View {
         NavigationStack {
             VStack {
                 List {
+                    AIStudioLibraryHero(
+                        eyebrow: "VIBE CODING",
+                        title: "Build the next big thing.",
+                        subtitle: "Ready-to-use ideas for apps, games and tools. Pick a stack and start creating.",
+                        promptCount: model.vibePrompts.count,
+                        symbol: "laptopcomputer.and.iphone",
+                        actionTitle: "Tech stacks"
+                    ) {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapFilterTechStackSheet()
+                    }
+                    .listRowInsets(EdgeInsets(top: 16, leading: 18, bottom: 18, trailing: 18))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+
                     if !model.selectedTechStacks.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             GlassGroup(spacing: 8) {
@@ -178,22 +193,39 @@ struct VibePromptListView: View {
                                             HStack(spacing: 4) {
                                                 Text(techStack)
                                                     .font(.callout)
-                                                    .foregroundColor(.blue)
+                                                    .foregroundStyle(AIStudioPalette.violet)
                                                 Image(systemName: "xmark.circle.fill")
-                                                    .foregroundColor(.blue)
+                                                    .foregroundStyle(AIStudioPalette.violet)
                                             }
                                             .padding(.vertical, 6)
                                             .padding(.horizontal, 10)
-                                            .glassCapsule(tint: Color.blue.opacity(0.15), interactive: true, fallback: Color.blue.opacity(0.15))
+                                            .glassCapsule(tint: AIStudioPalette.violet.opacity(0.15), interactive: true, fallback: AIStudioPalette.violet.opacity(0.15))
                                         }
                                         .buttonStyle(.plain)
+                                        .accessibilityLabel("Remove \(techStack) filter")
                                     }
                                 }
                                 .padding(.vertical, 4)
                             }
                         }
                         .scrollClipDisabled()
+                        .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 12, trailing: 18))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                     }
+
+                    HStack {
+                        Text(model.searchText.isEmpty ? "Explore builds" : "Search results")
+                            .font(.title3.bold())
+                        Spacer()
+                        Text("\(model.filteredVibePrompts.count)")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .listRowInsets(EdgeInsets(top: 4, leading: 22, bottom: 8, trailing: 22))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+
                     ForEach(model.filteredVibePrompts) { vibePrompt in
                         NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
                             VibePromptRowView(vibePrompt: vibePrompt) {
@@ -220,13 +252,28 @@ struct VibePromptListView: View {
                                 }
                             }
                         }
+                        .listRowInsets(EdgeInsets(top: 3, leading: 18, bottom: 11, trailing: 18))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                    }
+
+                    if model.filteredVibePrompts.isEmpty {
+                        ContentUnavailableView(
+                            model.searchText.isEmpty ? "No builds here yet" : "No matching builds",
+                            systemImage: "sparkle.magnifyingglass",
+                            description: Text(model.searchText.isEmpty ? "Try another tech stack filter." : "Try a different search term.")
+                        )
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                     }
                 }
                 .scrollDismissesKeyboard(.immediately)
                 .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(AIStudioPalette.canvas)
                 .searchable(text: $model.searchText, prompt: "Search prompts")
                 .navigationTitle("Vibe Prompts")
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Menu {
@@ -238,6 +285,7 @@ struct VibePromptListView: View {
                         } label: {
                             Label("Sort", systemImage: model.isDefault ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
                         }
+                        .help("Sort vibe prompts")
                     }
 
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -251,6 +299,8 @@ struct VibePromptListView: View {
                                 Image(systemName: "line.3.horizontal.decrease.circle.fill")
                             }
                         }
+                        .accessibilityLabel("Filter by tech stack")
+                        .help("Filter by tech stack")
                     }
 
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -260,6 +310,8 @@ struct VibePromptListView: View {
                         }) {
                             Image(systemName: "sparkles")
                         }
+                        .accessibilityLabel("Generate prompt idea")
+                        .help("Generate prompt idea")
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
@@ -268,6 +320,8 @@ struct VibePromptListView: View {
                         }) {
                             Image(systemName: "plus")
                         }
+                        .accessibilityLabel("Add vibe prompt")
+                        .help("Add vibe prompt")
                     }
                 }
                 .sheet(isPresented: Binding($model.route.isFilterTechShareSheetPresented)) {
@@ -284,15 +338,15 @@ struct VibePromptListView: View {
                                             .foregroundColor(.primary)
                                         if model.selectedTechStacks.contains(techStack) {
                                             Image(systemName: "checkmark.circle.fill")
-                                                .foregroundColor(.blue)
+                                                .foregroundStyle(AIStudioPalette.violet)
                                         }
                                     }
                                     .padding(.vertical, 6)
                                     .padding(.horizontal, 10)
                                     .glassCapsule(
-                                        tint: model.selectedTechStacks.contains(techStack) ? Color.blue.opacity(0.25) : nil,
+                                        tint: model.selectedTechStacks.contains(techStack) ? AIStudioPalette.violet.opacity(0.25) : nil,
                                         interactive: true,
-                                        fallback: model.selectedTechStacks.contains(techStack) ? Color.blue.opacity(0.15) : Color(.systemGray6)
+                                        fallback: model.selectedTechStacks.contains(techStack) ? AIStudioPalette.violet.opacity(0.15) : AIStudioPalette.surface
                                     )
                                 }
                                 .buttonStyle(.plain)

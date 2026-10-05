@@ -42,8 +42,14 @@ struct SearchView: View {
             let promptResults = matchingPrompts
             let vibePromptResults = matchingVibePrompts
             List {
+                if trimmedQuery.isEmpty {
+                    searchDiscovery
+                }
                 if canAskAI {
                     aiSection
+                }
+                if !trimmedQuery.isEmpty && promptResults.isEmpty && vibePromptResults.isEmpty {
+                    noResultsCard
                 }
                 if !promptResults.isEmpty {
                     Section("Prompts") {
@@ -53,6 +59,8 @@ struct SearchView: View {
                                     toggleFavorite(prompt)
                                 }
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                         }
                     }
                 }
@@ -64,23 +72,16 @@ struct SearchView: View {
                                     toggleFavorite(vibePrompt)
                                 }
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                         }
                     }
                 }
             }
             .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(AIStudioPalette.canvas)
             .scrollDismissesKeyboard(.immediately)
-            .overlay {
-                if trimmedQuery.isEmpty {
-                    ContentUnavailableView(
-                        "Search Everything",
-                        systemImage: "magnifyingglass",
-                        description: Text("Find prompts and vibe prompts by title, text, or tech stack.")
-                    )
-                } else if promptResults.isEmpty && vibePromptResults.isEmpty && !canAskAI {
-                    ContentUnavailableView.search(text: trimmedQuery)
-                }
-            }
             .navigationTitle("Search")
             .searchable(text: $query, prompt: "Prompts and vibe prompts")
             .onSubmit(of: .search) {
@@ -89,6 +90,97 @@ struct SearchView: View {
                 }
             }
         }
+    }
+
+    private var searchDiscovery: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Image(systemName: "sparkle.magnifyingglass")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 54, height: 54)
+                .background(.white.opacity(0.16), in: RoundedRectangle(cornerRadius: 17, style: .continuous))
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("DISCOVER WITH AI")
+                    .font(.caption.weight(.bold))
+                    .tracking(1.5)
+                    .foregroundStyle(AIStudioPalette.cyan)
+                Text("The right prompt starts here")
+                    .font(.system(.title, design: .rounded, weight: .bold))
+                    .foregroundStyle(.white)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("Search by title, topic, or the task you want to tackle.")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.94))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text("TRY A SEARCH")
+                    .font(.caption2.weight(.bold))
+                    .tracking(1.2)
+                    .foregroundStyle(.white.opacity(0.9))
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        suggestedSearch("Write better emails", query: "Write better emails", systemImage: "envelope")
+                        suggestedSearch("Explain code", query: "Explain code", systemImage: "chevron.left.forwardslash.chevron.right")
+                        suggestedSearch("Plan a trip", query: "Plan a trip", systemImage: "map")
+                    }
+                }
+                .scrollClipDisabled()
+            }
+        }
+        .padding(22)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.heroGradient, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .listRowInsets(EdgeInsets(top: 18, leading: 16, bottom: 8, trailing: 16))
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+    }
+
+    private func suggestedSearch(_ title: LocalizedStringKey, query searchQuery: String, systemImage: String) -> some View {
+        Button {
+            Haptics.shared.vibrateIfEnabled()
+            query = searchQuery
+        } label: {
+            Label(title, systemImage: systemImage)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 12)
+                .frame(minHeight: 44)
+                .background(.white.opacity(0.15), in: Capsule())
+                .overlay(Capsule().strokeBorder(.white.opacity(0.16), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var noResultsCard: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Image(systemName: "magnifyingglass")
+                .font(.headline)
+                .foregroundStyle(AIStudioPalette.violet)
+                .frame(width: 44, height: 44)
+                .background(AIStudioPalette.violet.opacity(0.11), in: RoundedRectangle(cornerRadius: 14))
+            VStack(alignment: .leading, spacing: 4) {
+                Text("No exact matches")
+                    .font(.headline)
+                if canAskAI {
+                    Text("Try Apple Intelligence, or search with broader words.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("Try searching with broader words or a different topic.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 20))
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
 
     // MARK: - Apple Intelligence
@@ -133,14 +225,38 @@ struct SearchView: View {
                     Haptics.shared.vibrateIfEnabled()
                     findWithAI()
                 } label: {
-                    Label("Find the best prompts with Apple Intelligence", systemImage: "sparkles")
+                    HStack(spacing: 14) {
+                        Image(systemName: "sparkles")
+                            .font(.title3.weight(.semibold))
+                            .foregroundStyle(AIStudioPalette.violet)
+                            .frame(width: 44, height: 44)
+                            .background(AIStudioPalette.violet.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Find with Apple Intelligence")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.primary)
+                            Text("Get suggestions from your prompt library")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer(minLength: 0)
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(AIStudioPalette.violet)
+                    }
+                    .padding(14)
+                    .background(AIStudioPalette.surface, in: RoundedRectangle(cornerRadius: 20))
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Find the best prompts with Apple Intelligence")
             }
         } header: {
             if hasResults || aiSearch.isSearching {
                 Text("Suggested by Apple Intelligence")
             }
         }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
 
     private func findWithAI() {

@@ -185,12 +185,42 @@ struct PromptListView: View {
         NavigationStack {
             VStack {
                 List {
+                    AIStudioLibraryHero(
+                        eyebrow: "THE PROMPT LIBRARY",
+                        title: "Find your next idea.",
+                        subtitle: "Thoughtful prompts for writing, learning, creating and everything in between.",
+                        promptCount: model.prompts.count,
+                        symbol: "sparkles.rectangle.stack",
+                        actionTitle: "Categories"
+                    ) {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapSelectCategory()
+                    }
+                    .listRowInsets(EdgeInsets(top: 16, leading: 18, bottom: 18, trailing: 18))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+
                     if model.showsNewPromptsBanner {
                         NewPromptsBanner(count: model.newPromptsCount) {
                             model.onTapNewPromptsBanner()
                         }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 18, trailing: 18))
+                        .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                     }
+
+                    HStack {
+                        Text(model.searchText.isEmpty ? "Explore prompts" : "Search results")
+                            .font(.title3.bold())
+                        Spacer()
+                        Text("\(model.filteredPrompts.count)")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    .listRowInsets(EdgeInsets(top: 4, leading: 22, bottom: 8, trailing: 22))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+
                     ForEach(model.filteredPrompts) { prompt in
                         NavigationLink(
                             destination: PromptDetailView(
@@ -222,14 +252,29 @@ struct PromptListView: View {
                                 }
                             }
                         }
+                        .listRowInsets(EdgeInsets(top: 3, leading: 18, bottom: 11, trailing: 18))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                    }
+
+                    if model.filteredPrompts.isEmpty {
+                        ContentUnavailableView(
+                            model.searchText.isEmpty ? "No prompts here yet" : "No matching prompts",
+                            systemImage: "sparkle.magnifyingglass",
+                            description: Text(model.searchText.isEmpty ? "Try another category or filter." : "Try a different search term.")
+                        )
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                     }
                 }
-                .listStyle(PlainListStyle())
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(AIStudioPalette.canvas)
             }
             .scrollDismissesKeyboard(.immediately)
-            .searchable(text: $model.searchText)
+            .searchable(text: $model.searchText, prompt: "Search prompts")
             .navigationTitle("Prompts")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
@@ -250,6 +295,7 @@ struct PromptListView: View {
                     } label: {
                         Label("Sort & Filter", systemImage: model.isDefault ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
                     }
+                    .help("Sort and filter prompts")
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -263,6 +309,8 @@ struct PromptListView: View {
                             Image(systemName: "line.3.horizontal.decrease.circle")
                         }
                     }
+                    .accessibilityLabel("Choose category")
+                    .help("Choose category")
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -272,6 +320,8 @@ struct PromptListView: View {
                     }) {
                         Image(systemName: "sparkles")
                     }
+                    .accessibilityLabel("Generate prompt idea")
+                    .help("Generate prompt idea")
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -280,6 +330,8 @@ struct PromptListView: View {
                     }) {
                         Image(systemName: "plus")
                     }
+                    .accessibilityLabel("Add prompt")
+                    .help("Add prompt")
                 }
             }
             .sheet(isPresented: Binding($model.route.showingAddPrompt)) {

@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var selectedTab = 0
     @State private var router = DeepLinkRouter.shared
+    @AppStorage("selectedThemeColor") private var selectedThemeColor = ThemeColor.default.rawValue
 
     var body: some View {
         Group {
@@ -12,6 +13,7 @@ struct ContentView: View {
                 legacyTabView
             }
         }
+        .tint((ThemeColor(rawValue: selectedThemeColor) ?? .default).primaryColor)
         .onOpenURL { url in
             router.handle(url)
         }
