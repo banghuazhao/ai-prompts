@@ -21,6 +21,10 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🌏 **Traditional Chinese**: Full zh-Hant localization of the app, widgets, and Siri phrases.
 - 🧩 **Fill-in-the-Blank Templates**: Prompts with variables (`{{topic}}`, `${Name: default}`, or a trailing `My first request is "..."`) get a **Customize & Use** sheet. Fill in the blanks, preview the result live, then copy it or launch it straight into ChatGPT, Claude, Gemini, Grok, or Perplexity.
 - 🍎 **Run on Device with Apple Intelligence**: On iOS 26 devices with Apple Intelligence, run any prompt right in the app with Apple's on-device Foundation Models: free, private and offline. Replies stream in, you can ask follow-ups, and conversations are saved under **Favorites › Chats**. If the model declines a prompt, the app offers Quick Launch instead. Other devices keep the existing Copy and Quick Launch flow.
+- 🔎 **Ask in Plain Language**: In the Search tab, describe what you need (like "help me prepare for a job interview") and Apple Intelligence picks the best prompts from the library. It can only choose prompts that exist.
+- 💡 **Blank Ideas**: In **Customize & Use**, tap **Suggest Ideas** for three tappable values for every blank.
+- 🏷️ **Auto Title & Category**: When adding a prompt, Apple Intelligence suggests its title, category and developer flag, or the app name and tech stack for a vibe prompt.
+- 🌐 **On-Device Translation**: If a prompt isn't in your language, translate it in place with Apple's Translation framework (iOS 18+) and copy the translation.
 - 🔍 **Prompt Details**: View detailed information for each prompt, including contributor and tech stack.
 - 🖥️ **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
 - 🫧 **Liquid Glass Design**: On iOS 26 the app uses Liquid Glass throughout: a floating tab bar that shrinks while you scroll, a dedicated Search tab that searches prompts and vibe prompts together, and glass buttons, chips, quick launch pills, and cards. iOS 17–25 keep the original look.

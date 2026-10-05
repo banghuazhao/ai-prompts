@@ -187,10 +187,7 @@ struct VibePromptDetailView: View {
                         .tint(.blue)
                         .disabled(model.copiedToClipboard)
                     }
-                    Text(model.vibePrompt.prompt)
-                        .font(.body)
-                        .lineSpacing(5)
-                        .foregroundColor(.primary)
+                    TranslatablePromptText(text: model.vibePrompt.prompt)
                 }
             }
             .padding()

@@ -184,10 +184,7 @@ struct PromptDetailView: View {
                         .tint(.blue)
                         .disabled(model.copiedToClipboard)
                     }
-                    Text(model.prompt.prompt)
-                        .font(.body)
-                        .lineSpacing(5)
-                        .foregroundColor(.primary)
+                    TranslatablePromptText(text: model.prompt.prompt)
                 }
             }
             .padding()

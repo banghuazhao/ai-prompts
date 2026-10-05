@@ -3,15 +3,20 @@ import SwiftUI
 /// Lets the user fill in a prompt's variables, preview the result, then copy or launch it.
 struct PromptCustomizeView: View {
     let title: String
+    let prompt: String
     let template: PromptTemplate
 
     @State private var values: [String: String]
     @State private var copied = false
     @State private var isRunningOnDevice = false
+    @State private var suggestions: [String: [String]] = [:]
+    @State private var isSuggesting = false
+    @State private var suggestionFailure: OnDeviceAIFailure?
     @Environment(\.dismiss) private var dismiss
 
     init(title: String, prompt: String) {
         self.title = title
+        self.prompt = prompt
         let template = PromptTemplate(prompt)
         self.template = template
         _values = State(initialValue: PromptVariableMemory.initialValues(for: template))
@@ -36,8 +41,17 @@ struct PromptCustomizeView: View {
                                 axis: .vertical
                             )
                             .lineLimit(1 ... 6)
+                            if let options = suggestions[variable.id], !options.isEmpty {
+                                SuggestionChips(options: options) { option in
+                                    Haptics.shared.vibrateIfEnabled()
+                                    values[variable.id] = option
+                                }
+                            }
                         }
                         .padding(.vertical, 2)
+                    }
+                    if OnDeviceAI.status == .available {
+                        suggestIdeasRow
                     }
                 } header: {
                     Text("Fill in the blanks")
@@ -115,6 +129,47 @@ struct PromptCustomizeView: View {
         }
     }
 
+    @ViewBuilder
+    private var suggestIdeasRow: some View {
+        if isSuggesting {
+            Label {
+                Text("Thinking of ideas…")
+                    .foregroundStyle(.secondary)
+            } icon: {
+                ProgressView()
+            }
+        } else {
+            Button {
+                Haptics.shared.vibrateIfEnabled()
+                suggestIdeas()
+            } label: {
+                Label(suggestions.isEmpty ? "Suggest Ideas" : "More Ideas", systemImage: "sparkles")
+            }
+            if let suggestionFailure {
+                Text(suggestionFailure.message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func suggestIdeas() {
+        guard #available(iOS 26.0, *) else { return }
+        isSuggesting = true
+        suggestionFailure = nil
+        Task {
+            do {
+                let result = try await PromptAssistant.suggestValues(for: template, text: prompt)
+                withAnimation {
+                    suggestions = result
+                }
+            } catch {
+                suggestionFailure = OnDeviceAIFailure(error)
+            }
+            isSuggesting = false
+        }
+    }
+
     private func binding(for id: String) -> Binding<String> {
         Binding(
             get: { values[id, default: ""] },
@@ -132,6 +187,33 @@ struct PromptCustomizeView: View {
                 copied = false
             }
         }
+    }
+}
+
+/// Tappable values suggested by the on-device model for one blank.
+private struct SuggestionChips: View {
+    let options: [String]
+    let onSelect: (String) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(options, id: \.self) { option in
+                    Button {
+                        onSelect(option)
+                    } label: {
+                        Text(option)
+                            .font(.footnote)
+                            .lineLimit(1)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color.purple.opacity(0.12), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .scrollClipDisabled()
     }
 }
 

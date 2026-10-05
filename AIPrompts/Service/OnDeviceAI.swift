@@ -100,7 +100,7 @@ final class OnDeviceChat {
             } catch is CancellationError {
                 // Keep whatever was streamed before the user tapped stop.
             } catch {
-                failure = Self.failure(for: error)
+                failure = OnDeviceAIFailure(error)
             }
             guard let index = messages.firstIndex(where: { $0.id == reply.id }) else { return }
             if messages[index].text.isEmpty {
@@ -129,39 +129,43 @@ final class OnDeviceChat {
         failure = nil
         isResponding = false
     }
+}
 
-    private static func failure(for error: Error) -> OnDeviceAIFailure {
+@available(iOS 26.0, *)
+extension OnDeviceAIFailure {
+    init(_ error: Error) {
         guard let error = error as? LanguageModelSession.GenerationError else {
-            return OnDeviceAIFailure(kind: .other, message: error.localizedDescription)
+            self.init(kind: .other, message: error.localizedDescription)
+            return
         }
         switch error {
         case .guardrailViolation, .refusal:
-            return OnDeviceAIFailure(
+            self.init(
                 kind: .declined,
                 message: String(localized: "Apple Intelligence can't help with this prompt. Try it in another assistant instead.")
             )
         case .exceededContextWindowSize:
-            return OnDeviceAIFailure(
+            self.init(
                 kind: .conversationTooLong,
                 message: String(localized: "This conversation is too long for the on-device model. Start a new chat to keep going.")
             )
         case .unsupportedLanguageOrLocale:
-            return OnDeviceAIFailure(
+            self.init(
                 kind: .declined,
                 message: String(localized: "Apple Intelligence doesn't support this language yet.")
             )
         case .assetsUnavailable:
-            return OnDeviceAIFailure(
+            self.init(
                 kind: .other,
                 message: String(localized: "Apple Intelligence is still getting ready. Try again in a moment.")
             )
         case .rateLimited, .concurrentRequests:
-            return OnDeviceAIFailure(
+            self.init(
                 kind: .other,
                 message: String(localized: "Apple Intelligence is busy. Try again in a moment.")
             )
         default:
-            return OnDeviceAIFailure(kind: .other, message: error.localizedDescription)
+            self.init(kind: .other, message: error.localizedDescription)
         }
     }
 }

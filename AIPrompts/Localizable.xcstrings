@@ -2612,6 +2612,136 @@
           }
         }
       }
+    },
+    "Finding prompts…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在尋找提示詞…"
+          }
+        }
+      }
+    },
+    "No prompts fit this request. Try describing it differently." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有符合這個需求的提示詞，試著換個方式描述。"
+          }
+        }
+      }
+    },
+    "Find the best prompts with Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 Apple Intelligence 找出最合適的提示詞"
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 推薦"
+          }
+        }
+      }
+    },
+    "Thinking of ideas…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在構思點子…"
+          }
+        }
+      }
+    },
+    "Suggest Ideas" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建議點子"
+          }
+        }
+      }
+    },
+    "More Ideas" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多點子"
+          }
+        }
+      }
+    },
+    "Suggest Title & Category" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建議標題與類別"
+          }
+        }
+      }
+    },
+    "Suggest App Name & Tech Stack" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建議 App 名稱與技術堆疊"
+          }
+        }
+      }
+    },
+    "Show Original" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示原文"
+          }
+        }
+      }
+    },
+    "Translate" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻譯"
+          }
+        }
+      }
+    },
+    "Copy Translation" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝翻譯"
+          }
+        }
+      }
+    },
+    "Couldn't translate this prompt. Try again later." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法翻譯這個提示詞，請稍後再試。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
