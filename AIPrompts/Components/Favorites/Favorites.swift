@@ -22,6 +22,14 @@ class FavoritesViewModel {
         , animation: .default) var favoriteVibePrompts
 
     @ObservationIgnored
+    @FetchAll(AIChat.all.order { $0.modifiedDate.desc() }, animation: .default) var aiChats
+
+    /// Saved on-device chats live here, next to favorites, so they don't need a tab of their own.
+    var showsAIChats: Bool {
+        OnDeviceAI.isSupported || !aiChats.isEmpty
+    }
+
+    @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
     
     @ObservationIgnored
@@ -118,6 +126,9 @@ struct FavoritesView: View {
                 Picker("Favorites", selection: $model.selectedTab) {
                     Text("Prompts (\(model.favoritePrompts.count))").tag(0)
                     Text("Vibe Prompts (\(model.favoriteVibePrompts.count))").tag(1)
+                    if model.showsAIChats {
+                        Text("Chats (\(model.aiChats.count))").tag(2)
+                    }
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
@@ -155,6 +166,8 @@ struct FavoritesView: View {
                         }
                         .listStyle(PlainListStyle())
                     }
+                } else if model.selectedTab == 2 {
+                    AIChatHistoryList(chats: model.aiChats)
                 } else {
                     if model.favoriteVibePrompts.isEmpty {
                         EmptyFavoritesView(

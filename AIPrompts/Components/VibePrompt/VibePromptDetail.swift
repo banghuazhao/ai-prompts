@@ -15,6 +15,8 @@ class VibePromptDetailModel {
     enum Route {
         case editingPrompt
         case customizing
+        case runningOnDevice
+        case sharingCard
         case showingDeleteAlert(VibePrompt)
     }
 
@@ -51,6 +53,11 @@ class VibePromptDetailModel {
 
     func onCustomize() {
         route = .customizing
+    }
+
+    /// Runs the prompt right away when every blank has a value, otherwise asks for them first.
+    func onRunOnDevice() {
+        route = template.runnablePrompt == nil ? .customizing : .runningOnDevice
     }
 
     func onEdit() {
@@ -142,6 +149,19 @@ struct VibePromptDetailView: View {
                     }
                 }
 
+                if OnDeviceAI.isSupported {
+                    RunOnDeviceCard {
+                        model.onRunOnDevice()
+                    }
+                }
+
+                if "\(model.vibePrompt.app) \(model.vibePrompt.prompt)".looksLikeImagePrompt {
+                    CreateImageButton(text: model.vibePrompt.prompt, title: model.vibePrompt.app) {
+                        ImagePlaygroundCardLabel()
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 // Quick Launch LLMs
                 LLMQuickLaunchSection(prompt: model.vibePrompt.prompt)
 
@@ -175,10 +195,7 @@ struct VibePromptDetailView: View {
                         .tint(.blue)
                         .disabled(model.copiedToClipboard)
                     }
-                    Text(model.vibePrompt.prompt)
-                        .font(.body)
-                        .lineSpacing(5)
-                        .foregroundColor(.primary)
+                    TranslatablePromptText(text: model.vibePrompt.prompt)
                 }
             }
             .padding()
@@ -196,10 +213,18 @@ struct VibePromptDetailView: View {
                 .tint(.red)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                ShareLink(item: "\(model.vibePrompt.app)\n\n\(model.vibePrompt.prompt)") {
+                Menu {
+                    ShareLink(item: "\(model.vibePrompt.app)\n\n\(model.vibePrompt.prompt)") {
+                        Label("Share Text", systemImage: "text.alignleft")
+                    }
+                    .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
+                    Button("Share as Image", systemImage: "photo") {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.route = .sharingCard
+                    }
+                } label: {
                     Image(systemName: "square.and.arrow.up")
                 }
-                .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
@@ -212,6 +237,12 @@ struct VibePromptDetailView: View {
         }
         .sheet(isPresented: Binding($model.route.customizing)) {
             PromptCustomizeView(title: model.vibePrompt.app, prompt: model.vibePrompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.runningOnDevice)) {
+            PromptRunSheet(title: model.vibePrompt.app, prompt: model.template.runnablePrompt ?? model.vibePrompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.sharingCard)) {
+            ShareCardSheet(content: ShareCardContent(title: model.vibePrompt.app, body: model.vibePrompt.prompt))
         }
         .sheet(isPresented: Binding($model.route.editingPrompt)) {
             VibePromptFormView(

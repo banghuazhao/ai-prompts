@@ -1151,16 +1151,6 @@
         }
       }
     },
-    "Open ${prompt}" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "開啟 ${prompt}"
-          }
-        }
-      }
-    },
     "Open Prompt" : {
       "localizations" : {
         "zh-Hant" : {
@@ -2359,6 +2349,556 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "隱私權設定"
+          }
+        }
+      }
+    },
+    "Apple Intelligence can't help with this prompt. Try it in another assistant instead." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 無法處理這個提示詞，請改用其他 AI 助理試試。"
+          }
+        }
+      }
+    },
+    "This conversation is too long for the on-device model. Start a new chat to keep going." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這段對話對裝置端模型來說太長了，請開始新的對話繼續。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence doesn't support this language yet." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 尚未支援此語言。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence is still getting ready. Try again in a moment." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 仍在準備中，請稍後再試。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence is busy. Try again in a moment." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 忙碌中，請稍後再試。"
+          }
+        }
+      }
+    },
+    "Start Over" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新開始"
+          }
+        }
+      }
+    },
+    "Share Conversation" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享對話"
+          }
+        }
+      }
+    },
+    "Ask a follow-up" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繼續提問"
+          }
+        }
+      }
+    },
+    "Stop" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停止"
+          }
+        }
+      }
+    },
+    "Send" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傳送"
+          }
+        }
+      }
+    },
+    "On-Device AI" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "裝置端 AI"
+          }
+        }
+      }
+    },
+    "Thinking…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "思考中…"
+          }
+        }
+      }
+    },
+    "Share" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
+        }
+      }
+    },
+    "Start New Chat" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始新對話"
+          }
+        }
+      }
+    },
+    "Try Again" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再試一次"
+          }
+        }
+      }
+    },
+    "On-Device AI Unavailable" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法使用裝置端 AI"
+          }
+        }
+      }
+    },
+    "Turn on Apple Intelligence in Settings › Apple Intelligence & Siri to run prompts for free, right on your iPhone." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在「設定」›「Apple Intelligence 與 Siri」中開啟 Apple Intelligence，即可在 iPhone 上免費執行提示詞。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence is still downloading. Try again once it's ready." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 仍在下載中，準備好後再試一次。"
+          }
+        }
+      }
+    },
+    "Apple Intelligence doesn't support your current language yet." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 尚未支援你目前使用的語言。"
+          }
+        }
+      }
+    },
+    "Running prompts on device needs an iPhone that supports Apple Intelligence." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在裝置上執行提示詞需要支援 Apple Intelligence 的 iPhone。"
+          }
+        }
+      }
+    },
+    "Run on Device" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在裝置上執行"
+          }
+        }
+      }
+    },
+    "Free and private with Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 Apple Intelligence 提供，免費且保護隱私"
+          }
+        }
+      }
+    },
+    "No Chats Yet" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚無對話"
+          }
+        }
+      }
+    },
+    "Open any prompt and tap Run on Device. Your conversations are saved here and never leave your iPhone." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打開任一提示詞並點一下「在裝置上執行」。你的對話會儲存在這裡，且絕不會離開你的 iPhone。"
+          }
+        }
+      }
+    },
+    "Chats (%lld)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "對話（%lld）"
+          }
+        }
+      }
+    },
+    "Finding prompts…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在尋找提示詞…"
+          }
+        }
+      }
+    },
+    "No prompts fit this request. Try describing it differently." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有符合這個需求的提示詞，試著換個方式描述。"
+          }
+        }
+      }
+    },
+    "Find the best prompts with Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 Apple Intelligence 找出最合適的提示詞"
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 推薦"
+          }
+        }
+      }
+    },
+    "Thinking of ideas…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在構思點子…"
+          }
+        }
+      }
+    },
+    "Suggest Ideas" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建議點子"
+          }
+        }
+      }
+    },
+    "More Ideas" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多點子"
+          }
+        }
+      }
+    },
+    "Suggest Title & Category" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建議標題與類別"
+          }
+        }
+      }
+    },
+    "Suggest App Name & Tech Stack" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建議 App 名稱與技術堆疊"
+          }
+        }
+      }
+    },
+    "Show Original" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示原文"
+          }
+        }
+      }
+    },
+    "Translate" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "翻譯"
+          }
+        }
+      }
+    },
+    "Copy Translation" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝翻譯"
+          }
+        }
+      }
+    },
+    "Couldn't translate this prompt. Try again later." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法翻譯這個提示詞，請稍後再試。"
+          }
+        }
+      }
+    },
+    "Open ${target}" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟 ${target}"
+          }
+        }
+      }
+    },
+    "Open Random Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟隨機提示詞"
+          }
+        }
+      }
+    },
+    "Opens AI Prompts on a random prompt for inspiration." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟 AI提示詞 並顯示一個隨機提示詞，給你靈感。"
+          }
+        }
+      }
+    },
+    "Share Text" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享文字"
+          }
+        }
+      }
+    },
+    "Share as Image" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享為圖片"
+          }
+        }
+      }
+    },
+    "Answered on device by Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 Apple Intelligence 在裝置上回答"
+          }
+        }
+      }
+    },
+    "AI Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI提示詞"
+          }
+        }
+      }
+    },
+    "Get AI Prompts on the App Store" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 App Store 取得 AI提示詞"
+          }
+        }
+      }
+    },
+    "Made with AI Prompts %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 AI提示詞 製作 %@"
+          }
+        }
+      }
+    },
+    "Create Image" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "建立圖片"
+          }
+        }
+      }
+    },
+    "Turn this prompt into a picture with Image Playground" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 Image Playground 把這個提示詞變成圖片"
+          }
+        }
+      }
+    },
+    "Run Prompt with Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 Apple Intelligence 執行提示詞"
+          }
+        }
+      }
+    },
+    "Runs a prompt with the on-device model and returns the answer. Free, private and works offline." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用裝置端模型執行提示詞並回傳答案。免費、保護隱私，且可離線使用。"
+          }
+        }
+      }
+    },
+    "Input" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "輸入內容"
+          }
+        }
+      }
+    },
+    "Optional text for the prompt to work on, such as your request or a document." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞要處理的文字（選填），例如你的需求或一份文件。"
+          }
+        }
+      }
+    },
+    "Run ${prompt}" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "執行${prompt}"
+          }
+        }
+      }
+    },
+    "Here's the answer for “%@”." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這是「%@」的答案。"
           }
         }
       }

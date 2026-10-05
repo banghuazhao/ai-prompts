@@ -30,27 +30,29 @@ struct CopyPromptIntent: AppIntent {
     }
 }
 
-struct OpenPromptIntent: AppIntent {
+/// An `OpenIntent`, so Spotlight opens indexed prompts with it. `OpenIntent` requires the
+/// parameter to be called `target`.
+struct OpenPromptIntent: OpenIntent {
     static var title: LocalizedStringResource = "Open Prompt"
     static var description = IntentDescription("Opens a prompt in AI Prompts.")
     static var openAppWhenRun = true
 
     @Parameter(title: "Prompt")
-    var prompt: PromptEntity
+    var target: PromptEntity
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Open \(\.$prompt)")
+        Summary("Open \(\.$target)")
     }
 
     init() {}
 
-    init(prompt: PromptEntity) {
-        self.prompt = prompt
+    init(target: PromptEntity) {
+        self.target = target
     }
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        DeepLinkRouter.shared.open(id: prompt.id)
+        DeepLinkRouter.shared.open(id: target.id)
         return .result()
     }
 }
@@ -94,7 +96,7 @@ struct AIPromptsShortcuts: AppShortcutsProvider {
             intent: OpenPromptIntent(),
             phrases: [
                 "Open a prompt in \(.applicationName)",
-                "Open \(\.$prompt) in \(.applicationName)",
+                "Open \(\.$target) in \(.applicationName)",
             ],
             shortTitle: "Open Prompt",
             systemImageName: "text.bubble"
@@ -108,5 +110,16 @@ struct AIPromptsShortcuts: AppShortcutsProvider {
             shortTitle: "Random Prompt",
             systemImageName: "shuffle"
         )
+        if #available(iOS 26.0, *) {
+            AppShortcut(
+                intent: RunPromptIntent(),
+                phrases: [
+                    "Run a prompt with \(.applicationName)",
+                    "Run \(\.$prompt) with \(.applicationName)",
+                ],
+                shortTitle: "Run Prompt",
+                systemImageName: "sparkles"
+            )
+        }
     }
 }

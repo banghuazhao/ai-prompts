@@ -18,6 +18,13 @@ class VibePromptFormModel {
     let isEdit: Bool
     let onUpsert: ((VibePrompt) -> Void)?
 
+    var isSuggestingDetails = false
+    var detailsFailure: OnDeviceAIFailure?
+
+    var canSuggestDetails: Bool {
+        OnDeviceAI.status == .available && !prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     init(
         prompt: VibePrompt.Draft = VibePrompt.Draft(),
         onUpsert: ((VibePrompt) -> Void)? = nil
@@ -25,6 +32,26 @@ class VibePromptFormModel {
         self.prompt = prompt
         self.onUpsert = onUpsert
         isEdit = prompt.id != nil
+    }
+
+    /// Fills in the app name and tech stack from the prompt text.
+    func onSuggestDetails() {
+        guard #available(iOS 26.0, *) else { return }
+        let text = prompt.prompt
+        isSuggestingDetails = true
+        detailsFailure = nil
+        Task {
+            do {
+                let details = try await PromptAssistant.suggestVibeDetails(for: text)
+                withAnimation {
+                    prompt.app = details.appName
+                    prompt.techstack = details.techStack.joined(separator: ", ")
+                }
+            } catch {
+                detailsFailure = OnDeviceAIFailure(error)
+            }
+            isSuggestingDetails = false
+        }
     }
 
     func onTapSave() {
@@ -99,6 +126,15 @@ struct VibePromptFormView: View {
                         Text("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.")
                             .font(.caption)
                             .foregroundColor(.secondary)
+                        if model.canSuggestDetails {
+                            AISuggestButton(
+                                title: "Suggest App Name & Tech Stack",
+                                isLoading: model.isSuggestingDetails,
+                                failure: model.detailsFailure
+                            ) {
+                                model.onSuggestDetails()
+                            }
+                        }
                         // --- Analyzer Button ---
                         if !model.prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                             Button(action: {

@@ -15,6 +15,8 @@ class PromptDetailModel {
     enum Route {
         case editingPrompt
         case customizing
+        case runningOnDevice
+        case sharingCard
         case showingDeleteAlert(Prompt)
     }
 
@@ -61,6 +63,11 @@ class PromptDetailModel {
 
     func onCustomize() {
         route = .customizing
+    }
+
+    /// Runs the prompt right away when every blank has a value, otherwise asks for them first.
+    func onRunOnDevice() {
+        route = template.runnablePrompt == nil ? .customizing : .runningOnDevice
     }
 
     func onEdit() {
@@ -139,6 +146,19 @@ struct PromptDetailView: View {
                     }
                 }
 
+                if OnDeviceAI.isSupported {
+                    RunOnDeviceCard {
+                        model.onRunOnDevice()
+                    }
+                }
+
+                if "\(model.prompt.act) \(model.prompt.prompt)".looksLikeImagePrompt {
+                    CreateImageButton(text: model.prompt.prompt, title: model.prompt.act) {
+                        ImagePlaygroundCardLabel()
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 // Quick Launch LLMs
                 LLMQuickLaunchSection(prompt: model.prompt.prompt)
 
@@ -172,10 +192,7 @@ struct PromptDetailView: View {
                         .tint(.blue)
                         .disabled(model.copiedToClipboard)
                     }
-                    Text(model.prompt.prompt)
-                        .font(.body)
-                        .lineSpacing(5)
-                        .foregroundColor(.primary)
+                    TranslatablePromptText(text: model.prompt.prompt)
                 }
             }
             .padding()
@@ -193,10 +210,18 @@ struct PromptDetailView: View {
                 .tint(.red)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                ShareLink(item: "\(model.prompt.act)\n\n\(model.prompt.prompt)") {
+                Menu {
+                    ShareLink(item: "\(model.prompt.act)\n\n\(model.prompt.prompt)") {
+                        Label("Share Text", systemImage: "text.alignleft")
+                    }
+                    .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
+                    Button("Share as Image", systemImage: "photo") {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.route = .sharingCard
+                    }
+                } label: {
                     Image(systemName: "square.and.arrow.up")
                 }
-                .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
@@ -209,6 +234,12 @@ struct PromptDetailView: View {
         }
         .sheet(isPresented: Binding($model.route.customizing)) {
             PromptCustomizeView(title: model.prompt.act, prompt: model.prompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.runningOnDevice)) {
+            PromptRunSheet(title: model.prompt.act, prompt: model.template.runnablePrompt ?? model.prompt.prompt)
+        }
+        .sheet(isPresented: Binding($model.route.sharingCard)) {
+            ShareCardSheet(content: ShareCardContent(title: model.prompt.act, body: model.prompt.prompt))
         }
         .sheet(isPresented: Binding($model.route.editingPrompt)) {
             PromptFormView(

@@ -27,6 +27,11 @@ enum PromptActions {
         registerPositiveAction()
     }
 
+    /// A finished on-device reply keeps the user in the app, so it's not an outbound action.
+    static func ranOnDevice() {
+        registerPositiveAction()
+    }
+
     static func favoriteToggled(isFavorite: Bool) {
         if isFavorite {
             registerPositiveAction()

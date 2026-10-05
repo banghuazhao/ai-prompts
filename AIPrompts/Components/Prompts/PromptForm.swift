@@ -24,6 +24,13 @@ class PromptFormModel {
 
     var route: Route?
 
+    var isSuggestingDetails = false
+    var detailsFailure: OnDeviceAIFailure?
+
+    var canSuggestDetails: Bool {
+        OnDeviceAI.status == .available && !prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     init(
         prompt: Prompt.Draft = Prompt.Draft(),
         onUpsert: ((Prompt) -> Void)? = nil
@@ -31,6 +38,30 @@ class PromptFormModel {
         self.prompt = prompt
         self.onUpsert = onUpsert
         isEdit = prompt.id != nil
+    }
+
+    /// Fills in the title, category and developer flag from the prompt text.
+    func onSuggestDetails() {
+        guard #available(iOS 26.0, *) else { return }
+        let text = prompt.prompt
+        let categories = allCategories
+        isSuggestingDetails = true
+        detailsFailure = nil
+        Task {
+            do {
+                let details = try await PromptAssistant.suggestDetails(for: text, categoryTitles: categories.map(\.title))
+                withAnimation {
+                    prompt.act = details.title
+                    if let categoryTitle = details.categoryTitle {
+                        prompt.categoryID = categories.first { $0.title == categoryTitle }?.id
+                    }
+                    prompt.forDevs = details.isForDevelopers
+                }
+            } catch {
+                detailsFailure = OnDeviceAIFailure(error)
+            }
+            isSuggestingDetails = false
+        }
     }
 
     func onTapSelectCategory() {
@@ -88,6 +119,15 @@ struct PromptFormView: View {
                         Text("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.")
                             .font(.caption)
                             .foregroundColor(.secondary)
+                        if model.canSuggestDetails {
+                            AISuggestButton(
+                                title: "Suggest Title & Category",
+                                isLoading: model.isSuggestingDetails,
+                                failure: model.detailsFailure
+                            ) {
+                                model.onSuggestDetails()
+                            }
+                        }
                         // Category Selection
                         HStack {
                             Text("Category")
