@@ -31,7 +31,7 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🌐 **On-Device Translation**: If a prompt isn't in your language, translate it in place with Apple's Translation framework (iOS 18+) and copy the translation.
 - 🔍 **Prompt Details**: View detailed information for each prompt, including contributor and tech stack.
 - 🖥️ **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
-- 🫧 **Liquid Glass Design**: On iOS 26 the app uses Liquid Glass throughout: a floating tab bar that shrinks while you scroll, a dedicated Search tab that searches prompts and vibe prompts together, and glass buttons, chips, quick launch pills, and cards. iOS 17–25 keep the original look.
+- 🫧 **Liquid Glass Design**: On iOS 26 the app uses Liquid Glass throughout: a floating tab bar that shrinks while you scroll, a dedicated Search tab that searches prompts and vibe prompts together, and glass buttons, chips, quick launch pills, and cards. iOS 17.4–25 keep the original look.
 - 🧩 **Modular Architecture**: Includes a reusable `MoreApps` module for app recommendations, with localization support.
 - 💾 **Local Data Management**: Uses GRDB for efficient, local data storage and management.
 - 🗂️ **Prompt Categories**: Organize and browse prompts by category for easier discovery and filtering. Quickly find prompts relevant to your needs.
@@ -47,7 +47,7 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 
 - Xcode 26 or later (the iOS 26 SDK is needed for the Liquid Glass APIs)
 - Swift 5.9+
-- iOS 17.0+ (Liquid Glass on iOS 26+)
+- iOS 17.4+ (Liquid Glass on iOS 26+)
 
 ### Installation
 

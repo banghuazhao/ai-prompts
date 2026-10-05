@@ -110,5 +110,16 @@ struct AIPromptsShortcuts: AppShortcutsProvider {
             shortTitle: "Random Prompt",
             systemImageName: "shuffle"
         )
+        if #available(iOS 26.0, *) {
+            AppShortcut(
+                intent: RunPromptIntent(),
+                phrases: [
+                    "Run a prompt with \(.applicationName)",
+                    "Run \(\.$prompt) with \(.applicationName)",
+                ],
+                shortTitle: "Run Prompt",
+                systemImageName: "sparkles"
+            )
+        }
     }
 }
