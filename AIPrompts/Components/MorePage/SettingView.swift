@@ -7,8 +7,10 @@
 
 
 
+import SharingGRDB
 import SwiftUI
 import Dependencies
+import UniformTypeIdentifiers
 
 struct SettingView: View {
     @AppStorage("buttonSoundEnabled") private var buttonSoundEnabled: Bool = true
@@ -18,8 +20,24 @@ struct SettingView: View {
     @Dependency(\.themeManager) var themeManager
     
     @Dependency(\.purchaseManager) var purchaseManager
+    @Dependency(\.defaultDatabase) private var database
     @ObservedObject private var consent = ConsentManager.shared
     @Environment(\.openURL) private var openURL
+
+    @State private var backupDocument: LibraryBackupDocument?
+    @State private var isExportingBackup = false
+    @State private var isImportingBackup = false
+    @State private var pendingRestore: LibraryBackup?
+    @State private var backupMessage: BackupMessage?
+
+    private struct BackupMessage: Identifiable {
+        let id = UUID()
+        let title: String
+        let message: String
+    }
+
+    /// Backups are a few hundred KB; anything far bigger isn't one.
+    private static let maxBackupFileSize = 50 * 1024 * 1024
 
     var body: some View {
         VStack(spacing: 0) {
@@ -49,12 +67,52 @@ struct SettingView: View {
                         }
                         .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     }
+                    settingsSection(title: "Backup") {
+                        Button {
+                            Haptics.shared.vibrateIfEnabled()
+                            exportBackup()
+                        } label: {
+                            linkRow("Export Library")
+                        }
+                        .fileExporter(
+                            isPresented: $isExportingBackup,
+                            document: backupDocument,
+                            contentType: .json,
+                            defaultFilename: LibraryBackup.defaultFilename
+                        ) { result in
+                            backupDocument = nil
+                            if case let .failure(error) = result {
+                                backupMessage = BackupMessage(title: String(localized: "Export Failed"), message: error.localizedDescription)
+                            }
+                        }
+
+                        Button {
+                            Haptics.shared.vibrateIfEnabled()
+                            isImportingBackup = true
+                        } label: {
+                            linkRow("Restore from Backup")
+                        }
+                        .fileImporter(isPresented: $isImportingBackup, allowedContentTypes: [.json]) { result in
+                            switch result {
+                            case let .success(url):
+                                readBackup(at: url)
+                            case let .failure(error):
+                                backupMessage = BackupMessage(title: String(localized: "Restore Failed"), message: error.localizedDescription)
+                            }
+                        }
+
+                        Text("Save your prompts, favorites, categories and chats to a file, then restore them on any device. Restoring adds to your library and never deletes anything.")
+                            .font(.footnote)
+                            .foregroundColor(themeManager.current.textPrimary.opacity(0.6))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                     settingsSection(title: "Privacy") {
                         if consent.privacyOptionsRequired {
                             Button {
                                 consent.presentPrivacyOptions()
                             } label: {
-                                privacyRow("Privacy Settings")
+                                linkRow("Privacy Settings")
                             }
                         }
                         Button {
@@ -62,7 +120,7 @@ struct SettingView: View {
                                 openURL(url)
                             }
                         } label: {
-                            privacyRow("Privacy Policy")
+                            linkRow("Privacy Policy")
                         }
                     }
                 }
@@ -80,9 +138,69 @@ struct SettingView: View {
         .onChange(of: darkModeEnabled) { _, newValue in
             themeManager.updateTheme(darkMode: newValue)
         }
+        .alert(
+            "Restore Backup?",
+            isPresented: Binding(
+                get: { pendingRestore != nil },
+                set: { if !$0 { pendingRestore = nil } }
+            ),
+            presenting: pendingRestore
+        ) { backup in
+            Button("Restore") {
+                restore(backup)
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: { backup in
+            Text("This backup has \(backup.promptCount) prompts, \(backup.vibePromptCount) vibe prompts and \(backup.chatCount) chats. Prompts with the same title are updated to the backup's version and the rest are added. Nothing is deleted.")
+        }
+        .alert(item: $backupMessage) { message in
+            Alert(title: Text(message.title), message: Text(message.message), dismissButton: .default(Text("OK")))
+        }
     }
 
-    private func privacyRow(_ title: LocalizedStringKey) -> some View {
+    private func exportBackup() {
+        do {
+            let data = try LibraryBackup.make(database: database).encoded()
+            backupDocument = LibraryBackupDocument(data: data)
+            isExportingBackup = true
+        } catch {
+            backupMessage = BackupMessage(title: String(localized: "Export Failed"), message: error.localizedDescription)
+        }
+    }
+
+    private func readBackup(at url: URL) {
+        let isAccessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if isAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        do {
+            let fileSize = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+            guard fileSize <= Self.maxBackupFileSize else { throw LibraryBackup.BackupError.notABackup }
+            pendingRestore = try LibraryBackup.decode(Data(contentsOf: url))
+        } catch {
+            backupMessage = BackupMessage(title: String(localized: "Restore Failed"), message: error.localizedDescription)
+        }
+    }
+
+    private func restore(_ backup: LibraryBackup) {
+        do {
+            let summary = try backup.restore(into: database)
+            backupMessage = BackupMessage(
+                title: String(localized: "Restore Complete"),
+                message: String(localized: "\(summary.added) items added, \(summary.updated) updated.")
+            )
+            WidgetSnapshotWriter.update(database: database)
+            Task {
+                await SpotlightIndexer.update()
+            }
+        } catch {
+            backupMessage = BackupMessage(title: String(localized: "Restore Failed"), message: error.localizedDescription)
+        }
+    }
+
+    private func linkRow(_ title: LocalizedStringKey) -> some View {
         HStack {
             Text(title)
                 .font(AppFont.body)

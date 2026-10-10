@@ -67,6 +67,8 @@ enum LLMProvider: String, CaseIterable, Identifiable {
 /// A horizontally scrolling row of quick launch buttons for every `LLMProvider`.
 struct LLMQuickLaunchSection: View {
     let prompt: String
+    /// Called after a provider is launched, e.g. to record the prompt as used.
+    var onLaunch: (() -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -84,7 +86,8 @@ struct LLMQuickLaunchSection: View {
                                     label: provider.label,
                                     background: provider.background,
                                     foreground: provider.foreground,
-                                    url: url
+                                    url: url,
+                                    onLaunch: onLaunch
                                 )
                             }
                         }

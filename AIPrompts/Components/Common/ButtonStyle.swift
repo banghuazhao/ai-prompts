@@ -129,11 +129,13 @@ struct LLMQuickLaunchButton: View {
     let background: Color
     let foreground: Color
     let url: URL
+    var onLaunch: (() -> Void)? = nil
     
     var body: some View {
         if #available(iOS 26.0, *) {
             Button(action: {
                 PromptActions.open(url)
+                onLaunch?()
             }) {
                 labelContent
                     .font(AppFont.headline)
@@ -147,6 +149,7 @@ struct LLMQuickLaunchButton: View {
         } else {
             Button(action: {
                 PromptActions.open(url)
+                onLaunch?()
             }) {
                 labelContent
             }

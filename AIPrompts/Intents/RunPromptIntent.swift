@@ -66,6 +66,7 @@ struct RunPromptIntent: AppIntent {
 
         saveToChats(prompt: text, answer: answer)
         PromptActions.ranOnDevice()
+        PromptUsage.record(entityID: prompt.id)
         return .result(
             value: answer,
             dialog: "Here's the answer for “\(prompt.title)”.",

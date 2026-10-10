@@ -5,6 +5,8 @@ struct PromptCustomizeView: View {
     let title: String
     let prompt: String
     let template: PromptTemplate
+    /// Called when the filled-in prompt is copied, launched or run, e.g. to record it as used.
+    let onUse: (() -> Void)?
 
     @State private var values: [String: String]
     @State private var copied = false
@@ -14,9 +16,10 @@ struct PromptCustomizeView: View {
     @State private var suggestionFailure: OnDeviceAIFailure?
     @Environment(\.dismiss) private var dismiss
 
-    init(title: String, prompt: String) {
+    init(title: String, prompt: String, onUse: (() -> Void)? = nil) {
         self.title = title
         self.prompt = prompt
+        self.onUse = onUse
         let template = PromptTemplate(prompt)
         self.template = template
         _values = State(initialValue: PromptVariableMemory.initialValues(for: template))
@@ -85,6 +88,7 @@ struct PromptCustomizeView: View {
                             Haptics.shared.vibrateIfEnabled()
                             PromptVariableMemory.save(values, for: template)
                             isRunningOnDevice = true
+                            onUse?()
                         } label: {
                             Label("Run on Device", systemImage: "sparkles")
                                 .foregroundStyle(.white)
@@ -97,7 +101,7 @@ struct PromptCustomizeView: View {
                         .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
                     }
 
-                    LLMQuickLaunchSection(prompt: renderedPrompt)
+                    LLMQuickLaunchSection(prompt: renderedPrompt, onLaunch: onUse)
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 }
@@ -179,6 +183,7 @@ struct PromptCustomizeView: View {
 
     private func onCopy() {
         PromptActions.copy(renderedPrompt)
+        onUse?()
         withAnimation {
             copied = true
         }

@@ -15,6 +15,9 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 📚 **Curated Prompts**: Browse a collection of high-quality AI prompts, including a special "Vibe Prompts" section for app-specific or mood-based prompts.
 - ✨ **AI-Powered Prompt Generation (Offline)**: Instantly generate new, unique prompts using an on-device Markov chain model trained on the existing prompt corpus. Works for both Prompts and Vibe Prompts, with no internet required.
 - ❤️ **Favorites**: Mark prompts as favorites for quick access.
+- 🕘 **Recently Used & Most Used**: Prompts you copy, quick launch or run show up in a **Recently Used** shelf at the top of the Prompts tab, and the **Most Used** sort puts your go-to prompts first. Long-press a card to remove it, or tap **Clear**.
+- 👆 **Swipe Actions**: Swipe right on any prompt to favorite it, or left to copy or delete it. **Copy** is also the first item in every long-press menu.
+- 💾 **Backup & Restore**: In **Settings › Backup**, export your prompts, favorites, categories and on-device chats to a JSON file, and restore it on any device. Restoring merges by title and never deletes anything.
 - 🆕 **Fresh Prompts Without an Update**: New prompts published to [`content/feed.json`](content/feed.json) reach every install on next launch, marked **NEW** with a "new prompts added" banner. Deleted prompts never come back.
 - 📱 **Widgets**: *Prompt of the Day* (Home Screen and Lock Screen) and *Favorite Prompts*. Tap to open the prompt.
 - 🗣️ **Siri & Shortcuts**: Copy, open, or get a random prompt with App Shortcuts, Siri, and Spotlight. On iOS 26 with Apple Intelligence, the **Run Prompt with Apple Intelligence** action runs a prompt (optionally with your own input) on device and returns the answer, which is also saved to Chats.

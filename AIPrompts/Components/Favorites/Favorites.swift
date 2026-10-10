@@ -80,7 +80,16 @@ class FavoritesViewModel {
         }
     }
 
+    func onCopy(_ prompt: Prompt) {
+        PromptActions.copy(prompt.prompt)
+        PromptUsage.record(promptID: prompt.id)
+    }
+
     // VibePrompt actions
+    func onCopy(_ vibePrompt: VibePrompt) {
+        PromptActions.copy(vibePrompt.prompt)
+    }
+
     func onEdit(_ vibePrompt: VibePrompt) {
         route = .editingVibePrompt(vibePrompt)
     }
@@ -155,6 +164,9 @@ struct FavoritesView: View {
                                     model.onFavorite(prompt)
                                 }
                                 .contextMenu {
+                                    Button(action: { model.onCopy(prompt) }) {
+                                        Label("Copy", systemImage: "doc.on.doc")
+                                    }
                                     Button(action: { model.onEdit(prompt) }) {
                                         Label("Edit", systemImage: "pencil")
                                     }
@@ -168,6 +180,12 @@ struct FavoritesView: View {
                             }
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
+                            .promptSwipeActions(
+                                isFavorite: prompt.isFavorite,
+                                onFavorite: { model.onFavorite(prompt) },
+                                onCopy: { model.onCopy(prompt) },
+                                onDelete: { model.onDeleteRequest(prompt) }
+                            )
                         }
                         .listStyle(.plain)
                         .scrollContentBackground(.hidden)
@@ -192,6 +210,9 @@ struct FavoritesView: View {
                                     model.onFavorite(vibePrompt)
                                 }
                                 .contextMenu {
+                                    Button(action: { model.onCopy(vibePrompt) }) {
+                                        Label("Copy", systemImage: "doc.on.doc")
+                                    }
                                     Button(action: { model.onEdit(vibePrompt) }) {
                                         Label("Edit", systemImage: "pencil")
                                     }
@@ -205,6 +226,12 @@ struct FavoritesView: View {
                             }
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
+                            .promptSwipeActions(
+                                isFavorite: vibePrompt.isFavorite,
+                                onFavorite: { model.onFavorite(vibePrompt) },
+                                onCopy: { model.onCopy(vibePrompt) },
+                                onDelete: { model.onDeleteRequest(vibePrompt) }
+                            )
                         }
                         .listStyle(.plain)
                         .scrollContentBackground(.hidden)

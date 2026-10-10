@@ -9,6 +9,7 @@ class PromptListModel {
     var searchText = ""
     enum SortOption: String, CaseIterable, Identifiable {
         case modifiedDate = "Modified Date"
+        case mostUsed = "Most Used"
         case title = "Title"
         case characterLengthAsc = "Character Length ↑"
         case characterLengthDesc = "Character Length ↓"
@@ -39,7 +40,17 @@ class PromptListModel {
         , animation: .default) var prompts
 
     @ObservationIgnored
+    @FetchAll(
+        PromptUsage
+            .all
+            .order { $0.lastUsedDate.desc() }
+        , animation: .default) var usages
+
+    @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
+
+    /// A prompt opened from the Recently Used shelf.
+    var recentPromptDestination: Prompt?
 
     @CasePathable
     enum Route {
@@ -75,6 +86,23 @@ class PromptListModel {
         switch sortOption {
         case .modifiedDate:
             prompts = prompts.sorted { $0.modifiedDate > $1.modifiedDate }
+        case .mostUsed:
+            let usageByPromptID = Dictionary(usages.map { ($0.promptID, $0) }, uniquingKeysWith: { first, _ in first })
+            prompts = prompts.sorted { lhs, rhs in
+                let lhsUsage = usageByPromptID[lhs.id]
+                let rhsUsage = usageByPromptID[rhs.id]
+                let lhsCount = lhsUsage?.useCount ?? 0
+                let rhsCount = rhsUsage?.useCount ?? 0
+                if lhsCount != rhsCount {
+                    return lhsCount > rhsCount
+                }
+                let lhsDate = lhsUsage?.lastUsedDate ?? .distantPast
+                let rhsDate = rhsUsage?.lastUsedDate ?? .distantPast
+                if lhsDate != rhsDate {
+                    return lhsDate > rhsDate
+                }
+                return lhs.modifiedDate > rhs.modifiedDate
+            }
         case .title:
             prompts = prompts.sorted { $0.act.localizedCaseInsensitiveCompare($1.act) == .orderedAscending }
         case .characterLengthAsc:
@@ -95,6 +123,22 @@ class PromptListModel {
         }
     }
     
+    /// Most recently used first. Usage rows are deleted with their prompt, but stay defensive.
+    var recentPrompts: [Prompt] {
+        let promptsByID = Dictionary(prompts.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return Array(usages.lazy.compactMap { promptsByID[$0.promptID] }.prefix(PromptUsage.recentLimit))
+    }
+
+    /// Only on the unfiltered library, where it doesn't compete with what the user is looking for.
+    var showsRecentlyUsed: Bool {
+        searchText.isEmpty && filterOption == .all && selectedCategory == nil && !usages.isEmpty
+    }
+
+    func onCopy(_ prompt: Prompt) {
+        PromptActions.copy(prompt.prompt)
+        PromptUsage.record(promptID: prompt.id)
+    }
+
     var newPromptsCount: Int {
         prompts.filter(\.isNew).count
     }
@@ -209,6 +253,21 @@ struct PromptListView: View {
                         .listRowSeparator(.hidden)
                     }
 
+                    if model.showsRecentlyUsed {
+                        let recentPrompts = model.recentPrompts
+                        if !recentPrompts.isEmpty {
+                            RecentlyUsedShelf(
+                                prompts: recentPrompts,
+                                onSelect: { model.recentPromptDestination = $0 },
+                                onRemove: { PromptUsage.remove(promptID: $0.id) },
+                                onClear: { PromptUsage.removeAll() }
+                            )
+                            .listRowInsets(EdgeInsets(top: 0, leading: 18, bottom: 18, trailing: 18))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                        }
+                    }
+
                     HStack {
                         Text(model.searchText.isEmpty ? "Explore prompts" : "Search results")
                             .font(.title3.bold())
@@ -234,6 +293,12 @@ struct PromptListView: View {
                             .contextMenu {
                                 Button(action: {
                                     Haptics.shared.vibrateIfEnabled()
+                                    model.onCopy(prompt)
+                                }) {
+                                    Label("Copy", systemImage: "doc.on.doc")
+                                }
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
                                     model.onEdit(prompt)
                                 }) {
                                     Label("Edit", systemImage: "pencil")
@@ -255,6 +320,12 @@ struct PromptListView: View {
                         .listRowInsets(EdgeInsets(top: 3, leading: 18, bottom: 11, trailing: 18))
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
+                        .promptSwipeActions(
+                            isFavorite: prompt.isFavorite,
+                            onFavorite: { model.onFavorite(prompt) },
+                            onCopy: { model.onCopy(prompt) },
+                            onDelete: { model.onDeleteRequest(prompt) }
+                        )
                     }
 
                     if model.filteredPrompts.isEmpty {
@@ -270,6 +341,9 @@ struct PromptListView: View {
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .background(AIStudioPalette.canvas)
+                .navigationDestination(item: $model.recentPromptDestination) { prompt in
+                    PromptDetailView(model: PromptDetailModel(prompt: prompt))
+                }
             }
             .scrollDismissesKeyboard(.immediately)
             .searchable(text: $model.searchText, prompt: "Search prompts")

@@ -39,6 +39,7 @@ class PromptDetailModel {
 
     func onCopy() {
         PromptActions.copy(prompt.prompt)
+        recordUse()
         copiedToClipboard = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.copiedToClipboard = false
@@ -67,7 +68,16 @@ class PromptDetailModel {
 
     /// Runs the prompt right away when every blank has a value, otherwise asks for them first.
     func onRunOnDevice() {
-        route = template.runnablePrompt == nil ? .customizing : .runningOnDevice
+        if template.runnablePrompt == nil {
+            route = .customizing
+        } else {
+            route = .runningOnDevice
+            recordUse()
+        }
+    }
+
+    func recordUse() {
+        PromptUsage.record(promptID: prompt.id)
     }
 
     func onEdit() {
@@ -125,7 +135,7 @@ struct PromptDetailView: View {
                     .buttonStyle(.plain)
                 }
 
-                LLMQuickLaunchSection(prompt: model.prompt.prompt)
+                LLMQuickLaunchSection(prompt: model.prompt.prompt, onLaunch: model.recordUse)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 20)
@@ -182,7 +192,7 @@ struct PromptDetailView: View {
             }
         }
         .sheet(isPresented: Binding($model.route.customizing)) {
-            PromptCustomizeView(title: model.prompt.act, prompt: model.prompt.prompt)
+            PromptCustomizeView(title: model.prompt.act, prompt: model.prompt.prompt, onUse: model.recordUse)
         }
         .sheet(isPresented: Binding($model.route.runningOnDevice)) {
             PromptRunSheet(title: model.prompt.act, prompt: model.template.runnablePrompt ?? model.prompt.prompt)

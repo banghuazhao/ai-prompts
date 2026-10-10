@@ -64,6 +64,16 @@
         }
       }
     },
+    "%lld items added, %lld updated." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已新增 %1$lld 個項目，更新 %2$lld 個。"
+          }
+        }
+      }
+    },
     "%lld more technologies" : {
 
     },
@@ -757,6 +767,16 @@
         }
       }
     },
+    "Backup" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "備份"
+          }
+        }
+      }
+    },
     "Best Practices:" : {
       "localizations" : {
         "zh-Hant" : {
@@ -892,6 +912,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "清除"
+          }
+        }
+      }
+    },
+    "Clear recently used prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除最近使用的提示詞"
           }
         }
       }
@@ -1283,6 +1313,26 @@
     },
     "Explore prompts" : {
 
+    },
+    "Export Failed" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯出失敗"
+          }
+        }
+      }
+    },
+    "Export Library" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匯出資料庫"
+          }
+        }
+      }
     },
     "Favorite" : {
       "localizations" : {
@@ -1752,6 +1802,16 @@
         }
       }
     },
+    "Most Used" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最常使用"
+          }
+        }
+      }
+    },
     "Name your app" : {
 
     },
@@ -1896,6 +1956,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "物品"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
@@ -2357,6 +2427,16 @@
     "Ready-to-use ideas for apps, games and tools. Pick a stack and start creating." : {
 
     },
+    "Recently Used" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近使用"
+          }
+        }
+      }
+    },
     "Redundancy" : {
       "localizations" : {
         "zh-Hant" : {
@@ -2392,6 +2472,16 @@
     "Remove from Favorites" : {
 
     },
+    "Remove from Recently Used" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從最近使用中移除"
+          }
+        }
+      }
+    },
     "Remove repeated instructions to keep your prompt focused." : {
       "localizations" : {
         "zh-Hant" : {
@@ -2418,6 +2508,56 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重設"
+          }
+        }
+      }
+    },
+    "Restore" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還原"
+          }
+        }
+      }
+    },
+    "Restore Backup?" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要還原備份嗎？"
+          }
+        }
+      }
+    },
+    "Restore Complete" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還原完成"
+          }
+        }
+      }
+    },
+    "Restore Failed" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還原失敗"
+          }
+        }
+      }
+    },
+    "Restore from Backup" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從備份還原"
           }
         }
       }
@@ -2491,6 +2631,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "儲存"
+          }
+        }
+      }
+    },
+    "Save your prompts, favorites, categories and chats to a file, then restore them on any device. Restoring adds to your library and never deletes anything." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將你的提示詞、最愛、分類與對話儲存成檔案，即可在任何裝置上還原。還原只會新增內容，不會刪除任何項目。"
           }
         }
       }
@@ -2876,12 +3026,42 @@
         }
       }
     },
+    "This backup has %lld prompts, %lld vibe prompts and %lld chats. Prompts with the same title are updated to the backup's version and the rest are added. Nothing is deleted." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此備份包含 %1$lld 則提示詞、%2$lld 則 Vibe 提示詞與 %3$lld 段對話。標題相同的提示詞會更新為備份中的版本，其餘則會新增。不會刪除任何項目。"
+          }
+        }
+      }
+    },
+    "This backup was made by a newer version of AI Prompts. Update the app and try again." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此備份來自較新版本的 AI Prompts。請更新 App 後再試一次。"
+          }
+        }
+      }
+    },
     "This conversation is too long for the on-device model. Start a new chat to keep going." : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "這段對話對裝置端模型來說太長了，請開始新的對話繼續。"
+          }
+        }
+      }
+    },
+    "This file isn't an AI Prompts backup." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此檔案不是 AI Prompts 的備份。"
           }
         }
       }

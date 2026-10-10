@@ -26,6 +26,7 @@ struct CopyPromptIntent: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
         PromptActions.copy(prompt.text)
+        PromptUsage.record(entityID: prompt.id)
         return .result(value: prompt.text, dialog: "Copied “\(prompt.title)”. Paste it into your AI chat.")
     }
 }
@@ -77,6 +78,7 @@ struct RandomPromptIntent: AppIntent {
             throw $favoritesOnly.needsValueError("You have no favorite prompts yet. Try all prompts instead?")
         }
         PromptActions.copy(prompt.text)
+        PromptUsage.record(entityID: prompt.id)
         return .result(value: prompt, dialog: "“\(prompt.title)” is copied and ready to paste.")
     }
 }

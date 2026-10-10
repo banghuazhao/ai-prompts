@@ -120,6 +120,10 @@ class VibePromptListModel {
         }
     }
 
+    func onCopy(_ prompt: VibePrompt) {
+        PromptActions.copy(prompt.prompt)
+    }
+
     func onEdit(_ prompt: VibePrompt) {
         route = .editingPrompt(prompt)
     }
@@ -234,6 +238,12 @@ struct VibePromptListView: View {
                             .contextMenu {
                                 Button(action: {
                                     Haptics.shared.vibrateIfEnabled()
+                                    model.onCopy(vibePrompt)
+                                }) {
+                                    Label("Copy", systemImage: "doc.on.doc")
+                                }
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
                                     model.onEdit(vibePrompt)
                                 }) {
                                     Label("Edit", systemImage: "pencil")
@@ -255,6 +265,12 @@ struct VibePromptListView: View {
                         .listRowInsets(EdgeInsets(top: 3, leading: 18, bottom: 11, trailing: 18))
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
+                        .promptSwipeActions(
+                            isFavorite: vibePrompt.isFavorite,
+                            onFavorite: { model.onFavorite(vibePrompt) },
+                            onCopy: { model.onCopy(vibePrompt) },
+                            onDelete: { model.onDeleteRequest(vibePrompt) }
+                        )
                     }
 
                     if model.filteredVibePrompts.isEmpty {

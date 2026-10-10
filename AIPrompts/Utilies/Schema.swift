@@ -181,6 +181,20 @@ func appDatabase() throws -> any DatabaseWriter {
         .execute(db)
     }
 
+    migrator.registerMigration("Add prompt usage") { db in
+        try #sql(
+            """
+            CREATE TABLE "promptUsages" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "promptID" INTEGER NOT NULL UNIQUE REFERENCES "prompts"("id") ON DELETE CASCADE,
+                "lastUsedDate" TEXT NOT NULL DEFAULT '',
+                "useCount" INTEGER NOT NULL DEFAULT 0
+            ) STRICT
+            """
+        )
+        .execute(db)
+    }
+
     try migrator.migrate(database)
 
     try database.write { db in

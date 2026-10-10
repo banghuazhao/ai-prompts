@@ -72,6 +72,7 @@ struct PromptRowView: View {
                 Button {
                     Haptics.shared.vibrateIfEnabled()
                     PromptActions.copy(prompt.prompt)
+                    PromptUsage.record(promptID: prompt.id)
                     copied = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         copied = false
