@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Copy a prompt from ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
@@ -25,6 +26,7 @@
       }
     },
     "Give me a random prompt from ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
@@ -47,6 +49,7 @@
       }
     },
     "Open a prompt in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {
@@ -70,6 +73,7 @@
       }
     },
     "Run a prompt with ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringSet" : {

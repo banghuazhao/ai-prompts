@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "  Suggestion: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -367,6 +368,7 @@
 
     },
     "✍️ Writing" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -387,6 +389,7 @@
       }
     },
     "✨ General" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -407,6 +410,7 @@
       }
     },
     "🎉 Fun" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -427,6 +431,7 @@
       }
     },
     "💼 Productivity" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -437,6 +442,7 @@
       }
     },
     "📚 Learning" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -447,6 +453,7 @@
       }
     },
     "🗣️ Conversation" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -457,6 +464,7 @@
       }
     },
     "🤖 AI & Tech" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -467,6 +475,7 @@
       }
     },
     "🧠 Creativity" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -497,6 +506,7 @@
       }
     },
     "Act/Role (e.g., 'Act as a iOS Developer')" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -605,6 +615,7 @@
 
     },
     "AI Prompts  |  AI Prompt Directory" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -615,6 +626,7 @@
       }
     },
     "All" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -851,6 +863,7 @@
       }
     },
     "Character Length ↑" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -861,6 +874,7 @@
       }
     },
     "Character Length ↓" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -874,6 +888,7 @@
 
     },
     "Chats (%lld)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -907,6 +922,7 @@
       }
     },
     "Clear" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1273,6 +1289,7 @@
       }
     },
     "Enter your GitHub username (e.g., banghuazhao, which will link to https://github.com/banghuazhao). Optional." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1283,6 +1300,7 @@
       }
     },
     "Example: Swift, SwiftUI, iOS. Optional." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1428,6 +1446,7 @@
       }
     },
     "Find prompts and vibe prompts by title, text, or tech stack." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1753,6 +1772,7 @@
       }
     },
     "Modified Date" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1783,6 +1803,7 @@
       }
     },
     "More Features" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1826,6 +1847,7 @@
       }
     },
     "New" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -2077,6 +2099,7 @@
 
     },
     "Others" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -2345,6 +2368,7 @@
       }
     },
     "Prompts (%lld)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -2365,6 +2389,7 @@
       }
     },
     "Prompts you favorite will appear here" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -2662,6 +2687,7 @@
 
     },
     "Search Everything" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -2985,6 +3011,7 @@
       }
     },
     "Tech Stack (comma-separated, optional)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -3080,6 +3107,7 @@
       }
     },
     "Title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -3204,6 +3232,7 @@
       }
     },
     "v%@  Check for Updates" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -3236,6 +3265,7 @@
       }
     },
     "Vibe Prompts (%lld)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -3246,6 +3276,7 @@
       }
     },
     "Vibe prompts you favorite will appear here" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
