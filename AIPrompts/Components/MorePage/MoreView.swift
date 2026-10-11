@@ -336,11 +336,22 @@ struct SupportEmail {
 
     """ }
 
+    /// Query items escape `&`, `=` and `#`, so any text in the subject or body keeps the link intact.
+    var url: URL? {
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = toAddress
+        components.queryItems = [
+            URLQueryItem(name: "subject", value: subject),
+            URLQueryItem(name: "body", value: body),
+        ]
+        // `+` is legal in a query but some mail apps read it as a space.
+        components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
+        return components.url
+    }
+
     func send(openURL: OpenURLAction) {
-        let replacedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
-        let replacedBody = body.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
-        let urlString = "mailto:\(toAddress)?subject=\(replacedSubject)&body=\(replacedBody)"
-        guard let url = URL(string: urlString) else { return }
+        guard let url else { return }
         openURL(url) { accepted in
             if !accepted { // e.g. Simulator
                 print("Device doesn't support email.\n \(body)")
