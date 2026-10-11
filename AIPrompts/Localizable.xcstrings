@@ -1124,6 +1124,16 @@
         }
       }
     },
+    "Couldn't load the purchase. Check your connection and try again." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法載入購買項目。請檢查網路連線後再試一次。"
+          }
+        }
+      }
+    },
     "Couldn't translate this prompt. Try again later." : {
       "localizations" : {
         "zh-Hant" : {
@@ -2399,6 +2409,16 @@
         }
       }
     },
+    "Purchase Not Completed" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "購買未完成"
+          }
+        }
+      }
+    },
     "Purple" : {
       "localizations" : {
         "zh-Hant" : {
@@ -3377,6 +3397,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你的購買將支持我們持續為資料庫加入新的提示詞。"
+          }
+        }
+      }
+    },
+    "Your purchase is waiting for approval. Ads will be removed as soon as it's approved." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您的購買正在等待核准。核准後將立即移除廣告。"
           }
         }
       }

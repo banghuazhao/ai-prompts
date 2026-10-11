@@ -14,6 +14,7 @@ struct PurchaseSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var isPurchasing = false
     @State private var showSuccessModal = false
+    @State private var purchaseMessage: String?
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -123,6 +124,18 @@ struct PurchaseSheet: View {
                                 .padding(.horizontal)
                                 .disabled(isPurchasing)
                         }
+                    } else if purchaseManager.productLoadFailed {
+                        VStack(spacing: 12) {
+                            Text("Couldn't load the purchase. Check your connection and try again.")
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                            Button("Try Again") {
+                                Haptics.shared.vibrateIfEnabled()
+                                Task { await purchaseManager.loadPremiumProduct() }
+                            }
+                            .foregroundColor(themeManager.current.primaryColor)
+                        }
+                        .padding(.horizontal)
                     } else {
                         ProgressView()
                         Text("Loading product...")
@@ -164,6 +177,14 @@ struct PurchaseSheet: View {
         }
         .sheet(isPresented: $showSuccessModal) {
             PremiumSuccessView()
+        }
+        .alert(
+            "Purchase Not Completed",
+            isPresented: Binding(get: { purchaseMessage != nil }, set: { if !$0 { purchaseMessage = nil } })
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(purchaseMessage ?? "")
         }
         .task {
             await purchaseManager.loadPremiumProduct()
@@ -218,6 +239,14 @@ struct PurchaseSheet: View {
                 showSuccessModal = true
             case .failure(let error):
                 print("Purchase failed: \(error.localizedDescription)")
+                switch error {
+                case .userCancelled:
+                    break
+                case .pending:
+                    purchaseMessage = String(localized: "Your purchase is waiting for approval. Ads will be removed as soon as it's approved.")
+                default:
+                    purchaseMessage = error.localizedDescription
+                }
             }
             isPurchasing = false
         }

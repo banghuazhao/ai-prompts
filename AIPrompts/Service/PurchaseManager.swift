@@ -20,6 +20,11 @@ final class PurchaseManager {
     
     private let productID = "com.appsbay.aiPrompts.paid_user"
     var premiumProduct: Product?
+    /// The product could not be fetched (offline, or the store did not return it).
+    /// The purchase sheet offers a retry instead of a spinner that never ends.
+    var productLoadFailed = false
+    @ObservationIgnored
+    private var transactionUpdates: Task<Void, Never>?
     
     // MARK: - Public Interface
     
@@ -27,12 +32,30 @@ final class PurchaseManager {
     @MainActor
     func loadPremiumProduct() async {
         guard premiumProduct == nil else { return }
-        
+        productLoadFailed = false
+
         do {
             let products = try await Product.products(for: [productID])
             premiumProduct = products.first
         } catch {
             print("❌ Failed to load product: \(error.localizedDescription)")
+        }
+        productLoadFailed = premiumProduct == nil
+    }
+
+    /// Call once at launch. Purchases that finish outside the purchase sheet — Ask to
+    /// Buy approvals, interrupted purchases, a purchase made on another device — only
+    /// arrive here; without this they were never finished and ads stayed on.
+    @MainActor
+    func startObservingTransactions() {
+        guard transactionUpdates == nil else { return }
+        transactionUpdates = Task { @MainActor [weak self] in
+            for await result in Transaction.updates {
+                if case let .verified(transaction) = result {
+                    await transaction.finish()
+                }
+                await self?.updatePurchaseStatus()
+            }
         }
     }
     
@@ -61,6 +84,8 @@ final class PurchaseManager {
     /// Restores previous purchases
     @MainActor
     func restorePurchases() async {
+        // Sync first so a purchase made with the same Apple Account elsewhere is picked up.
+        try? await AppStore.sync()
         await checkPurchaseStatus()
     }
     

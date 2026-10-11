@@ -29,6 +29,10 @@ struct AIPrompts: App {
             ContentView()
                 .preferredColorScheme(darkModeEnabled ? .dark : .light)
                 .task {
+                    purchaseManager.startObservingTransactions()
+                    await purchaseManager.checkPurchaseStatus()
+                }
+                .task {
                     await ConsentManager.shared.gatherConsentAndStartAds()
                     openAd.requestAppOpenAd()
                 }
