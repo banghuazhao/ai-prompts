@@ -1,0 +1,8 @@
+{
+  "version": "1.4.0",
+  "build": "1",
+  "whatsNew": {
+    "en-US": "Back up your library: export your prompts, favorites, categories and chats to a file in Settings, and restore them on any device. Restoring only adds to your library and never deletes anything.\n\nYour most-used prompts are now one tap away with a new Recently Used shelf and a Most Used sort.\n\nSwipe right on a prompt to favorite it, or left to copy or delete it. Copy is also in every long-press menu, and you can select several prompts to delete at once.\n\nPremium purchases now complete reliably, including Ask to Buy approvals and purchases made on another device.\n\nBug fixes and improvements.",
+    "zh-Hans": "备份你的资料库：在设置中将提示词、收藏、分类和对话导出为文件，并在任何设备上恢复。恢复只会新增内容，绝不会删除任何项目。\n\n全新的“最近使用”栏和“最常使用”排序，让常用的提示词一触即达。\n\n在提示词上向右轻扫即可收藏，向左轻扫可拷贝或删除。长按菜单中也新增了“拷贝”，还可以一次选择多个提示词进行删除。\n\n高级版购买现在更加可靠，包括“询问购买”的批准以及在其他设备上完成的购买。\n\n问题修复与体验改进。"
+  }
+}
