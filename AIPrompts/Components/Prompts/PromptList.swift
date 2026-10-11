@@ -198,6 +198,57 @@ class PromptListModel {
         }
     }
 
+    // MARK: - Selecting several prompts
+
+    /// Selection mode, for clearing out many prompts at once instead of one swipe at a time.
+    var isSelecting = false
+    var selectedIDs: Set<Prompt.ID> = []
+    var showingDeleteSelectedAlert = false
+
+    func toggleSelecting() {
+        withAnimation {
+            isSelecting.toggle()
+            selectedIDs = []
+        }
+    }
+
+    func toggleSelection(_ prompt: Prompt) {
+        if selectedIDs.contains(prompt.id) {
+            selectedIDs.remove(prompt.id)
+        } else {
+            selectedIDs.insert(prompt.id)
+        }
+    }
+
+    var allVisibleSelected: Bool {
+        !filteredPrompts.isEmpty && filteredPrompts.allSatisfy { selectedIDs.contains($0.id) }
+    }
+
+    func toggleSelectAll() {
+        let visible = filteredPrompts.map(\.id)
+        if allVisibleSelected {
+            selectedIDs.subtract(visible)
+        } else {
+            selectedIDs.formUnion(visible)
+        }
+    }
+
+    /// Library prompts stay deleted: ContentSync only ever inserts an item once.
+    func confirmDeleteSelected() {
+        let doomed = prompts.filter { selectedIDs.contains($0.id) }
+        withErrorReporting {
+            try database.write { db in
+                for prompt in doomed {
+                    try Prompt.delete(prompt).execute(db)
+                }
+            }
+        }
+        withAnimation {
+            selectedIDs = []
+            isSelecting = false
+        }
+    }
+
     // MARK: - Markov Generator State
 
     @ObservationIgnored
@@ -281,39 +332,62 @@ struct PromptListView: View {
                     .listRowSeparator(.hidden)
 
                     ForEach(model.filteredPrompts) { prompt in
-                        NavigationLink(
-                            destination: PromptDetailView(
-                                model: PromptDetailModel(prompt: prompt)
-                            )
-                        ) {
-                            PromptRowView(
-                                prompt: prompt,
-                                onFavorite: { model.onFavorite(prompt) }
-                            )
-                            .contextMenu {
-                                Button(action: {
+                        Group {
+                            if model.isSelecting {
+                                let isSelected = model.selectedIDs.contains(prompt.id)
+                                Button {
                                     Haptics.shared.vibrateIfEnabled()
-                                    model.onCopy(prompt)
-                                }) {
-                                    Label("Copy", systemImage: "doc.on.doc")
+                                    model.toggleSelection(prompt)
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                                            .font(.title3)
+                                            .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
+                                        PromptRowView(
+                                            prompt: prompt,
+                                            onFavorite: {}
+                                        )
+                                        .allowsHitTesting(false)
+                                    }
                                 }
-                                Button(action: {
-                                    Haptics.shared.vibrateIfEnabled()
-                                    model.onEdit(prompt)
-                                }) {
-                                    Label("Edit", systemImage: "pencil")
-                                }
-                                Button(action: {
-                                    Haptics.shared.vibrateIfEnabled()
-                                    model.onFavorite(prompt)
-                                }) {
-                                    Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
-                                }
-                                Button(role: .destructive, action: {
-                                    Haptics.shared.vibrateIfEnabled()
-                                    model.onDeleteRequest(prompt)
-                                }) {
-                                    Label("Delete", systemImage: "trash")
+                                .buttonStyle(.plain)
+                                .accessibilityAddTraits(isSelected ? .isSelected : [])
+                            } else {
+                                NavigationLink(
+                                    destination: PromptDetailView(
+                                        model: PromptDetailModel(prompt: prompt)
+                                    )
+                                ) {
+                                    PromptRowView(
+                                        prompt: prompt,
+                                        onFavorite: { model.onFavorite(prompt) }
+                                    )
+                                    .contextMenu {
+                                        Button(action: {
+                                            Haptics.shared.vibrateIfEnabled()
+                                            model.onCopy(prompt)
+                                        }) {
+                                            Label("Copy", systemImage: "doc.on.doc")
+                                        }
+                                        Button(action: {
+                                            Haptics.shared.vibrateIfEnabled()
+                                            model.onEdit(prompt)
+                                        }) {
+                                            Label("Edit", systemImage: "pencil")
+                                        }
+                                        Button(action: {
+                                            Haptics.shared.vibrateIfEnabled()
+                                            model.onFavorite(prompt)
+                                        }) {
+                                            Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
+                                        }
+                                        Button(role: .destructive, action: {
+                                            Haptics.shared.vibrateIfEnabled()
+                                            model.onDeleteRequest(prompt)
+                                        }) {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -343,6 +417,28 @@ struct PromptListView: View {
                 .background(AIStudioPalette.canvas)
                 .navigationDestination(item: $model.recentPromptDestination) { prompt in
                     PromptDetailView(model: PromptDetailModel(prompt: prompt))
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                if model.isSelecting {
+                    HStack {
+                        Button(model.allVisibleSelected ? "Deselect All" : "Select All") {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.toggleSelectAll()
+                        }
+                        Spacer()
+                        Button(role: .destructive) {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.showingDeleteSelectedAlert = true
+                        } label: {
+                            Text("Delete (\(model.selectedIDs.count))")
+                                .fontWeight(.semibold)
+                        }
+                        .disabled(model.selectedIDs.isEmpty)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(.bar)
                 }
             }
             .scrollDismissesKeyboard(.immediately)
@@ -387,6 +483,13 @@ struct PromptListView: View {
                     .help("Choose category")
                 }
                 
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(model.isSelecting ? "Done" : "Select") {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.toggleSelecting()
+                    }
+                    .help("Select several prompts to delete")
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         Haptics.shared.vibrateIfEnabled()
@@ -452,6 +555,18 @@ struct PromptListView: View {
                     Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")
                 }
             )
+            .alert(
+                "Delete \(model.selectedIDs.count) Prompts?",
+                isPresented: $model.showingDeleteSelectedAlert
+            ) {
+                Button("Delete", role: .destructive) {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.confirmDeleteSelected()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This action cannot be undone.")
+            }
             .sheet(item: $model.route.showingMarkovAddPrompt, id: \.self) { draft in
                 PromptFormView(
                     model: PromptFormModel(

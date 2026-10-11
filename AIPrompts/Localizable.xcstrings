@@ -1203,6 +1203,26 @@
         }
       }
     },
+    "Delete (%lld)" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除（%lld）"
+          }
+        }
+      }
+    },
+    "Delete %lld Prompts?" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除 %lld 個提示詞？"
+          }
+        }
+      }
+    },
     "Delete Prompt" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1225,6 +1245,16 @@
     },
     "Describe what the AI should do" : {
 
+    },
+    "Deselect All" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消全選"
+          }
+        }
+      }
     },
     "DISCOVER WITH AI" : {
 
@@ -2730,6 +2760,36 @@
     "Search results" : {
 
     },
+    "Select" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選取"
+          }
+        }
+      }
+    },
+    "Select All" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全選"
+          }
+        }
+      }
+    },
+    "Select several prompts to delete" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選取多個提示詞以刪除"
+          }
+        }
+      }
+    },
     "Send" : {
       "localizations" : {
         "zh-Hant" : {
@@ -3069,6 +3129,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "思考中…"
+          }
+        }
+      }
+    },
+    "This action cannot be undone." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此操作無法復原。"
           }
         }
       }
