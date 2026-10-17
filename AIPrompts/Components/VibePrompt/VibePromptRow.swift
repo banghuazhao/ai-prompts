@@ -73,6 +73,7 @@ struct VibePromptRowView: View {
                 Button {
                     Haptics.shared.vibrateIfEnabled()
                     PromptActions.copy(vibePrompt.prompt)
+                    VibePromptUsage.record(vibePromptID: vibePrompt.id)
                     copied = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         copied = false

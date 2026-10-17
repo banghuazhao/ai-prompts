@@ -26,8 +26,30 @@ class PromptListModel {
     @ObservationIgnored
     @Shared(.appStorage("selectedCategory")) var selectedCategory: PromptCategory.ID?
 
-    var sortOption: SortOption = .modifiedDate
-    var filterOption: FilterOption = .all
+    @ObservationIgnored
+    @Shared(.appStorage("promptSortOption")) private var savedSortOption: SortOption = .modifiedDate
+
+    @ObservationIgnored
+    @Shared(.appStorage("promptFilterOption")) private var savedFilterOption: FilterOption = .all
+
+    /// "New" is a quick look opened from the banner, so it isn't remembered between launches.
+    private var showsNewOnly = false
+
+    var sortOption: SortOption {
+        get { savedSortOption }
+        set { $savedSortOption.withLock { $0 = newValue } }
+    }
+
+    var filterOption: FilterOption {
+        get { showsNewOnly ? .new : savedFilterOption }
+        set {
+            showsNewOnly = newValue == .new
+            if newValue != .new {
+                $savedFilterOption.withLock { $0 = newValue }
+            }
+        }
+    }
+
     var isDefault: Bool {
         sortOption == .modifiedDate && filterOption == .all
     }
@@ -57,7 +79,7 @@ class PromptListModel {
         case showingAddPrompt
         case editingPrompt(Prompt)
         case showingDeleteAlert(Prompt)
-        case showingMarkovAddPrompt(Prompt.Draft)
+        case addingDraft(Prompt.Draft)
         case selectCategory
     }
 
@@ -186,6 +208,10 @@ class PromptListModel {
         route = .editingPrompt(prompt)
     }
 
+    func onDuplicate(_ prompt: Prompt) {
+        route = .addingDraft(Prompt.Draft(duplicating: prompt))
+    }
+
     func onDeleteRequest(_ prompt: Prompt) {
         route = .showingDeleteAlert(prompt)
     }
@@ -200,10 +226,11 @@ class PromptListModel {
 
     // MARK: - Selecting several prompts
 
-    /// Selection mode, for clearing out many prompts at once instead of one swipe at a time.
+    /// Selection mode, for favoriting, moving, sharing or deleting many prompts at once.
     var isSelecting = false
     var selectedIDs: Set<Prompt.ID> = []
     var showingDeleteSelectedAlert = false
+    var showingMoveSelected = false
 
     func toggleSelecting() {
         withAnimation {
@@ -233,6 +260,67 @@ class PromptListModel {
         }
     }
 
+    /// Selected prompts in the order they're listed, followed by any that a search or filter now hides.
+    var selectedPrompts: [Prompt] {
+        let visible = filteredPrompts.filter { selectedIDs.contains($0.id) }
+        let visibleIDs = Set(visible.map(\.id))
+        return visible + prompts.filter { selectedIDs.contains($0.id) && !visibleIDs.contains($0.id) }
+    }
+
+    /// When every selected prompt is already a favorite, the favorite action removes them instead.
+    var selectionIsAllFavorites: Bool {
+        let selected = selectedPrompts
+        return !selected.isEmpty && selected.allSatisfy(\.isFavorite)
+    }
+
+    func favoriteSelected() {
+        let isFavorite = !selectionIsAllFavorites
+        let changed = selectedPrompts.filter { $0.isFavorite != isFavorite }
+        withErrorReporting {
+            try database.write { db in
+                for prompt in changed {
+                    var updatedPrompt = prompt
+                    updatedPrompt.isFavorite = isFavorite
+                    try Prompt.update(updatedPrompt).execute(db)
+                }
+            }
+        }
+        if !changed.isEmpty {
+            PromptActions.favoriteToggled(isFavorite: isFavorite)
+        }
+        finishSelecting()
+    }
+
+    /// The selection's category, for the picker's checkmark. `isShared` is false when the selected
+    /// prompts are in different categories, so nothing is checked.
+    var moveCategoryChoice: (selected: PromptCategory.ID?, isShared: Bool) {
+        let categoryIDs = Set(selectedPrompts.map(\.categoryID))
+        return (categoryIDs.first ?? nil, categoryIDs.count == 1)
+    }
+
+    func onMoveSelected(to category: PromptCategory?) {
+        let changed = selectedPrompts.filter { $0.categoryID != category?.id }
+        withErrorReporting {
+            try database.write { db in
+                for prompt in changed {
+                    var updatedPrompt = prompt
+                    updatedPrompt.categoryID = category?.id
+                    try Prompt.update(updatedPrompt).execute(db)
+                }
+            }
+        }
+        finishSelecting()
+        Task {
+            showingMoveSelected = false
+        }
+    }
+
+    var selectedShareText: String {
+        selectedPrompts
+            .map { "\($0.act)\n\n\($0.prompt)" }
+            .joined(separator: "\n\n---\n\n")
+    }
+
     /// Library prompts stay deleted: ContentSync only ever inserts an item once.
     func confirmDeleteSelected() {
         let doomed = prompts.filter { selectedIDs.contains($0.id) }
@@ -243,6 +331,10 @@ class PromptListModel {
                 }
             }
         }
+        finishSelecting()
+    }
+
+    private func finishSelecting() {
         withAnimation {
             selectedIDs = []
             isSelecting = false
@@ -269,7 +361,7 @@ class PromptListModel {
             act: "AI Generated Act",
             prompt: generated.isEmpty ? "Failed to load corpus." : generated
         )
-        route = .showingMarkovAddPrompt(draft)
+        route = .addingDraft(draft)
     }
 }
 
@@ -377,6 +469,12 @@ struct PromptListView: View {
                                         }
                                         Button(action: {
                                             Haptics.shared.vibrateIfEnabled()
+                                            model.onDuplicate(prompt)
+                                        }) {
+                                            Label("Duplicate", systemImage: "plus.square.on.square")
+                                        }
+                                        Button(action: {
+                                            Haptics.shared.vibrateIfEnabled()
                                             model.onFavorite(prompt)
                                         }) {
                                             Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
@@ -421,19 +519,42 @@ struct PromptListView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 if model.isSelecting {
-                    HStack {
+                    HStack(spacing: 24) {
                         Button(model.allVisibleSelected ? "Deselect All" : "Select All") {
                             Haptics.shared.vibrateIfEnabled()
                             model.toggleSelectAll()
                         }
-                        Spacer()
-                        Button(role: .destructive) {
-                            Haptics.shared.vibrateIfEnabled()
-                            model.showingDeleteSelectedAlert = true
-                        } label: {
-                            Text("Delete (\(model.selectedIDs.count))")
-                                .fontWeight(.semibold)
+                        Spacer(minLength: 0)
+                        Group {
+                            Button {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.favoriteSelected()
+                            } label: {
+                                Label(
+                                    model.selectionIsAllFavorites ? "Remove from Favorites" : "Add to Favorites",
+                                    systemImage: model.selectionIsAllFavorites ? "heart.slash" : "heart"
+                                )
+                            }
+                            Button {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.showingMoveSelected = true
+                            } label: {
+                                Label("Move to Category", systemImage: "folder")
+                            }
+                            ShareLink(item: model.selectedShareText) {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                            .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
+                            Button(role: .destructive) {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.showingDeleteSelectedAlert = true
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            .tint(.red)
                         }
+                        .labelStyle(.iconOnly)
+                        .imageScale(.large)
                         .disabled(model.selectedIDs.isEmpty)
                     }
                     .padding(.horizontal, 20)
@@ -443,7 +564,7 @@ struct PromptListView: View {
             }
             .scrollDismissesKeyboard(.immediately)
             .searchable(text: $model.searchText, prompt: "Search prompts")
-            .navigationTitle("Prompts")
+            .navigationTitle(model.isSelecting ? Text("\(model.selectedIDs.count) Selected") : Text("Prompts"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -488,27 +609,30 @@ struct PromptListView: View {
                         Haptics.shared.vibrateIfEnabled()
                         model.toggleSelecting()
                     }
-                    .help("Select several prompts to delete")
+                    .help("Select several prompts")
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.generateMarkovPrompt()
-                    }) {
-                        Image(systemName: "sparkles")
+                // Hidden while selecting, so the title has room for the selection count.
+                if !model.isSelecting {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.generateMarkovPrompt()
+                        }) {
+                            Image(systemName: "sparkles")
+                        }
+                        .accessibilityLabel("Generate prompt idea")
+                        .help("Generate prompt idea")
                     }
-                    .accessibilityLabel("Generate prompt idea")
-                    .help("Generate prompt idea")
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.route = .showingAddPrompt
-                    }) {
-                        Image(systemName: "plus")
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.route = .showingAddPrompt
+                        }) {
+                            Image(systemName: "plus")
+                        }
+                        .accessibilityLabel("Add prompt")
+                        .help("Add prompt")
                     }
-                    .accessibilityLabel("Add prompt")
-                    .help("Add prompt")
                 }
             }
             .sheet(isPresented: Binding($model.route.showingAddPrompt)) {
@@ -567,7 +691,21 @@ struct PromptListView: View {
             } message: {
                 Text("This action cannot be undone.")
             }
-            .sheet(item: $model.route.showingMarkovAddPrompt, id: \.self) { draft in
+            .sheet(isPresented: $model.showingMoveSelected) {
+                let choice = model.moveCategoryChoice
+                CategoryFormView(
+                    model: CategoryFormModel(
+                        selectedCategory: choice.selected,
+                        marksSelection: choice.isShared,
+                        onSelect: { category in
+                            model.onMoveSelected(to: category)
+                        }
+                    )
+                )
+                .presentationDetents([.fraction(0.7), .large])
+                .presentationDragIndicator(.visible)
+            }
+            .sheet(item: $model.route.addingDraft, id: \.self) { draft in
                 PromptFormView(
                     model: PromptFormModel(
                         prompt: draft

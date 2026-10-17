@@ -46,10 +46,13 @@ extension PromptUsage {
         }
     }
 
-    /// Records a use from an App Intent, whose entity ids look like "prompt-12". Vibe prompts are not tracked.
+    /// Records a use from an App Intent, whose entity ids look like "prompt-12" or "vibe-3".
     static func record(entityID: String) {
-        guard entityID.hasPrefix("prompt-"), let id = Int(entityID.dropFirst("prompt-".count)) else { return }
-        record(promptID: id)
+        if entityID.hasPrefix("prompt-"), let id = Int(entityID.dropFirst("prompt-".count)) {
+            record(promptID: id)
+        } else if entityID.hasPrefix("vibe-"), let id = Int(entityID.dropFirst("vibe-".count)) {
+            VibePromptUsage.record(vibePromptID: id)
+        }
     }
 
     static func remove(promptID: Prompt.ID) {

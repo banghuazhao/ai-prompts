@@ -20,3 +20,15 @@ struct Prompt: Identifiable, Hashable {
 }
 
 extension Prompt.Draft: Identifiable, Hashable {}
+
+extension Prompt.Draft {
+    /// An unsaved copy of `prompt` for the add form, so the original stays as it is.
+    init(duplicating prompt: Prompt) {
+        self.init(
+            act: String(localized: "\(prompt.act) Copy"),
+            prompt: prompt.prompt,
+            forDevs: prompt.forDevs,
+            categoryID: prompt.categoryID
+        )
+    }
+}

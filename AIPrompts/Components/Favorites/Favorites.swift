@@ -39,6 +39,8 @@ class FavoritesViewModel {
     enum Route {
         case editingPrompt(Prompt)
         case editingVibePrompt(VibePrompt)
+        case duplicatingPrompt(Prompt.Draft)
+        case duplicatingVibePrompt(VibePrompt.Draft)
         case showingDeletePromptAlert(Prompt)
         case showingDeleteVibePromptAlert(VibePrompt)
     }
@@ -48,6 +50,10 @@ class FavoritesViewModel {
     // Prompt actions
     func onEdit(_ prompt: Prompt) {
         route = .editingPrompt(prompt)
+    }
+
+    func onDuplicate(_ prompt: Prompt) {
+        route = .duplicatingPrompt(Prompt.Draft(duplicating: prompt))
     }
 
     func onDeleteRequest(_ prompt: Prompt) {
@@ -88,10 +94,15 @@ class FavoritesViewModel {
     // VibePrompt actions
     func onCopy(_ vibePrompt: VibePrompt) {
         PromptActions.copy(vibePrompt.prompt)
+        VibePromptUsage.record(vibePromptID: vibePrompt.id)
     }
 
     func onEdit(_ vibePrompt: VibePrompt) {
         route = .editingVibePrompt(vibePrompt)
+    }
+
+    func onDuplicate(_ vibePrompt: VibePrompt) {
+        route = .duplicatingVibePrompt(VibePrompt.Draft(duplicating: vibePrompt))
     }
 
     func onDeleteRequest(_ vibePrompt: VibePrompt) {
@@ -170,6 +181,9 @@ struct FavoritesView: View {
                                     Button(action: { model.onEdit(prompt) }) {
                                         Label("Edit", systemImage: "pencil")
                                     }
+                                    Button(action: { model.onDuplicate(prompt) }) {
+                                        Label("Duplicate", systemImage: "plus.square.on.square")
+                                    }
                                     Button(action: { model.onFavorite(prompt) }) {
                                         Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
                                     }
@@ -216,6 +230,9 @@ struct FavoritesView: View {
                                     Button(action: { model.onEdit(vibePrompt) }) {
                                         Label("Edit", systemImage: "pencil")
                                     }
+                                    Button(action: { model.onDuplicate(vibePrompt) }) {
+                                        Label("Duplicate", systemImage: "plus.square.on.square")
+                                    }
                                     Button(action: { model.onFavorite(vibePrompt) }) {
                                         Label(vibePrompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: vibePrompt.isFavorite ? "heart.slash" : "heart")
                                     }
@@ -257,6 +274,20 @@ struct FavoritesView: View {
             .sheet(item: $model.route.editingVibePrompt, id: \.self) { vibePrompt in
                 VibePromptFormView(
                     model: VibePromptFormModel(prompt: VibePrompt.Draft(vibePrompt)) { _ in
+                        model.route = nil
+                    }
+                )
+            }
+            .sheet(item: $model.route.duplicatingPrompt, id: \.self) { draft in
+                PromptFormView(
+                    model: PromptFormModel(prompt: draft) { _ in
+                        model.route = nil
+                    }
+                )
+            }
+            .sheet(item: $model.route.duplicatingVibePrompt, id: \.self) { draft in
+                VibePromptFormView(
+                    model: VibePromptFormModel(prompt: draft) { _ in
                         model.route = nil
                     }
                 )

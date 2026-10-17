@@ -18,14 +18,17 @@ class CategoryFormModel: HashableObject {
     @Dependency(\.defaultDatabase) var database
 
     var selectedCategory: PromptCategory.ID?
+    /// False when picking for several prompts in different categories, so no row is checked.
+    let marksSelection: Bool
     let onSelect: (PromptCategory?) -> Void
 
     var isEditing = false
 
     var newCategory = PromptCategory.Draft()
 
-    init(selectedCategory: PromptCategory.ID?, onSelect: @escaping (PromptCategory?) -> Void) {
+    init(selectedCategory: PromptCategory.ID?, marksSelection: Bool = true, onSelect: @escaping (PromptCategory?) -> Void) {
         self.selectedCategory = selectedCategory
+        self.marksSelection = marksSelection
         self.onSelect = onSelect
     }
 
@@ -84,7 +87,7 @@ struct CategoryFormView: View {
                             HStack {
                                 Text("💬 All")
                                 Spacer()
-                                if model.selectedCategory == nil {
+                                if model.marksSelection && model.selectedCategory == nil {
                                     Image(systemName: "checkmark")
                                         .foregroundColor(.green)
                                 }
@@ -119,7 +122,7 @@ struct CategoryFormView: View {
                                 HStack {
                                     Text(category.displayTitle)
                                     Spacer()
-                                    if category.id == model.selectedCategory {
+                                    if model.marksSelection && category.id == model.selectedCategory {
                                         Image(systemName: "checkmark")
                                             .foregroundColor(.green)
                                     }

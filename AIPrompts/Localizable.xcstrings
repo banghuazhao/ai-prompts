@@ -52,6 +52,16 @@
         }
       }
     },
+    "%@ Copy" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 副本"
+          }
+        }
+      }
+    },
     "%lld" : {
 
     },
@@ -93,6 +103,16 @@
     },
     "%lld saved items" : {
 
+    },
+    "%lld Selected" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已選取 %lld 項"
+          }
+        }
+      }
     },
     "• %@: %@" : {
       "localizations" : {
@@ -583,7 +603,14 @@
 
     },
     "Add to Favorites" : {
-
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加入最愛"
+          }
+        }
+      }
     },
     "Add vibe prompt" : {
 
@@ -1204,6 +1231,7 @@
       }
     },
     "Delete (%lld)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1271,6 +1299,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
+          }
+        }
+      }
+    },
+    "Duplicate" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "複製"
           }
         }
       }
@@ -1869,6 +1907,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最常使用"
+          }
+        }
+      }
+    },
+    "Move to Category" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "移至分類"
           }
         }
       }
@@ -2545,7 +2593,14 @@
 
     },
     "Remove from Favorites" : {
-
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從最愛中移除"
+          }
+        }
+      }
     },
     "Remove from Recently Used" : {
       "localizations" : {
@@ -2780,7 +2835,18 @@
         }
       }
     },
+    "Select several prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選取多個提示詞"
+          }
+        }
+      }
+    },
     "Select several prompts to delete" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {

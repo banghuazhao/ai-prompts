@@ -30,3 +30,15 @@ struct VibePrompt: Identifiable, Hashable {
 }
 
 extension VibePrompt.Draft: Identifiable, Hashable {}
+
+extension VibePrompt.Draft {
+    /// An unsaved copy of `vibePrompt` for the add form, so the original stays as it is.
+    init(duplicating vibePrompt: VibePrompt) {
+        self.init(
+            app: String(localized: "\(vibePrompt.app) Copy"),
+            prompt: vibePrompt.prompt,
+            contributor: vibePrompt.contributor,
+            techstack: vibePrompt.techstack
+        )
+    }
+}

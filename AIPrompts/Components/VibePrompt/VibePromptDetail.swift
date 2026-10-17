@@ -29,6 +29,7 @@ class VibePromptDetailModel {
 
     func onCopy() {
         PromptActions.copy(vibePrompt.prompt)
+        recordUse()
         copiedToClipboard = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.copiedToClipboard = false
@@ -57,7 +58,16 @@ class VibePromptDetailModel {
 
     /// Runs the prompt right away when every blank has a value, otherwise asks for them first.
     func onRunOnDevice() {
-        route = template.runnablePrompt == nil ? .customizing : .runningOnDevice
+        if template.runnablePrompt == nil {
+            route = .customizing
+        } else {
+            route = .runningOnDevice
+            recordUse()
+        }
+    }
+
+    func recordUse() {
+        VibePromptUsage.record(vibePromptID: vibePrompt.id)
     }
 
     func onEdit() {
@@ -115,7 +125,7 @@ struct VibePromptDetailView: View {
                     .buttonStyle(.plain)
                 }
 
-                LLMQuickLaunchSection(prompt: model.vibePrompt.prompt)
+                LLMQuickLaunchSection(prompt: model.vibePrompt.prompt, onLaunch: model.recordUse)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 20)
@@ -172,7 +182,7 @@ struct VibePromptDetailView: View {
             }
         }
         .sheet(isPresented: Binding($model.route.customizing)) {
-            PromptCustomizeView(title: model.vibePrompt.app, prompt: model.vibePrompt.prompt)
+            PromptCustomizeView(title: model.vibePrompt.app, prompt: model.vibePrompt.prompt, onUse: model.recordUse)
         }
         .sheet(isPresented: Binding($model.route.runningOnDevice)) {
             PromptRunSheet(title: model.vibePrompt.app, prompt: model.template.runnablePrompt ?? model.vibePrompt.prompt)

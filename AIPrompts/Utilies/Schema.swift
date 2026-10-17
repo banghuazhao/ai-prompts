@@ -195,6 +195,20 @@ func appDatabase() throws -> any DatabaseWriter {
         .execute(db)
     }
 
+    migrator.registerMigration("Add vibe prompt usage") { db in
+        try #sql(
+            """
+            CREATE TABLE "vibePromptUsages" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "vibePromptID" INTEGER NOT NULL UNIQUE REFERENCES "vibePrompts"("id") ON DELETE CASCADE,
+                "lastUsedDate" TEXT NOT NULL DEFAULT '',
+                "useCount" INTEGER NOT NULL DEFAULT 0
+            ) STRICT
+            """
+        )
+        .execute(db)
+    }
+
     try migrator.migrate(database)
 
     try database.write { db in

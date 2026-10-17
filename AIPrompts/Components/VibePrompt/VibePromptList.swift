@@ -11,13 +11,21 @@ class VibePromptListModel {
     var showingAddPrompt = false
     enum SortOption: String, CaseIterable, Identifiable {
         case modifiedDate = "Modified Date"
+        case mostUsed = "Most Used"
         case title = "Title"
         case characterLengthAsc = "Character Length ↑"
         case characterLengthDesc = "Character Length ↓"
         var id: String { rawValue }
     }
 
-    var sortOption: SortOption = .modifiedDate
+    @ObservationIgnored
+    @Shared(.appStorage("vibePromptSortOption")) private var savedSortOption: SortOption = .modifiedDate
+
+    var sortOption: SortOption {
+        get { savedSortOption }
+        set { $savedSortOption.withLock { $0 = newValue } }
+    }
+
     var isDefault: Bool {
         sortOption == .modifiedDate
     }
@@ -28,6 +36,9 @@ class VibePromptListModel {
             .all
             .order { $0.modifiedDate.desc() }
         , animation: .default) var vibePrompts
+
+    @ObservationIgnored
+    @FetchAll(VibePromptUsage.all, animation: .default) var usages
 
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
@@ -49,7 +60,7 @@ class VibePromptListModel {
             app: "AI Generated App",
             prompt: generated.isEmpty ? "Failed to load corpus." : generated
         )
-        route = .showingAddMarkovPrompt(draft)
+        route = .addingDraft(draft)
     }
 
     @CasePathable
@@ -58,7 +69,7 @@ class VibePromptListModel {
         case editingPrompt(VibePrompt)
         case showingDeleteAlert(VibePrompt)
         case isFilterTechShareSheetPresented
-        case showingAddMarkovPrompt(VibePrompt.Draft)
+        case addingDraft(VibePrompt.Draft)
     }
 
     var route: Route?
@@ -68,7 +79,19 @@ class VibePromptListModel {
             .sorted()
     }
 
-    var selectedTechStacks: [String] = []
+    private static let selectedTechStacksKey = "vibePromptSelectedTechStacks"
+
+    private var savedTechStacks = UserDefaults.standard.stringArray(forKey: VibePromptListModel.selectedTechStacksKey) ?? []
+
+    /// Remembered between launches. A stack that no prompt uses anymore stays visible as a chip,
+    /// so it's easy to remove.
+    var selectedTechStacks: [String] {
+        get { savedTechStacks }
+        set {
+            savedTechStacks = newValue
+            UserDefaults.standard.set(newValue, forKey: Self.selectedTechStacksKey)
+        }
+    }
 
     var filteredVibePrompts: [VibePrompt] {
         var new = vibePrompts
@@ -87,6 +110,23 @@ class VibePromptListModel {
         switch sortOption {
         case .modifiedDate:
             new = new.sorted { $0.modifiedDate > $1.modifiedDate }
+        case .mostUsed:
+            let usageByVibePromptID = Dictionary(usages.map { ($0.vibePromptID, $0) }, uniquingKeysWith: { first, _ in first })
+            new = new.sorted { lhs, rhs in
+                let lhsUsage = usageByVibePromptID[lhs.id]
+                let rhsUsage = usageByVibePromptID[rhs.id]
+                let lhsCount = lhsUsage?.useCount ?? 0
+                let rhsCount = rhsUsage?.useCount ?? 0
+                if lhsCount != rhsCount {
+                    return lhsCount > rhsCount
+                }
+                let lhsDate = lhsUsage?.lastUsedDate ?? .distantPast
+                let rhsDate = rhsUsage?.lastUsedDate ?? .distantPast
+                if lhsDate != rhsDate {
+                    return lhsDate > rhsDate
+                }
+                return lhs.modifiedDate > rhs.modifiedDate
+            }
         case .title:
             new = new.sorted { $0.app.localizedCaseInsensitiveCompare($1.app) == .orderedAscending }
         case .characterLengthAsc:
@@ -122,10 +162,15 @@ class VibePromptListModel {
 
     func onCopy(_ prompt: VibePrompt) {
         PromptActions.copy(prompt.prompt)
+        VibePromptUsage.record(vibePromptID: prompt.id)
     }
 
     func onEdit(_ prompt: VibePrompt) {
         route = .editingPrompt(prompt)
+    }
+
+    func onDuplicate(_ prompt: VibePrompt) {
+        route = .addingDraft(VibePrompt.Draft(duplicating: prompt))
     }
 
     func onDeleteRequest(_ prompt: VibePrompt) {
@@ -247,6 +292,12 @@ struct VibePromptListView: View {
                                     model.onEdit(vibePrompt)
                                 }) {
                                     Label("Edit", systemImage: "pencil")
+                                }
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onDuplicate(vibePrompt)
+                                }) {
+                                    Label("Duplicate", systemImage: "plus.square.on.square")
                                 }
                                 Button(action: {
                                     Haptics.shared.vibrateIfEnabled()
@@ -377,7 +428,7 @@ struct VibePromptListView: View {
                 .sheet(isPresented: Binding($model.route.showingAddVibePrompt)) {
                     VibePromptFormView(model: VibePromptFormModel { _ in model.route = nil })
                 }
-                .sheet(item: $model.route.showingAddMarkovPrompt, id: \.self) { draft in
+                .sheet(item: $model.route.addingDraft, id: \.self) { draft in
                     VibePromptFormView(model: VibePromptFormModel(prompt: draft) { _ in model.route = nil })
                 }
                 .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
