@@ -1,0 +1,8 @@
+{
+  "version": "1.5.0",
+  "build": "2",
+  "whatsNew": {
+    "en-US": "In the Prompts tab, select several prompts to favorite, move to a category, share or delete them all at once.\n\nDuplicate a prompt from its long-press menu to make your own version and keep the original.\n\nYour sort and filter choices are now remembered, and Vibe Prompts can be sorted by Most Used.",
+    "zh-Hans": "在 Prompts 标签页中可一次选择多个提示词，批量收藏、移至分类、分享或删除。\n\n在长按菜单中为提示词创建副本，即可在保留原版的同时打造属于自己的版本。\n\n排序和筛选选项现在会被记住，Vibe 提示词也可以按使用次数排序。"
+  }
+}
