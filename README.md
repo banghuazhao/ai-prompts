@@ -40,7 +40,8 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🗂️ **Prompt Categories**: Organize and browse prompts by category for easier discovery and filtering. Quickly find prompts relevant to your needs.
 - 🧠 **Context Engineering Tips**: Access best practices and actionable tips for effective context engineering directly in the app, helping you craft better prompts for LLMs.
 - 🛠️ **Prompt Engineering Analyzer**: Analyze your prompts with built-in tools to improve their effectiveness, clarity, and results.
-- 🌙 **Dark Mode**: Supports system-wide dark mode, with user preference override.
+- 🌙 **Appearance**: Follows the system light or dark setting by default, or pick Light or Dark in **Settings › Appearance**.
+- 🔠 **Dynamic Type**: Text throughout the app follows your text size setting, including accessibility sizes.
 - 📢 **Ad Integration**: Integrates Google Mobile Ads with ATT permission handling.
 - 🛒 **App Store Links**: The More tab features other recommended apps with direct App Store links.
 

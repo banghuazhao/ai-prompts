@@ -4,6 +4,8 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var router = DeepLinkRouter.shared
     @AppStorage("selectedThemeColor") private var selectedThemeColor = ThemeColor.default.rawValue
+    @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
@@ -14,6 +16,18 @@ struct ContentView: View {
             }
         }
         .tint((ThemeColor(rawValue: selectedThemeColor) ?? .default).primaryColor)
+        .onAppear {
+            appearance.apply()
+        }
+        .onChange(of: appearance) { _, newValue in
+            newValue.apply()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            // Catches windows that weren't attached yet on first appearance.
+            if newPhase == .active {
+                appearance.apply()
+            }
+        }
         .onOpenURL { url in
             router.handle(url)
         }

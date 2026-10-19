@@ -30,6 +30,7 @@ struct PurchaseSheet: View {
                             }) {
                                 Image(systemName: "xmark")
                                     .font(AppFont.headline)
+                                    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                                     .frame(width: 28, height: 28)
                             }
                             .buttonStyle(.glass)

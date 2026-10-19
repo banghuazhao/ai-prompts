@@ -15,7 +15,7 @@ import UniformTypeIdentifiers
 struct SettingView: View {
     @AppStorage("buttonSoundEnabled") private var buttonSoundEnabled: Bool = true
     @AppStorage("vibrateEnabled") private var vibrateEnabled: Bool = true
-    @AppStorage("darkModeEnabled") private var darkModeEnabled: Bool = false
+    @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
     @AppStorage("showContextEngineeringTips") private var showContextEngineeringTips: Bool = true
     @Dependency(\.themeManager) var themeManager
     
@@ -52,12 +52,15 @@ struct SettingView: View {
                         .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     }
                     settingsSection(title: "Appearance") {
-                        Toggle(isOn: $darkModeEnabled) {
-                            Text(String(localized: "Dark Mode"))
-                                .font(AppFont.body)
-                                .foregroundColor(themeManager.current.textPrimary)
+                        Picker("Appearance", selection: $appearance) {
+                            ForEach(AppAppearance.allCases) { option in
+                                Text(option.displayName).tag(option)
+                            }
                         }
-                        .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
+                        .pickerStyle(.segmented)
+                        .onChange(of: appearance) { _, _ in
+                            Haptics.shared.vibrateIfEnabled()
+                        }
                     }
                     settingsSection(title: "Prompt Creation") {
                         Toggle(isOn: $showContextEngineeringTips) {
@@ -134,10 +137,6 @@ struct SettingView: View {
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .preferredColorScheme(darkModeEnabled ? .dark : .light)
-        .onChange(of: darkModeEnabled) { _, newValue in
-            themeManager.updateTheme(darkMode: newValue)
-        }
         .alert(
             "Restore Backup?",
             isPresented: Binding(
