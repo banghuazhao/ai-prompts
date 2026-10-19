@@ -461,6 +461,9 @@ struct PromptListView: View {
                                         }) {
                                             Label("Copy", systemImage: "doc.on.doc")
                                         }
+                                        OpenInDefaultLLMButton(prompt: prompt.prompt) {
+                                            PromptUsage.record(promptID: prompt.id)
+                                        }
                                         Button(action: {
                                             Haptics.shared.vibrateIfEnabled()
                                             model.onEdit(prompt)

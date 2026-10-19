@@ -36,6 +36,23 @@ struct AIChat: Identifiable, Hashable {
         messages.first { $0.role == .assistant }?.text ?? ""
     }
 
+    /// Whether the title or any message contains `query`.
+    func matches(_ query: String) -> Bool {
+        title.localizedStandardContains(query)
+            || messages.contains { $0.text.localizedStandardContains(query) }
+    }
+
+    /// Renames a saved chat. A blank title is ignored.
+    static func rename(id: AIChat.ID, to title: String, database: any DatabaseWriter) {
+        let title = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !title.isEmpty else { return }
+        withErrorReporting {
+            try database.write { db in
+                try AIChat.find(id).update { $0.title = title }.execute(db)
+            }
+        }
+    }
+
     static func encode(_ messages: [AIMessage]) -> String {
         guard let data = try? JSONEncoder().encode(messages) else { return "[]" }
         return String(decoding: data, as: UTF8.self)

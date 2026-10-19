@@ -39,75 +39,119 @@ extension PromptTemplate {
     }
 }
 
+/// Runs a prompt in a new on-device chat, presented as a sheet.
 @available(iOS 26.0, *)
 struct OnDeviceChatView: View {
     let title: String
     let prompt: String
 
-    @State private var chat = OnDeviceChat()
-    @State private var followUp = ""
-    @State private var savedChatID: AIChat.ID?
-    @State private var createdDate = Date()
-    @Dependency(\.defaultDatabase) private var database
-
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 16) {
-                    ForEach(chat.messages) { message in
-                        AIMessageView(
-                            message: message,
-                            title: title,
-                            isStreaming: chat.isResponding && message.id == chat.messages.last?.id
-                        )
-                    }
-                    if let failure = chat.failure {
-                        AIFailureView(
-                            failure: failure,
-                            lastPrompt: chat.messages.last { $0.role == .user }?.text ?? prompt,
-                            onRetry: { chat.retry() },
-                            onStartOver: startOver
-                        )
+            OnDeviceChatScreen(title: title, prompt: prompt)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        DismissButton()
                     }
                 }
-                .padding()
-            }
-            .defaultScrollAnchor(.bottom, for: .sizeChanges)
-            .scrollDismissesKeyboard(.interactively)
-            .background(Color(.systemGroupedBackground).ignoresSafeArea())
-            .safeAreaInset(edge: .bottom) {
-                composer
-            }
-            .navigationTitle(title)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    DismissButton()
+        }
+    }
+}
+
+/// A chat with the on-device model, either new or continuing a saved `AIChat`.
+/// Expects to be inside a `NavigationStack`.
+@available(iOS 26.0, *)
+struct OnDeviceChatScreen: View {
+    /// The prompt that opens the chat, sent again by Start Over.
+    let prompt: String
+
+    @State private var title: String
+    @State private var chat: OnDeviceChat
+    @State private var followUp = ""
+    @State private var savedChatID: AIChat.ID?
+    @State private var createdDate: Date
+    @State private var isRenaming = false
+    @Dependency(\.defaultDatabase) private var database
+
+    init(title: String, prompt: String) {
+        self.prompt = prompt
+        _title = State(initialValue: title)
+        _chat = State(initialValue: OnDeviceChat())
+        _createdDate = State(initialValue: Date())
+    }
+
+    /// Continues a saved chat. Long chats only keep their first and latest turns in the
+    /// model's context; the full history stays on screen.
+    init(chat saved: AIChat) {
+        let messages = saved.messages
+        prompt = messages.first { $0.role == .user }?.text ?? ""
+        _title = State(initialValue: saved.title)
+        _chat = State(initialValue: OnDeviceChat(history: messages))
+        _savedChatID = State(initialValue: saved.id)
+        _createdDate = State(initialValue: saved.createdDate)
+    }
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 16) {
+                ForEach(chat.messages) { message in
+                    AIMessageView(
+                        message: message,
+                        title: title,
+                        isStreaming: chat.isResponding && message.id == chat.messages.last?.id
+                    )
                 }
-                ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        Button("Start Over", systemImage: "arrow.counterclockwise") {
-                            Haptics.shared.vibrateIfEnabled()
-                            startOver()
+                if let failure = chat.failure {
+                    AIFailureView(
+                        failure: failure,
+                        lastPrompt: chat.messages.last { $0.role == .user }?.text ?? prompt,
+                        onRetry: { chat.retry() },
+                        onStartOver: startOver
+                    )
+                }
+            }
+            .padding()
+        }
+        .defaultScrollAnchor(.bottom, for: .sizeChanges)
+        .defaultScrollAnchor(.bottom, for: .initialOffset)
+        .scrollDismissesKeyboard(.interactively)
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .safeAreaInset(edge: .bottom) {
+            composer
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Menu {
+                    Button("Start Over", systemImage: "arrow.counterclockwise") {
+                        Haptics.shared.vibrateIfEnabled()
+                        startOver()
+                    }
+                    if savedChatID != nil {
+                        Button("Rename", systemImage: "pencil") {
+                            isRenaming = true
                         }
-                        ShareLink(item: AIMessage.transcript(chat.messages)) {
-                            Label("Share Conversation", systemImage: "square.and.arrow.up")
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis")
                     }
-                    .disabled(chat.isResponding)
+                    ShareLink(item: AIMessage.transcript(chat.messages)) {
+                        Label("Share Conversation", systemImage: "square.and.arrow.up")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
                 }
+                .disabled(chat.isResponding)
             }
-            .task {
-                if chat.messages.isEmpty {
-                    chat.send(prompt)
-                }
+        }
+        .renameChatAlert(isPresented: $isRenaming, title: title) { newTitle in
+            rename(to: newTitle)
+        }
+        .task {
+            if chat.messages.isEmpty {
+                chat.send(prompt)
             }
-            .onChange(of: chat.isResponding) { _, isResponding in
-                if !isResponding {
-                    save()
-                }
+        }
+        .onChange(of: chat.isResponding) { _, isResponding in
+            if !isResponding {
+                save()
             }
         }
     }
@@ -158,6 +202,12 @@ struct OnDeviceChatView: View {
         savedChatID = nil
         createdDate = Date()
         chat.send(prompt)
+    }
+
+    private func rename(to newTitle: String) {
+        title = newTitle
+        guard let savedChatID else { return }
+        AIChat.rename(id: savedChatID, to: newTitle, database: database)
     }
 
     private func save() {

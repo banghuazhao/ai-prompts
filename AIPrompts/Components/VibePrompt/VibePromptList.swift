@@ -287,6 +287,9 @@ struct VibePromptListView: View {
                                 }) {
                                     Label("Copy", systemImage: "doc.on.doc")
                                 }
+                                OpenInDefaultLLMButton(prompt: vibePrompt.prompt) {
+                                    VibePromptUsage.record(vibePromptID: vibePrompt.id)
+                                }
                                 Button(action: {
                                     Haptics.shared.vibrateIfEnabled()
                                     model.onEdit(vibePrompt)

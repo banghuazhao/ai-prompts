@@ -22,6 +22,16 @@
         }
       }
     },
+    "Assistants" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "助理"
+          }
+        }
+      }
+    },
     "Check Prompt" : {
       "localizations" : {
         "zh-Hant" : {
@@ -68,6 +78,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "由 Apple Intelligence 建議，使用前請先確認內容。"
+          }
+        }
+      }
+    },
+    "The default assistant is always shown" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設助理一律會顯示"
           }
         }
       }
@@ -1045,6 +1065,16 @@
         }
       }
     },
+    "Choose Assistants" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇助理"
+          }
+        }
+      }
+    },
     "Choose category" : {
 
     },
@@ -1337,6 +1367,16 @@
         }
       }
     },
+    "Default Assistant" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設助理"
+          }
+        }
+      }
+    },
     "Define the app, then describe what to build." : {
 
     },
@@ -1419,6 +1459,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
+          }
+        }
+      }
+    },
+    "Drag to reorder. Quick Launch opens the assistant with your prompt filled in." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拖移以重新排序。快速開啟會開啟助理並預先填入你的提示詞。"
           }
         }
       }
@@ -1950,6 +2000,16 @@
         }
       }
     },
+    "Long-press a prompt and choose Open in %@ to skip the detail page. The default assistant is always shown in Quick Launch." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "長按提示詞並選擇「在 %@ 中開啟」即可略過詳細頁面。預設助理一律會顯示在快速開啟中。"
+          }
+        }
+      }
+    },
     "Made with AI Prompts %@" : {
       "localizations" : {
         "zh-Hant" : {
@@ -2267,6 +2327,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 AI 提示詞中開啟提示詞。"
+          }
+        }
+      }
+    },
+    "Open in %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 %@ 中開啟"
           }
         }
       }
@@ -2753,6 +2823,26 @@
         }
       }
     },
+    "Rename" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名"
+          }
+        }
+      }
+    },
+    "Rename Chat" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名聊天"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "zh-Hant" : {
@@ -2923,6 +3013,16 @@
         }
       }
     },
+    "Search chats" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜尋聊天"
+          }
+        }
+      }
+    },
     "Search prompts" : {
       "localizations" : {
         "zh-Hant" : {
@@ -3075,6 +3175,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "顯示原文"
+          }
+        }
+      }
+    },
+    "Shows or hides this assistant in Quick Launch" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在快速開啟中顯示或隱藏此助理"
           }
         }
       }

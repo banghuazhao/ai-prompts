@@ -47,6 +47,9 @@ struct RecentlyUsedShelf: View {
                             } label: {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
+                            OpenInDefaultLLMButton(prompt: prompt.prompt) {
+                                PromptUsage.record(promptID: prompt.id)
+                            }
                             Button {
                                 Haptics.shared.vibrateIfEnabled()
                                 onRemove(prompt)
