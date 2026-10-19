@@ -12,6 +12,126 @@
         }
       }
     },
+    "Apple Intelligence didn't find anything to change." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 沒有找到需要修改的地方。"
+          }
+        }
+      }
+    },
+    "Check Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢查提示詞"
+          }
+        }
+      }
+    },
+    "Improve with Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 Apple Intelligence 改善"
+          }
+        }
+      }
+    },
+    "Improved Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "改善後的提示詞"
+          }
+        }
+      }
+    },
+    "Keep Original" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留原始版本"
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence. Check it before you use it." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 Apple Intelligence 建議，使用前請先確認內容。"
+          }
+        }
+      }
+    },
+    "The improved version leaves out these blanks: %@. Add them back after using it, or keep your original." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "改善後的版本少了這些空格：%@。使用後請自行補回，或保留原始版本。"
+          }
+        }
+      }
+    },
+    "This prompt is too long to improve on device." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個提示詞太長，無法在裝置上改善。"
+          }
+        }
+      }
+    },
+    "Undo Improvement" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "復原改善"
+          }
+        }
+      }
+    },
+    "Use This" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用此版本"
+          }
+        }
+      }
+    },
+    "What Changed" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改內容"
+          }
+        }
+      }
+    },
+    "Your Original" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的原始版本"
+          }
+        }
+      }
+    },
     "“%@” is copied and ready to paste." : {
       "localizations" : {
         "zh-Hant" : {
@@ -1720,6 +1840,7 @@
       }
     },
     "Improve Prompt" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
