@@ -5,7 +5,6 @@ import UIKit
 
 @main
 struct AIPrompts: App {
-    @AppStorage("darkModeEnabled") private var darkModeEnabled: Bool = false
     @StateObject private var openAd = OpenAd()
     @Environment(\.scenePhase) private var scenePhase
     @Dependency(\.purchaseManager) private var purchaseManager
@@ -15,6 +14,7 @@ struct AIPrompts: App {
         UITableView.appearance().backgroundColor = .clear
         UITableViewCell.appearance().backgroundColor = .clear
         AppUsage.registerLaunch()
+        AppAppearance.migrateLegacySetting()
         prepareDependencies {
             $0.defaultDatabase = AppDatabase.shared
         }
@@ -27,7 +27,6 @@ struct AIPrompts: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(darkModeEnabled ? .dark : .light)
                 .task {
                     purchaseManager.startObservingTransactions()
                     await purchaseManager.checkPurchaseStatus()

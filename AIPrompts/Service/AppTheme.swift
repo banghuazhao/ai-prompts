@@ -67,20 +67,21 @@ enum ThemeColor: String, CaseIterable {
         }
     }
 
-    var backgroundColor: Color {
+    /// Page background in light appearance. Dark appearance uses one neutral background for every color.
+    var lightBackground: UIColor {
         switch self {
         case .default:
-            return AIStudioPalette.canvas
+            return UIColor(named: "StudioCanvas") ?? .systemGroupedBackground
         case .blue:
-            return Color(red: 0.95, green: 0.97, blue: 1.0) // Light blue background
+            return UIColor(red: 0.95, green: 0.97, blue: 1.0, alpha: 1) // Light blue background
         case .green:
-            return Color(red: 0.94, green: 0.98, blue: 0.95) // Light green background
+            return UIColor(red: 0.94, green: 0.98, blue: 0.95, alpha: 1) // Light green background
         case .purple:
-            return Color(red: 0.97, green: 0.95, blue: 1.0) // Light purple background
+            return UIColor(red: 0.97, green: 0.95, blue: 1.0, alpha: 1) // Light purple background
         case .pink:
-            return Color(red: 0.99, green: 0.95, blue: 0.97) // Light pink background
+            return UIColor(red: 0.99, green: 0.95, blue: 0.97, alpha: 1) // Light pink background
         case .orange:
-            return Color(red: 1.0, green: 0.97, blue: 0.94) // Light orange background
+            return UIColor(red: 1.0, green: 0.97, blue: 0.94, alpha: 1) // Light orange background
         }
     }
 }
@@ -104,38 +105,98 @@ enum AIStudioPalette {
     )
 }
 
+// MARK: - Appearance
+
+/// Whether the app follows the system's light or dark setting or always uses one of them.
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+
+    static let storageKey = "appearance"
+
+    var id: String { rawValue }
+
+    var displayName: LocalizedStringKey {
+        switch self {
+        case .system: "System"
+        case .light: "Light"
+        case .dark: "Dark"
+        }
+    }
+
+    var userInterfaceStyle: UIUserInterfaceStyle {
+        switch self {
+        case .system: .unspecified
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+
+    /// Up to 1.5 the app had a Dark Mode switch that defaulted to off, which kept the app light even
+    /// when the system was dark. Anyone who touched that switch keeps their choice; everyone else
+    /// now follows the system.
+    static func migrateLegacySetting(in defaults: UserDefaults = .standard) {
+        guard defaults.string(forKey: storageKey) == nil else { return }
+        let appearance: AppAppearance
+        if let darkModeEnabled = defaults.object(forKey: "darkModeEnabled") as? Bool {
+            appearance = darkModeEnabled ? .dark : .light
+        } else {
+            appearance = .system
+        }
+        defaults.set(appearance.rawValue, forKey: storageKey)
+    }
+
+    /// Overrides every window, so sheets, alerts and ads follow the choice too.
+    /// `preferredColorScheme(nil)` doesn't reliably hand control back to the system once it was set.
+    @MainActor
+    func apply() {
+        for case let windowScene as UIWindowScene in UIApplication.shared.connectedScenes {
+            for window in windowScene.windows {
+                window.overrideUserInterfaceStyle = userInterfaceStyle
+            }
+        }
+    }
+}
+
+extension Color {
+    /// A color that resolves to `light` or `dark` for the appearance it is drawn in.
+    static func adaptive(light: UIColor, dark: UIColor) -> Color {
+        Color(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark ? dark.resolvedColor(with: traits) : light.resolvedColor(with: traits)
+        })
+    }
+}
+
 // MARK: - Base Theme
 
+/// Colors that switch between light and dark on their own, so views never need to know the appearance.
 struct BaseTheme: AppTheme {
     let primaryColor: Color
     let secondaryGray = Color(red: 0.56, green: 0.56, blue: 0.58) // #8E8E93
     let background: Color
-    let card = Color.white
+    let card = Color.adaptive(
+        light: .white,
+        dark: UIColor(red: 0.16, green: 0.16, blue: 0.18, alpha: 1) // #29292E
+    )
     let success = Color(red: 0.20, green: 0.78, blue: 0.35) // #34C759
     let warning = Color(red: 1.0, green: 0.80, blue: 0.0) // #FFCC00
     let error = Color(red: 1.0, green: 0.23, blue: 0.19) // #FF3B30
-    let textPrimary = Color(red: 0.11, green: 0.11, blue: 0.12) // #1C1C1E
-    let textSecondary = Color(red: 0.56, green: 0.56, blue: 0.58) // #8E8E93
+    let textPrimary = Color.adaptive(
+        light: UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1), // #1C1C1E
+        dark: .white
+    )
+    let textSecondary = Color.adaptive(
+        light: UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1), // #8E8E93
+        dark: UIColor(red: 0.7, green: 0.7, blue: 0.75, alpha: 1)
+    )
 
     init(themeColor: ThemeColor) {
         primaryColor = themeColor.primaryColor
-        background = themeColor.backgroundColor
-    }
-}
-
-struct DarkBaseTheme: AppTheme {
-    let primaryColor: Color
-    let secondaryGray = Color(red: 0.56, green: 0.56, blue: 0.58)
-    let background = Color(red: 0.10, green: 0.10, blue: 0.12) // #1A1A1F
-    let card = Color(red: 0.16, green: 0.16, blue: 0.18) // #29292E
-    let success = Color(red: 0.20, green: 0.78, blue: 0.35)
-    let warning = Color(red: 1.0, green: 0.80, blue: 0.0)
-    let error = Color(red: 1.0, green: 0.23, blue: 0.19)
-    let textPrimary = Color.white
-    let textSecondary = Color(red: 0.7, green: 0.7, blue: 0.75)
-
-    init(themeColor: ThemeColor) {
-        primaryColor = themeColor.primaryColor
+        background = Color.adaptive(
+            light: themeColor.lightBackground,
+            dark: UIColor(red: 0.10, green: 0.10, blue: 0.12, alpha: 1) // #1A1A1F
+        )
     }
 }
 
@@ -144,16 +205,8 @@ struct DarkBaseTheme: AppTheme {
 @Observable
 class ThemeManager: ObservableObject {
     var current: AppTheme {
-        let themeColor = ThemeColor(rawValue: selectedThemeColor) ?? .default
-        return darkModeEnabled ?
-            DarkBaseTheme(themeColor: themeColor) :
-            BaseTheme(themeColor: themeColor)
+        BaseTheme(themeColor: ThemeColor(rawValue: selectedThemeColor) ?? .default)
     }
-
-    @ObservationIgnored
-    @Shared(.appStorage("darkModeEnabled")) private var darkModeEnabledStorage: Bool = false
-
-    var darkModeEnabled: Bool { darkModeEnabledStorage }
 
     @ObservationIgnored
     @Shared(.appStorage("selectedThemeColor")) private var selectedThemeColor: String = ThemeColor.default.rawValue
@@ -167,12 +220,6 @@ class ThemeManager: ObservableObject {
     func updateThemeColor(_ themeColorName: String) {
         $selectedThemeColor.withLock {
             $0 = themeColorName
-        }
-    }
-
-    func updateTheme(darkMode: Bool) {
-        $darkModeEnabledStorage.withLock {
-            $0 = darkMode
         }
     }
 }
@@ -192,17 +239,19 @@ extension DependencyValues {
 
 // MARK: - Typography
 
+/// Text styles scale with the reader's text size setting. At the default size they are within a
+/// point of the fixed sizes the app used before.
 struct AppFont {
-    static let largeTitle = Font.system(size: 34, weight: .bold)
-    static let title = Font.system(size: 28, weight: .semibold)
-    static let title2 = Font.system(size: 22, weight: .semibold)
-    static let title3 = Font.system(size: 19, weight: .semibold)
-    static let headline = Font.system(size: 17, weight: .semibold)
-    static let body = Font.system(size: 17, weight: .regular)
-    static let subheadline = Font.system(size: 15, weight: .regular)
-    static let subheadlineSemibold = Font.system(size: 15, weight: .semibold)
-    static let caption = Font.system(size: 13, weight: .regular)
-    static let footnote = Font.system(size: 12, weight: .regular)
+    static let largeTitle = Font.system(.largeTitle, weight: .bold)
+    static let title = Font.system(.title, weight: .semibold)
+    static let title2 = Font.system(.title2, weight: .semibold)
+    static let title3 = Font.system(.title3, weight: .semibold)
+    static let headline = Font.system(.headline, weight: .semibold)
+    static let body = Font.system(.body, weight: .regular)
+    static let subheadline = Font.system(.subheadline, weight: .regular)
+    static let subheadlineSemibold = Font.system(.subheadline, weight: .semibold)
+    static let caption = Font.system(.footnote, weight: .regular)
+    static let footnote = Font.system(.caption, weight: .regular)
 }
 
 // MARK: - Spacing & Layout

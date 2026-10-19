@@ -1197,7 +1197,18 @@
         }
       }
     },
+    "Dark" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "深色"
+          }
+        }
+      }
+    },
     "Dark Mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1785,6 +1796,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "欄位留空則保留原文。"
+          }
+        }
+      }
+    },
+    "Light" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "淺色"
           }
         }
       }
@@ -3129,6 +3150,16 @@
     },
     "Swift, SwiftUI, iOS" : {
 
+    },
+    "System" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系統"
+          }
+        }
+      }
     },
     "Tap the heart on a prompt to keep it close at hand." : {
 

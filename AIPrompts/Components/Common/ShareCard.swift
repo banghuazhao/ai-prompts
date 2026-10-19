@@ -72,6 +72,8 @@ struct ShareCardView: View {
         )
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
         .environment(\.colorScheme, .light)
+        // A fixed-width image, so it looks the same whatever the sharer's text size is.
+        .dynamicTypeSize(.large)
     }
 
     private static func trimmed(_ text: String) -> String {

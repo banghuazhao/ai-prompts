@@ -27,6 +27,8 @@ struct AppCircularButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(AppFont.headline)
+            // The circle has a fixed size, so the icon stops growing before it overflows it.
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             .frame(width: 38, height: 38)
             .background(
                 (overrideColor?.opacity(0.1) ?? theme.primaryColor.opacity(0.1))
@@ -41,6 +43,8 @@ struct AppWhiteCircularButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(AppFont.headline)
+            // The circle has a fixed size, so the icon stops growing before it overflows it.
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             .frame(width: 38, height: 38)
             .background(
                 Color.black.opacity(0.1)
@@ -61,7 +65,7 @@ struct AppRectButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(AppFont.headline)
-            .frame(height: 38)
+            .frame(minHeight: 38)
             .padding(.horizontal, AppSpacing.medium)
             .background(theme.primaryColor.opacity(0.1))
             .foregroundColor(theme.primaryColor)
