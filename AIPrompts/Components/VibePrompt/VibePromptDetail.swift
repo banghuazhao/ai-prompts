@@ -125,7 +125,7 @@ struct VibePromptDetailView: View {
                     .buttonStyle(.plain)
                 }
 
-                LLMQuickLaunchSection(prompt: model.vibePrompt.prompt, onLaunch: model.recordUse)
+                LLMQuickLaunchSection(prompt: model.vibePrompt.prompt, onLaunch: model.recordUse, onNeedsBlanks: model.onCustomize)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 20)

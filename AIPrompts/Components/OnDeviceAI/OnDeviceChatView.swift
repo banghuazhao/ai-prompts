@@ -99,12 +99,26 @@ struct OnDeviceChatScreen: View {
                         title: title,
                         isStreaming: chat.isResponding && message.id == chat.messages.last?.id
                     )
+                    if message.id == chat.summarizedThroughID {
+                        SummaryDivider()
+                    }
+                }
+                if chat.isSummarizing {
+                    HStack(spacing: 8) {
+                        ProgressView()
+                        Text("Summarizing earlier messages…")
+                            .foregroundStyle(.secondary)
+                    }
+                    .font(.callout)
+                    .frame(maxWidth: .infinity)
                 }
                 if let failure = chat.failure {
                     AIFailureView(
                         failure: failure,
                         lastPrompt: chat.messages.last { $0.role == .user }?.text ?? prompt,
+                        canSummarize: chat.canSummarize,
                         onRetry: { chat.retry() },
+                        onSummarize: { chat.continueWithSummary() },
                         onStartOver: startOver
                     )
                 }
@@ -138,7 +152,7 @@ struct OnDeviceChatScreen: View {
                 } label: {
                     Image(systemName: "ellipsis")
                 }
-                .disabled(chat.isResponding)
+                .disabled(chat.isResponding || chat.isSummarizing)
             }
         }
         .renameChatAlert(isPresented: $isRenaming, title: title) { newTitle in
@@ -162,7 +176,7 @@ struct OnDeviceChatScreen: View {
                 .lineLimit(1 ... 5)
                 .padding(.vertical, 6)
                 .onSubmit(sendFollowUp)
-            if chat.isResponding {
+            if chat.isResponding || chat.isSummarizing {
                 Button {
                     Haptics.shared.vibrateIfEnabled()
                     chat.stop()
@@ -192,7 +206,7 @@ struct OnDeviceChatScreen: View {
     }
 
     private func sendFollowUp() {
-        guard !chat.isResponding else { return }
+        guard !chat.isResponding, !chat.isSummarizing else { return }
         chat.send(followUp)
         followUp = ""
     }
@@ -358,23 +372,39 @@ struct AIMessageView: View {
 private struct AIFailureView: View {
     let failure: OnDeviceAIFailure
     let lastPrompt: String
+    let canSummarize: Bool
     let onRetry: () -> Void
+    let onSummarize: () -> Void
     let onStartOver: () -> Void
+
+    private var message: String {
+        if failure.kind == .conversationTooLong, canSummarize {
+            return String(localized: "This conversation is too long for the on-device model. Continue with a summary of it, or start a new chat.")
+        }
+        return failure.message
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label(failure.message, systemImage: "exclamationmark.bubble")
+            Label(message, systemImage: "exclamationmark.bubble")
                 .font(.callout)
                 .foregroundStyle(.secondary)
             switch failure.kind {
             case .declined:
                 LLMQuickLaunchSection(prompt: lastPrompt)
             case .conversationTooLong:
+                if canSummarize {
+                    Button("Continue with Summary", systemImage: "text.append") {
+                        Haptics.shared.vibrateIfEnabled()
+                        onSummarize()
+                    }
+                    .glassButtonStyle(prominent: true)
+                }
                 Button("Start New Chat", systemImage: "arrow.counterclockwise") {
                     Haptics.shared.vibrateIfEnabled()
                     onStartOver()
                 }
-                .glassButtonStyle(prominent: true)
+                .glassButtonStyle(prominent: !canSummarize)
             case .other:
                 Button("Try Again", systemImage: "arrow.clockwise") {
                     Haptics.shared.vibrateIfEnabled()
@@ -386,6 +416,27 @@ private struct AIFailureView: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+}
+
+/// Marks where the model's memory of the chat switches to a summary.
+private struct SummaryDivider: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            line
+            Label("Earlier messages summarized", systemImage: "text.append")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize()
+            line
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private var line: some View {
+        Rectangle()
+            .fill(.separator)
+            .frame(height: 1)
     }
 }
 

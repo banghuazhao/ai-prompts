@@ -9,6 +9,8 @@ import SwiftUI
 struct RecentlyUsedShelf: View {
     let prompts: [Prompt]
     let onSelect: (Prompt) -> Void
+    /// Shows the Customize sheet, for "Open in …" while a blank still needs a value.
+    let onCustomize: (Prompt) -> Void
     let onRemove: (Prompt) -> Void
     let onClear: () -> Void
 
@@ -47,7 +49,7 @@ struct RecentlyUsedShelf: View {
                             } label: {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
-                            OpenInDefaultLLMButton(prompt: prompt.prompt) {
+                            OpenInDefaultLLMButton(prompt: prompt.prompt, onNeedsBlanks: { onCustomize(prompt) }) {
                                 PromptUsage.record(promptID: prompt.id)
                             }
                             Button {

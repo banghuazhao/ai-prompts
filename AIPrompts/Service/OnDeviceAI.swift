@@ -67,6 +67,9 @@ final class OnDeviceChat {
     private(set) var messages: [AIMessage] = []
     private(set) var isResponding = false
     private(set) var failure: OnDeviceAIFailure?
+    private(set) var isSummarizing = false
+    /// The last message covered by a summary, after `continueWithSummary()`. Not saved.
+    private(set) var summarizedThroughID: AIMessage.ID?
 
     @ObservationIgnored private var session: LanguageModelSession
     @ObservationIgnored private var responseTask: Task<Void, Never>?
@@ -85,7 +88,15 @@ final class OnDeviceChat {
     """
 
     private static func makeSession(history: [AIMessage] = []) -> LanguageModelSession {
-        let turns = turnsToRestore(from: history)
+        makeSession(turns: turnsToRestore(from: history))
+    }
+
+    /// A session that already knows `turns`, and a summary of anything earlier.
+    private static func makeSession(summary: String? = nil, turns: [(prompt: String, response: String)]) -> LanguageModelSession {
+        var instructions = instructions
+        if let summary {
+            instructions += "\n\nThe conversation got too long to keep in full. Here is a summary of it so far:\n\(summary)"
+        }
         guard !turns.isEmpty else {
             return LanguageModelSession(instructions: instructions)
         }
@@ -99,17 +110,23 @@ final class OnDeviceChat {
         return LanguageModelSession(transcript: Transcript(entries: entries))
     }
 
-    /// The turns of a saved chat that fit in about half the context window, leaving the rest for
-    /// the next prompt and reply: the first turn, which usually sets up the role, then as many
-    /// recent turns as fit. Older turns stay on screen but the model no longer sees them.
-    private static func turnsToRestore(from history: [AIMessage]) -> [(prompt: String, response: String)] {
+    /// Each user message with the reply that followed it. Unanswered messages are left out.
+    private static func turns(in messages: [AIMessage]) -> [(prompt: String, response: String)] {
         var turns: [(prompt: String, response: String)] = []
-        for (index, message) in history.enumerated() where message.role == .user {
-            let next = history.indices.contains(index + 1) ? history[index + 1] : nil
+        for (index, message) in messages.enumerated() where message.role == .user {
+            let next = messages.indices.contains(index + 1) ? messages[index + 1] : nil
             if let next, next.role == .assistant, !next.text.isEmpty {
                 turns.append((message.text, next.text))
             }
         }
+        return turns
+    }
+
+    /// The turns of a saved chat that fit in about half the context window, leaving the rest for
+    /// the next prompt and reply: the first turn, which usually sets up the role, then as many
+    /// recent turns as fit. Older turns stay on screen but the model no longer sees them.
+    private static func turnsToRestore(from history: [AIMessage]) -> [(prompt: String, response: String)] {
+        let turns = turns(in: history)
         guard let first = turns.first else { return [] }
 
         var budget = SystemLanguageModel.default.contextSize / 2
@@ -147,7 +164,7 @@ final class OnDeviceChat {
 
     func send(_ text: String) {
         let text = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty, !isResponding else { return }
+        guard !text.isEmpty, !isResponding, !isSummarizing else { return }
 
         failure = nil
         let reply = AIMessage(role: .assistant, text: "")
@@ -175,6 +192,88 @@ final class OnDeviceChat {
         }
     }
 
+    /// Whether `continueWithSummary()` has earlier replies to summarize.
+    var canSummarize: Bool {
+        !isResponding && !isSummarizing && messages.dropLast().contains { $0.role == .assistant }
+    }
+
+    /// For a chat that outgrew the context window: summarizes it so far, continues in a fresh
+    /// session that starts from the summary and the latest turn, and sends the last message again.
+    func continueWithSummary() {
+        guard canSummarize else { return }
+        let unanswered = messages.last?.role == .user ? messages.last : nil
+        let earlier = unanswered == nil ? messages : Array(messages.dropLast())
+
+        failure = nil
+        isSummarizing = true
+        responseTask = Task {
+            do {
+                let summary = try await Self.summarize(earlier)
+                let budget = SystemLanguageModel.default.contextSize / 4
+                let latest = Self.turns(in: earlier).suffix(1).filter {
+                    Self.estimatedTokens($0.prompt) + Self.estimatedTokens($0.response) <= budget
+                }
+                session = Self.makeSession(summary: summary, turns: Array(latest))
+                summarizedThroughID = earlier.last?.id
+                isSummarizing = false
+                if unanswered != nil {
+                    retry()
+                }
+            } catch is CancellationError {
+                isSummarizing = false
+            } catch {
+                failure = OnDeviceAIFailure(error)
+                isSummarizing = false
+            }
+        }
+    }
+
+    /// A short summary of `messages` from a separate session. Only an excerpt that fits in half
+    /// the context window is sent: the opening message, which usually sets up the role, and as
+    /// many of the latest messages as fit.
+    private static func summarize(_ messages: [AIMessage]) async throws -> String {
+        let budget = SystemLanguageModel.default.contextSize / 2
+        func line(_ message: AIMessage, maxTokens: Int) -> String {
+            let speaker = message.role == .user ? "User" : "Assistant"
+            return "\(speaker): \(clipped(message.text, toTokens: maxTokens))"
+        }
+
+        var remaining = budget
+        var opening: String?
+        if let first = messages.first {
+            opening = line(first, maxTokens: budget / 4)
+            remaining -= estimatedTokens(opening ?? "")
+        }
+        var latest: [String] = []
+        for message in messages.dropFirst().reversed() {
+            let text = line(message, maxTokens: budget / 4)
+            guard estimatedTokens(text) <= remaining else { break }
+            remaining -= estimatedTokens(text)
+            latest.insert(text, at: 0)
+        }
+        let excerpt = ([opening].compactMap { $0 } + latest).joined(separator: "\n\n")
+
+        let session = LanguageModelSession(instructions: """
+        You summarize conversations between a user and an assistant so they can continue without \
+        the full history. Keep the role or task the user set up, key facts, names, numbers, \
+        decisions and open questions. Write in the same language as the conversation. Reply with \
+        the summary only, in at most 150 words.
+        """)
+        let response = try await session.respond(
+            to: "Summarize this conversation:\n\n\(excerpt)",
+            options: GenerationOptions(maximumResponseTokens: 400)
+        )
+        return response.content.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// `text` cut down to about `maxTokens` tokens, by `estimatedTokens`.
+    private static func clipped(_ text: String, toTokens maxTokens: Int) -> String {
+        let tokens = estimatedTokens(text)
+        guard tokens > maxTokens else { return text }
+        let keep = max(1, text.count * maxTokens / tokens)
+        return String(text.prefix(keep)) + "…"
+    }
+
     /// Sends the last user message again after a failure.
     func retry() {
         guard !isResponding, let last = messages.last, last.role == .user else { return }
@@ -193,6 +292,8 @@ final class OnDeviceChat {
         messages = []
         failure = nil
         isResponding = false
+        isSummarizing = false
+        summarizedThroughID = nil
     }
 }
 
