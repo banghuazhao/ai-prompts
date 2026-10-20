@@ -1,3 +1,4 @@
+import Sharing
 import SwiftUI
 
 /// Chat assistants that a prompt can be launched into directly.
@@ -64,11 +65,85 @@ enum LLMProvider: String, CaseIterable, Identifiable {
     }
 }
 
-/// A horizontally scrolling row of quick launch buttons for every `LLMProvider`.
+// MARK: - Preferences
+
+extension SharedKey where Self == AppStorageKey<String>.Default {
+    /// Every provider's raw value, comma separated, in the order Quick Launch shows them.
+    static var quickLaunchOrder: Self {
+        Self[.appStorage("quickLaunchOrder"), default: ""]
+    }
+
+    /// Raw values of the providers Quick Launch hides, comma separated.
+    static var hiddenQuickLaunchProviders: Self {
+        Self[.appStorage("hiddenQuickLaunchProviders"), default: ""]
+    }
+}
+
+extension SharedKey where Self == AppStorageKey<LLMProvider>.Default {
+    /// The assistant behind "Open in …" on prompt rows. It's always shown in Quick Launch.
+    static var defaultLLMProvider: Self {
+        Self[.appStorage("defaultLLMProvider"), default: .chatGPT]
+    }
+}
+
+extension LLMProvider {
+    /// All providers in the saved order. Providers added in later versions go at the end.
+    static func ordered(_ storedOrder: String) -> [LLMProvider] {
+        var providers: [LLMProvider] = []
+        for provider in storedOrder.split(separator: ",").compactMap({ LLMProvider(rawValue: String($0)) })
+        where !providers.contains(provider) {
+            providers.append(provider)
+        }
+        return providers + allCases.filter { !providers.contains($0) }
+    }
+
+    static func hidden(_ storedHidden: String) -> Set<LLMProvider> {
+        Set(storedHidden.split(separator: ",").compactMap { LLMProvider(rawValue: String($0)) })
+    }
+
+    static func store(_ providers: some Sequence<LLMProvider>) -> String {
+        providers.map(\.rawValue).joined(separator: ",")
+    }
+}
+
+// MARK: - Views
+
+/// "Open in …" for context menus, using the default assistant.
+struct OpenInDefaultLLMButton: View {
+    let prompt: String
+    /// Called after the assistant opens, e.g. to record the prompt as used.
+    var onLaunch: (() -> Void)? = nil
+
+    @Shared(.defaultLLMProvider) private var provider
+
+    var body: some View {
+        if let url = provider.url(for: prompt) {
+            Button {
+                Haptics.shared.vibrateIfEnabled()
+                PromptActions.open(url)
+                onLaunch?()
+            } label: {
+                Label("Open in \(provider.label)", systemImage: provider.icon)
+            }
+        }
+    }
+}
+
+/// A horizontally scrolling row of quick launch buttons for the assistants the user picked
+/// in Settings, in their order.
 struct LLMQuickLaunchSection: View {
     let prompt: String
     /// Called after a provider is launched, e.g. to record the prompt as used.
     var onLaunch: (() -> Void)? = nil
+
+    @Shared(.quickLaunchOrder) private var order
+    @Shared(.hiddenQuickLaunchProviders) private var hidden
+    @Shared(.defaultLLMProvider) private var defaultProvider
+
+    private var providers: [LLMProvider] {
+        let hidden = LLMProvider.hidden(hidden)
+        return LLMProvider.ordered(order).filter { $0 == defaultProvider || !hidden.contains($0) }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -79,7 +154,7 @@ struct LLMQuickLaunchSection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 GlassGroup(spacing: AppSpacing.small) {
                     HStack(spacing: AppSpacing.small) {
-                        ForEach(LLMProvider.allCases) { provider in
+                        ForEach(providers) { provider in
                             if let url = provider.url(for: prompt) {
                                 LLMQuickLaunchButton(
                                     icon: provider.icon,

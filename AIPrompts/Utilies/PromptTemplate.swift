@@ -89,6 +89,19 @@ struct PromptTemplate {
         .joined()
     }
 
+    /// The `{{…}}` and `${…}` placeholders in `text`, in order and without repeats. The trailing
+    /// "My first request" example isn't included, since it is ordinary text a rewrite may change.
+    static func placeholders(in text: String) -> [(name: String, token: String)] {
+        let nsText = text as NSString
+        let fullRange = NSRange(location: 0, length: nsText.length)
+        var seen = Set<String>()
+        return [mustacheRule, dollarRule].compactMap { $0 }
+            .flatMap { $0.regex.matches(in: text, range: fullRange) }
+            .sorted { $0.range.location < $1.range.location }
+            .map { (name: nsText.substring(with: $0.range(at: 1)), token: nsText.substring(with: $0.range)) }
+            .filter { seen.insert($0.name).inserted }
+    }
+
     // MARK: - Rules
 
     private static let rules: [Rule] = [mustacheRule, dollarRule, firstRequestRule].compactMap { $0 }

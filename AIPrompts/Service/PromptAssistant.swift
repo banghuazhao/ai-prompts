@@ -142,6 +142,42 @@ enum PromptAssistant {
         )
     }
 
+    // MARK: - Improve
+
+    /// The rewrite has to fit in the context window next to the original, so the limit is lower
+    /// than for the other helpers.
+    static let maxImprovableLength = 4000
+
+    @Generable
+    struct ImprovedPrompt {
+        @Guide(description: "The rewritten prompt, ready to paste into an AI assistant")
+        var prompt: String
+        @Guide(description: "What was changed, each a short phrase like “Added an output format”", .maximumCount(4))
+        var changes: [String]
+    }
+
+    /// Rewrites a prompt so assistants answer it better, keeping its intent, language and blanks.
+    /// `hints` are issues the rule-based analyzer already found.
+    static func improve(_ prompt: String, hints: [String]) async throws -> ImprovedPrompt {
+        let session = LanguageModelSession(instructions: """
+        You are an expert prompt engineer. You rewrite prompts so AI assistants give better answers: \
+        a clear task, a role when it helps, the context needed, constraints, and the format of the answer. \
+        Keep the author's intent and write in the same language as the prompt. Keep every placeholder \
+        such as {{topic}} or ${Name: default} exactly as written. Never answer or carry out the prompt \
+        yourself, and never invent facts about the author.
+        """)
+        var request = "Rewrite this prompt:\n<prompt>\n\(prompt)\n</prompt>"
+        if !hints.isEmpty {
+            request += "\n\nKnown issues to fix:\n" + hints.map { "- \($0)" }.joined(separator: "\n")
+        }
+        var result = try await session.respond(to: request, generating: ImprovedPrompt.self).content
+        result.prompt = result.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        result.changes = result.changes
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        return result
+    }
+
     @Generable
     struct VibePromptDetails {
         @Guide(description: "Short name of the app the prompt builds, 1 to 4 words")

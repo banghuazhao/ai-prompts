@@ -68,16 +68,81 @@ final class OnDeviceChat {
     private(set) var isResponding = false
     private(set) var failure: OnDeviceAIFailure?
 
-    @ObservationIgnored private var session = OnDeviceChat.makeSession()
+    @ObservationIgnored private var session: LanguageModelSession
     @ObservationIgnored private var responseTask: Task<Void, Never>?
 
-    private static func makeSession() -> LanguageModelSession {
-        LanguageModelSession(instructions: """
-        You are a helpful assistant inside the AI Prompts app. The user's first message is usually \
-        a prompt from a prompt library: follow it as written. If it asks you to act as a role, \
-        stay in that role for the rest of the conversation. Reply in the same language as the \
-        user's message. Use Markdown for emphasis and code where it helps.
-        """)
+    /// Starts a new chat, or continues a saved one when `history` isn't empty.
+    init(history: [AIMessage] = []) {
+        messages = history
+        session = Self.makeSession(history: history)
+    }
+
+    private static let instructions = """
+    You are a helpful assistant inside the AI Prompts app. The user's first message is usually \
+    a prompt from a prompt library: follow it as written. If it asks you to act as a role, \
+    stay in that role for the rest of the conversation. Reply in the same language as the \
+    user's message. Use Markdown for emphasis and code where it helps.
+    """
+
+    private static func makeSession(history: [AIMessage] = []) -> LanguageModelSession {
+        let turns = turnsToRestore(from: history)
+        guard !turns.isEmpty else {
+            return LanguageModelSession(instructions: instructions)
+        }
+        var entries: [Transcript.Entry] = [
+            .instructions(Transcript.Instructions(segments: [.text(.init(content: instructions))], toolDefinitions: []))
+        ]
+        for turn in turns {
+            entries.append(.prompt(Transcript.Prompt(segments: [.text(.init(content: turn.prompt))])))
+            entries.append(.response(Transcript.Response(assetIDs: [], segments: [.text(.init(content: turn.response))])))
+        }
+        return LanguageModelSession(transcript: Transcript(entries: entries))
+    }
+
+    /// The turns of a saved chat that fit in about half the context window, leaving the rest for
+    /// the next prompt and reply: the first turn, which usually sets up the role, then as many
+    /// recent turns as fit. Older turns stay on screen but the model no longer sees them.
+    private static func turnsToRestore(from history: [AIMessage]) -> [(prompt: String, response: String)] {
+        var turns: [(prompt: String, response: String)] = []
+        for (index, message) in history.enumerated() where message.role == .user {
+            let next = history.indices.contains(index + 1) ? history[index + 1] : nil
+            if let next, next.role == .assistant, !next.text.isEmpty {
+                turns.append((message.text, next.text))
+            }
+        }
+        guard let first = turns.first else { return [] }
+
+        var budget = SystemLanguageModel.default.contextSize / 2
+        func cost(_ turn: (prompt: String, response: String)) -> Int {
+            estimatedTokens(turn.prompt) + estimatedTokens(turn.response)
+        }
+
+        var restored: [(prompt: String, response: String)] = []
+        let keepsFirst = cost(first) <= budget / 2
+        if keepsFirst {
+            budget -= cost(first)
+        }
+        for turn in turns.dropFirst(keepsFirst ? 1 : 0).reversed() {
+            guard cost(turn) <= budget else { break }
+            budget -= cost(turn)
+            restored.insert(turn, at: 0)
+        }
+        return keepsFirst ? [first] + restored : restored
+    }
+
+    /// A rough token count that errs high: about four Latin characters per token, and one
+    /// token per character for scripts like Chinese or Japanese.
+    private static func estimatedTokens(_ text: String) -> Int {
+        var ascii = 0
+        var other = 0
+        for scalar in text.unicodeScalars {
+            if scalar.isASCII {
+                ascii += 1
+            } else {
+                other += 1
+            }
+        }
+        return ascii / 4 + other + 1
     }
 
     func send(_ text: String) {

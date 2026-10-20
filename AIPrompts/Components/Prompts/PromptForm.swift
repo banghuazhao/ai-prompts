@@ -27,6 +27,27 @@ class PromptFormModel {
     var isSuggestingDetails = false
     var detailsFailure: OnDeviceAIFailure?
 
+    /// A rewrite from the on-device model, waiting for the user to use it or keep their own text.
+    struct ImprovementProposal: Identifiable {
+        let id = UUID()
+        let original: String
+        let improved: String
+        let changes: [String]
+        /// Placeholders in the original that the rewrite left out.
+        let missingPlaceholders: [String]
+    }
+
+    var isImproving = false
+    var improveFailure: OnDeviceAIFailure?
+    var improvementProposal: ImprovementProposal?
+    /// The text from before the last accepted rewrite, offered as Undo until the user edits the rewrite.
+    private var textBeforeImprovement: String?
+    private var appliedImprovement: String?
+
+    var canUndoImprovement: Bool {
+        textBeforeImprovement != nil && prompt.prompt == appliedImprovement
+    }
+
     var canSuggestDetails: Bool {
         OnDeviceAI.status == .available && !prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -62,6 +83,70 @@ class PromptFormModel {
             }
             isSuggestingDetails = false
         }
+    }
+
+    /// Asks the on-device model for a better version of the prompt and shows it for review.
+    func onImprove() {
+        guard #available(iOS 26.0, *) else { return }
+        let text = prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        let tooLong = OnDeviceAIFailure(
+            kind: .other,
+            message: String(localized: "This prompt is too long to improve on device.")
+        )
+        guard text.count <= PromptAssistant.maxImprovableLength else {
+            improveFailure = tooLong
+            return
+        }
+        let hints = PromptAnalyzer.analyze(text).map { issue in
+            [issue.description, issue.suggestion].compactMap { $0 }.joined(separator: " ")
+        }
+        isImproving = true
+        improveFailure = nil
+        Task {
+            do {
+                let result = try await PromptAssistant.improve(text, hints: hints)
+                if result.prompt.isEmpty || result.prompt == text {
+                    improveFailure = OnDeviceAIFailure(
+                        kind: .other,
+                        message: String(localized: "Apple Intelligence didn't find anything to change.")
+                    )
+                } else {
+                    let keptNames = Set(PromptTemplate.placeholders(in: result.prompt).map(\.name))
+                    improvementProposal = ImprovementProposal(
+                        original: text,
+                        improved: result.prompt,
+                        changes: result.changes,
+                        missingPlaceholders: PromptTemplate.placeholders(in: text)
+                            .filter { !keptNames.contains($0.name) }
+                            .map(\.token)
+                    )
+                }
+            } catch {
+                // Text in some languages uses more of the context window per character than the
+                // length check assumes; the chat's "start a new chat" advice doesn't apply here.
+                let failure = OnDeviceAIFailure(error)
+                improveFailure = failure.kind == .conversationTooLong ? tooLong : failure
+            }
+            isImproving = false
+        }
+    }
+
+    func onUseImprovement(_ proposal: ImprovementProposal) {
+        textBeforeImprovement = prompt.prompt
+        appliedImprovement = proposal.improved
+        withAnimation {
+            prompt.prompt = proposal.improved
+        }
+        improvementProposal = nil
+    }
+
+    func onUndoImprovement() {
+        guard canUndoImprovement, let textBeforeImprovement else { return }
+        withAnimation {
+            prompt.prompt = textBeforeImprovement
+        }
+        self.textBeforeImprovement = nil
+        appliedImprovement = nil
     }
 
     func onTapSelectCategory() {
@@ -146,6 +231,11 @@ struct PromptFormView: View {
                     .disabled(model.prompt.act.isEmpty || model.prompt.prompt.isEmpty)
                 }
             }
+            .sheet(item: $model.improvementProposal) { proposal in
+                ImprovedPromptReviewView(proposal: proposal) {
+                    model.onUseImprovement(proposal)
+                }
+            }
             .sheet(isPresented: Binding($model.route.selectCategory)) {
                 CategoryFormView(
                     model: CategoryFormModel(
@@ -227,6 +317,13 @@ struct PromptFormView: View {
 
             if model.canSuggestDetails {
                 AISuggestButton(
+                    title: "Improve with Apple Intelligence",
+                    isLoading: model.isImproving,
+                    failure: model.improveFailure
+                ) {
+                    model.onImprove()
+                }
+                AISuggestButton(
                     title: "Suggest Title & Category",
                     isLoading: model.isSuggestingDetails,
                     failure: model.detailsFailure
@@ -235,12 +332,21 @@ struct PromptFormView: View {
                 }
             }
 
+            if model.canUndoImprovement {
+                Button("Undo Improvement", systemImage: "arrow.uturn.backward") {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onUndoImprovement()
+                }
+                .font(.subheadline)
+                .glassButtonStyle()
+            }
+
             if !model.prompt.prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 Button {
                     analyzerIssues = PromptAnalyzer.analyze(model.prompt.prompt)
                     showAnalyzerFeedback = true
                 } label: {
-                    Label("Improve Prompt", systemImage: "wand.and.stars")
+                    Label("Check Prompt", systemImage: "checklist")
                         .font(.subheadline.bold())
                         .foregroundStyle(AIStudioPalette.violet)
                         .frame(minHeight: 44)

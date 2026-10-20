@@ -70,6 +70,14 @@ struct SettingView: View {
                         }
                         .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     }
+                    settingsSection(title: "Quick Launch") {
+                        NavigationLink {
+                            QuickLaunchSettingsView()
+                        } label: {
+                            linkRow("Choose Assistants")
+                        }
+                        .buttonStyle(.plain)
+                    }
                     settingsSection(title: "Backup") {
                         Button {
                             Haptics.shared.vibrateIfEnabled()

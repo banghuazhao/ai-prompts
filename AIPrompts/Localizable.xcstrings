@@ -12,6 +12,146 @@
         }
       }
     },
+    "Apple Intelligence didn't find anything to change." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 沒有找到需要修改的地方。"
+          }
+        }
+      }
+    },
+    "Assistants" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "助理"
+          }
+        }
+      }
+    },
+    "Check Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檢查提示詞"
+          }
+        }
+      }
+    },
+    "Improve with Apple Intelligence" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用 Apple Intelligence 改善"
+          }
+        }
+      }
+    },
+    "Improved Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "改善後的提示詞"
+          }
+        }
+      }
+    },
+    "Keep Original" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保留原始版本"
+          }
+        }
+      }
+    },
+    "Suggested by Apple Intelligence. Check it before you use it." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "由 Apple Intelligence 建議，使用前請先確認內容。"
+          }
+        }
+      }
+    },
+    "The default assistant is always shown" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設助理一律會顯示"
+          }
+        }
+      }
+    },
+    "The improved version leaves out these blanks: %@. Add them back after using it, or keep your original." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "改善後的版本少了這些空格：%@。使用後請自行補回，或保留原始版本。"
+          }
+        }
+      }
+    },
+    "This prompt is too long to improve on device." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這個提示詞太長，無法在裝置上改善。"
+          }
+        }
+      }
+    },
+    "Undo Improvement" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "復原改善"
+          }
+        }
+      }
+    },
+    "Use This" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用此版本"
+          }
+        }
+      }
+    },
+    "What Changed" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改內容"
+          }
+        }
+      }
+    },
+    "Your Original" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的原始版本"
+          }
+        }
+      }
+    },
     "“%@” is copied and ready to paste." : {
       "localizations" : {
         "zh-Hant" : {
@@ -925,6 +1065,16 @@
         }
       }
     },
+    "Choose Assistants" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇助理"
+          }
+        }
+      }
+    },
     "Choose category" : {
 
     },
@@ -1228,6 +1378,16 @@
         }
       }
     },
+    "Default Assistant" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預設助理"
+          }
+        }
+      }
+    },
     "Define the app, then describe what to build." : {
 
     },
@@ -1310,6 +1470,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
+          }
+        }
+      }
+    },
+    "Drag to reorder. Quick Launch opens the assistant with your prompt filled in." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拖移以重新排序。快速開啟會開啟助理並預先填入你的提示詞。"
           }
         }
       }
@@ -1731,6 +1901,7 @@
       }
     },
     "Improve Prompt" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1846,6 +2017,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "較長的提示詞可以加入更多結構（步驟、清單等）。"
+          }
+        }
+      }
+    },
+    "Long-press a prompt and choose Open in %@ to skip the detail page. The default assistant is always shown in Quick Launch." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "長按提示詞並選擇「在 %@ 中開啟」即可略過詳細頁面。預設助理一律會顯示在快速開啟中。"
           }
         }
       }
@@ -2167,6 +2348,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 AI 提示詞中開啟提示詞。"
+          }
+        }
+      }
+    },
+    "Open in %@" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 %@ 中開啟"
           }
         }
       }
@@ -2653,6 +2844,26 @@
         }
       }
     },
+    "Rename" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名"
+          }
+        }
+      }
+    },
+    "Rename Chat" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名聊天"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "zh-Hant" : {
@@ -2823,6 +3034,16 @@
         }
       }
     },
+    "Search chats" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜尋聊天"
+          }
+        }
+      }
+    },
     "Search prompts" : {
       "localizations" : {
         "zh-Hant" : {
@@ -2975,6 +3196,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "顯示原文"
+          }
+        }
+      }
+    },
+    "Shows or hides this assistant in Quick Launch" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在快速開啟中顯示或隱藏此助理"
           }
         }
       }

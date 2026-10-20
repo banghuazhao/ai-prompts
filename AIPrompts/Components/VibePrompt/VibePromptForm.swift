@@ -251,7 +251,7 @@ struct VibePromptFormView: View {
                     analyzerIssues = PromptAnalyzer.analyze(model.prompt.prompt)
                     showAnalyzerFeedback = true
                 } label: {
-                    Label("Improve Prompt", systemImage: "wand.and.stars")
+                    Label("Check Prompt", systemImage: "checklist")
                         .font(.subheadline.bold())
                         .foregroundStyle(AIStudioPalette.violet)
                         .frame(minHeight: 44)

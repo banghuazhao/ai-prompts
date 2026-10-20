@@ -178,6 +178,9 @@ struct FavoritesView: View {
                                     Button(action: { model.onCopy(prompt) }) {
                                         Label("Copy", systemImage: "doc.on.doc")
                                     }
+                                    OpenInDefaultLLMButton(prompt: prompt.prompt) {
+                                        PromptUsage.record(promptID: prompt.id)
+                                    }
                                     Button(action: { model.onEdit(prompt) }) {
                                         Label("Edit", systemImage: "pencil")
                                     }
@@ -226,6 +229,9 @@ struct FavoritesView: View {
                                 .contextMenu {
                                     Button(action: { model.onCopy(vibePrompt) }) {
                                         Label("Copy", systemImage: "doc.on.doc")
+                                    }
+                                    OpenInDefaultLLMButton(prompt: vibePrompt.prompt) {
+                                        VibePromptUsage.record(vibePromptID: vibePrompt.id)
                                     }
                                     Button(action: { model.onEdit(vibePrompt) }) {
                                         Label("Edit", systemImage: "pencil")
