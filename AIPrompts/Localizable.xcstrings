@@ -1212,6 +1212,16 @@
         }
       }
     },
+    "Continue with Summary" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以摘要繼續"
+          }
+        }
+      }
+    },
     "Contributor" : {
 
     },
@@ -1513,6 +1523,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "例如：「以 JSON 格式回覆」。"
+          }
+        }
+      }
+    },
+    "Earlier messages summarized" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已摘要先前的訊息"
           }
         }
       }
@@ -2358,6 +2378,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在 %@ 中開啟"
+          }
+        }
+      }
+    },
+    "Open in %@…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 %@ 中開啟…"
           }
         }
       }
@@ -3369,6 +3399,16 @@
         }
       }
     },
+    "Summarizing earlier messages…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在摘要先前的訊息…"
+          }
+        }
+      }
+    },
     "Support New Prompts" : {
       "localizations" : {
         "zh-Hant" : {
@@ -3487,6 +3527,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此備份來自較新版本的 AI Prompts。請更新 App 後再試一次。"
+          }
+        }
+      }
+    },
+    "This conversation is too long for the on-device model. Continue with a summary of it, or start a new chat." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這段對話對裝置端模型來說太長了。你可以用對話摘要繼續，或開始新的對話。"
           }
         }
       }

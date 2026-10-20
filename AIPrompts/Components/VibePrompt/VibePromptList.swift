@@ -70,6 +70,7 @@ class VibePromptListModel {
         case showingDeleteAlert(VibePrompt)
         case isFilterTechShareSheetPresented
         case addingDraft(VibePrompt.Draft)
+        case customizing(VibePrompt)
     }
 
     var route: Route?
@@ -287,7 +288,10 @@ struct VibePromptListView: View {
                                 }) {
                                     Label("Copy", systemImage: "doc.on.doc")
                                 }
-                                OpenInDefaultLLMButton(prompt: vibePrompt.prompt) {
+                                OpenInDefaultLLMButton(
+                                    prompt: vibePrompt.prompt,
+                                    onNeedsBlanks: { model.route = .customizing(vibePrompt) }
+                                ) {
                                     VibePromptUsage.record(vibePromptID: vibePrompt.id)
                                 }
                                 Button(action: {
@@ -433,6 +437,11 @@ struct VibePromptListView: View {
                 }
                 .sheet(item: $model.route.addingDraft, id: \.self) { draft in
                     VibePromptFormView(model: VibePromptFormModel(prompt: draft) { _ in model.route = nil })
+                }
+                .sheet(item: $model.route.customizing, id: \.self) { vibePrompt in
+                    PromptCustomizeView(title: vibePrompt.app, prompt: vibePrompt.prompt) {
+                        VibePromptUsage.record(vibePromptID: vibePrompt.id)
+                    }
                 }
                 .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
                     VibePromptFormView(model: VibePromptFormModel(prompt: VibePrompt.Draft(prompt)) { _ in model.route = nil })

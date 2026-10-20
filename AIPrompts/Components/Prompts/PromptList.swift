@@ -81,6 +81,7 @@ class PromptListModel {
         case showingDeleteAlert(Prompt)
         case addingDraft(Prompt.Draft)
         case selectCategory
+        case customizing(Prompt)
     }
 
     var route: Route?
@@ -402,6 +403,7 @@ struct PromptListView: View {
                             RecentlyUsedShelf(
                                 prompts: recentPrompts,
                                 onSelect: { model.recentPromptDestination = $0 },
+                                onCustomize: { model.route = .customizing($0) },
                                 onRemove: { PromptUsage.remove(promptID: $0.id) },
                                 onClear: { PromptUsage.removeAll() }
                             )
@@ -461,7 +463,10 @@ struct PromptListView: View {
                                         }) {
                                             Label("Copy", systemImage: "doc.on.doc")
                                         }
-                                        OpenInDefaultLLMButton(prompt: prompt.prompt) {
+                                        OpenInDefaultLLMButton(
+                                            prompt: prompt.prompt,
+                                            onNeedsBlanks: { model.route = .customizing(prompt) }
+                                        ) {
                                             PromptUsage.record(promptID: prompt.id)
                                         }
                                         Button(action: {
@@ -654,6 +659,11 @@ struct PromptListView: View {
                 )
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+            }
+            .sheet(item: $model.route.customizing, id: \.self) { prompt in
+                PromptCustomizeView(title: prompt.act, prompt: prompt.prompt) {
+                    PromptUsage.record(promptID: prompt.id)
+                }
             }
             .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
                 PromptFormView(

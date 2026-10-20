@@ -41,6 +41,8 @@ class FavoritesViewModel {
         case editingVibePrompt(VibePrompt)
         case duplicatingPrompt(Prompt.Draft)
         case duplicatingVibePrompt(VibePrompt.Draft)
+        case customizingPrompt(Prompt)
+        case customizingVibePrompt(VibePrompt)
         case showingDeletePromptAlert(Prompt)
         case showingDeleteVibePromptAlert(VibePrompt)
     }
@@ -178,7 +180,10 @@ struct FavoritesView: View {
                                     Button(action: { model.onCopy(prompt) }) {
                                         Label("Copy", systemImage: "doc.on.doc")
                                     }
-                                    OpenInDefaultLLMButton(prompt: prompt.prompt) {
+                                    OpenInDefaultLLMButton(
+                                        prompt: prompt.prompt,
+                                        onNeedsBlanks: { model.route = .customizingPrompt(prompt) }
+                                    ) {
                                         PromptUsage.record(promptID: prompt.id)
                                     }
                                     Button(action: { model.onEdit(prompt) }) {
@@ -230,7 +235,10 @@ struct FavoritesView: View {
                                     Button(action: { model.onCopy(vibePrompt) }) {
                                         Label("Copy", systemImage: "doc.on.doc")
                                     }
-                                    OpenInDefaultLLMButton(prompt: vibePrompt.prompt) {
+                                    OpenInDefaultLLMButton(
+                                        prompt: vibePrompt.prompt,
+                                        onNeedsBlanks: { model.route = .customizingVibePrompt(vibePrompt) }
+                                    ) {
                                         VibePromptUsage.record(vibePromptID: vibePrompt.id)
                                     }
                                     Button(action: { model.onEdit(vibePrompt) }) {
@@ -270,6 +278,16 @@ struct FavoritesView: View {
             .navigationTitle("Favorites")
             .navigationBarTitleDisplayMode(.inline)
             // Prompt sheets/alerts
+            .sheet(item: $model.route.customizingPrompt, id: \.self) { prompt in
+                PromptCustomizeView(title: prompt.act, prompt: prompt.prompt) {
+                    PromptUsage.record(promptID: prompt.id)
+                }
+            }
+            .sheet(item: $model.route.customizingVibePrompt, id: \.self) { vibePrompt in
+                PromptCustomizeView(title: vibePrompt.app, prompt: vibePrompt.prompt) {
+                    VibePromptUsage.record(vibePromptID: vibePrompt.id)
+                }
+            }
             .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
                 PromptFormView(
                     model: PromptFormModel(prompt: Prompt.Draft(prompt)) { _ in

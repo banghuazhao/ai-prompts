@@ -108,22 +108,40 @@ extension LLMProvider {
 
 // MARK: - Views
 
-/// "Open in …" for context menus, using the default assistant.
+/// The text to launch for a prompt from a list or detail page: the prompt as written, or with
+/// its blanks filled from remembered values. Nil while a blank still needs the user's input.
+func launchablePrompt(_ prompt: String) -> String? {
+    let template = PromptTemplate(prompt)
+    return template.hasVariables ? template.runnablePrompt : prompt
+}
+
+/// "Open in …" for context menus, using the default assistant. When the prompt has blanks
+/// without values it calls `onNeedsBlanks` instead, e.g. to show the Customize sheet.
 struct OpenInDefaultLLMButton: View {
     let prompt: String
+    let onNeedsBlanks: () -> Void
     /// Called after the assistant opens, e.g. to record the prompt as used.
     var onLaunch: (() -> Void)? = nil
 
     @Shared(.defaultLLMProvider) private var provider
 
     var body: some View {
-        if let url = provider.url(for: prompt) {
+        if let launchable = launchablePrompt(prompt) {
+            if let url = provider.url(for: launchable) {
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    PromptActions.open(url)
+                    onLaunch?()
+                } label: {
+                    Label("Open in \(provider.label)", systemImage: provider.icon)
+                }
+            }
+        } else {
             Button {
                 Haptics.shared.vibrateIfEnabled()
-                PromptActions.open(url)
-                onLaunch?()
+                onNeedsBlanks()
             } label: {
-                Label("Open in \(provider.label)", systemImage: provider.icon)
+                Label("Open in \(provider.label)…", systemImage: provider.icon)
             }
         }
     }
@@ -135,6 +153,9 @@ struct LLMQuickLaunchSection: View {
     let prompt: String
     /// Called after a provider is launched, e.g. to record the prompt as used.
     var onLaunch: (() -> Void)? = nil
+    /// When set, blanks are filled from remembered values before launching, and this is called
+    /// instead of launching while a blank still has none. When nil, `prompt` is launched as is.
+    var onNeedsBlanks: (() -> Void)? = nil
 
     @Shared(.quickLaunchOrder) private var order
     @Shared(.hiddenQuickLaunchProviders) private var hidden
@@ -155,15 +176,13 @@ struct LLMQuickLaunchSection: View {
                 GlassGroup(spacing: AppSpacing.small) {
                     HStack(spacing: AppSpacing.small) {
                         ForEach(providers) { provider in
-                            if let url = provider.url(for: prompt) {
-                                LLMQuickLaunchButton(
-                                    icon: provider.icon,
-                                    label: provider.label,
-                                    background: provider.background,
-                                    foreground: provider.foreground,
-                                    url: url,
-                                    onLaunch: onLaunch
-                                )
+                            LLMQuickLaunchButton(
+                                icon: provider.icon,
+                                label: provider.label,
+                                background: provider.background,
+                                foreground: provider.foreground
+                            ) {
+                                launch(provider)
                             }
                         }
                     }
@@ -173,5 +192,21 @@ struct LLMQuickLaunchSection: View {
             }
             .scrollClipDisabled()
         }
+    }
+
+    private func launch(_ provider: LLMProvider) {
+        let text: String
+        if let onNeedsBlanks {
+            guard let launchable = launchablePrompt(prompt) else {
+                onNeedsBlanks()
+                return
+            }
+            text = launchable
+        } else {
+            text = prompt
+        }
+        guard let url = provider.url(for: text) else { return }
+        PromptActions.open(url)
+        onLaunch?()
     }
 }

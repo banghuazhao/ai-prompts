@@ -132,15 +132,11 @@ struct LLMQuickLaunchButton: View {
     let label: String
     let background: Color
     let foreground: Color
-    let url: URL
-    var onLaunch: (() -> Void)? = nil
-    
+    let action: () -> Void
+
     var body: some View {
         if #available(iOS 26.0, *) {
-            Button(action: {
-                PromptActions.open(url)
-                onLaunch?()
-            }) {
+            Button(action: action) {
                 labelContent
                     .font(AppFont.headline)
                     .foregroundStyle(foreground)
@@ -151,10 +147,7 @@ struct LLMQuickLaunchButton: View {
             .buttonStyle(.plain)
             .accessibilityLabel("Quick launch to \(label)")
         } else {
-            Button(action: {
-                PromptActions.open(url)
-                onLaunch?()
-            }) {
+            Button(action: action) {
                 labelContent
             }
             .buttonStyle(.llmQuickLaunch(background: background, foreground: foreground))
