@@ -306,9 +306,8 @@ struct AIMessageView: View {
                         .foregroundStyle(.secondary)
                 }
             } else {
-                Text(Self.markdown(message.text))
+                MarkdownView(markdown: message.text)
                     .font(.body)
-                    .lineSpacing(4)
                     .textSelection(.enabled)
             }
             if !isStreaming, !message.text.isEmpty {
@@ -361,11 +360,6 @@ struct AIMessageView: View {
                 copied = false
             }
         }
-    }
-
-    private static func markdown(_ text: String) -> AttributedString {
-        let options = AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        return (try? AttributedString(markdown: text, options: options)) ?? AttributedString(text)
     }
 }
 
