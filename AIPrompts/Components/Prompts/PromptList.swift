@@ -612,24 +612,29 @@ struct PromptListView: View {
                     .help("Choose category")
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(model.isSelecting ? "Done" : "Select") {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.toggleSelecting()
-                    }
-                    .help("Select several prompts")
-                }
-                // Hidden while selecting, so the title has room for the selection count.
-                if !model.isSelecting {
+                if model.isSelecting {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
+                        Button("Done") {
                             Haptics.shared.vibrateIfEnabled()
-                            model.generateMarkovPrompt()
-                        }) {
-                            Image(systemName: "sparkles")
+                            model.toggleSelecting()
                         }
-                        .accessibilityLabel("Generate prompt idea")
-                        .help("Generate prompt idea")
+                    }
+                } else {
+                    // Less frequent actions share one menu, so the title isn't squeezed.
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button("Select Prompts", systemImage: "checkmark.circle") {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.toggleSelecting()
+                            }
+                            Button("Generate Prompt Idea", systemImage: "sparkles") {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.generateMarkovPrompt()
+                            }
+                        } label: {
+                            Label("More", systemImage: "ellipsis")
+                        }
+                        .help("More actions")
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {

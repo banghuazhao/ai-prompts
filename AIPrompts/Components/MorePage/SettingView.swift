@@ -18,8 +18,7 @@ struct SettingView: View {
     @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
     @AppStorage("showContextEngineeringTips") private var showContextEngineeringTips: Bool = true
     @Dependency(\.themeManager) var themeManager
-    
-    @Dependency(\.purchaseManager) var purchaseManager
+
     @Dependency(\.defaultDatabase) private var database
     @ObservedObject private var consent = ConsentManager.shared
     @Environment(\.openURL) private var openURL
@@ -136,11 +135,6 @@ struct SettingView: View {
                     }
                 }
                 .padding()
-            }
-            if !purchaseManager.isPremiumUserPurchased {
-                BannerView()
-                    .frame(height: 50)
-                    .padding(.bottom, 16)
             }
         }
         .navigationTitle("Settings")

@@ -242,7 +242,26 @@
 
     },
     "%lld saved items" : {
-
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld saved item"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld saved items"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "%lld Selected" : {
       "localizations" : {
@@ -1129,6 +1148,16 @@
         }
       }
     },
+    "Code" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "程式碼"
+          }
+        }
+      }
+    },
     "Completeness" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1236,7 +1265,14 @@
       }
     },
     "Copied" : {
-
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拷貝"
+          }
+        }
+      }
     },
     "Copied “%@”. Paste it into your AI chat." : {
       "localizations" : {
@@ -1284,6 +1320,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "拷貝 ${prompt}"
+          }
+        }
+      }
+    },
+    "Copy code" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝程式碼"
           }
         }
       }
@@ -1841,6 +1887,16 @@
         }
       }
     },
+    "Generate Prompt Idea" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "產生提示詞點子"
+          }
+        }
+      }
+    },
     "Generate prompt idea" : {
 
     },
@@ -2119,6 +2175,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "更多點子"
+          }
+        }
+      }
+    },
+    "More actions" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多動作"
           }
         }
       }
@@ -3103,6 +3169,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "全選"
+          }
+        }
+      }
+    },
+    "Select Prompts" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選取提示詞"
           }
         }
       }

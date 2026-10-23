@@ -112,11 +112,6 @@ struct MoreView: View {
                     .padding(.vertical, 16)
                 }
                 .scrollDismissesKeyboard(.immediately)
-                if !model.purchaseManager.isPremiumUserPurchased {
-                    BannerView()
-                        .frame(height: 50)
-                        .padding(.bottom, AppSpacing.medium)
-                }
             }
             .background(AIStudioPalette.canvas.ignoresSafeArea())
             .navigationTitle("More")

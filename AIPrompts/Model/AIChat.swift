@@ -31,9 +31,9 @@ struct AIChat: Identifiable, Hashable {
         AIChat.decode(messagesJSON)
     }
 
-    /// The first reply, used as a preview in the history list.
+    /// The first reply without Markdown, used as a preview in the history list.
     var preview: String {
-        messages.first { $0.role == .assistant }?.text ?? ""
+        MarkdownBlock.plainText(messages.first { $0.role == .assistant }?.text ?? "")
     }
 
     /// Whether the title or any message contains `query`.
