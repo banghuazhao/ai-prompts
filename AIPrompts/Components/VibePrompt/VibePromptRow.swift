@@ -112,5 +112,4 @@ struct VibePromptRowView: View {
             techstack: "HTML,CSS,JavaScript,API"
         )) {}
     }
-    .environmentObject(DataManager())
 }

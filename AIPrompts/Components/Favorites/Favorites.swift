@@ -43,8 +43,6 @@ class FavoritesViewModel {
         case duplicatingVibePrompt(VibePrompt.Draft)
         case customizingPrompt(Prompt)
         case customizingVibePrompt(VibePrompt)
-        case showingDeletePromptAlert(Prompt)
-        case showingDeleteVibePromptAlert(VibePrompt)
     }
 
     var route: Route?
@@ -58,16 +56,9 @@ class FavoritesViewModel {
         route = .duplicatingPrompt(Prompt.Draft(duplicating: prompt))
     }
 
-    func onDeleteRequest(_ prompt: Prompt) {
-        route = .showingDeletePromptAlert(prompt)
-    }
-
-    func confirmDelete(_ prompt: Prompt) {
-        withErrorReporting {
-            try database.write { db in
-                try Prompt.delete(prompt).execute(db)
-            }
-        }
+    /// Deletes right away; the banner that follows offers Undo.
+    func onDelete(_ prompt: Prompt) {
+        PromptTrash.delete(prompt)
     }
 
     func onUpdate(_ newPrompt: Prompt) {
@@ -107,16 +98,8 @@ class FavoritesViewModel {
         route = .duplicatingVibePrompt(VibePrompt.Draft(duplicating: vibePrompt))
     }
 
-    func onDeleteRequest(_ vibePrompt: VibePrompt) {
-        route = .showingDeleteVibePromptAlert(vibePrompt)
-    }
-
-    func confirmDelete(_ vibePrompt: VibePrompt) {
-        withErrorReporting {
-            try database.write { db in
-                try VibePrompt.delete(vibePrompt).execute(db)
-            }
-        }
+    func onDelete(_ vibePrompt: VibePrompt) {
+        PromptTrash.delete(vibePrompt)
     }
 
     func onUpdate(_ newVibePrompt: VibePrompt) {
@@ -195,7 +178,7 @@ struct FavoritesView: View {
                                     Button(action: { model.onFavorite(prompt) }) {
                                         Label(prompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: prompt.isFavorite ? "heart.slash" : "heart")
                                     }
-                                    Button(role: .destructive, action: { model.onDeleteRequest(prompt) }) {
+                                    Button(role: .destructive, action: { model.onDelete(prompt) }) {
                                         Label("Delete", systemImage: "trash")
                                     }
                                 }
@@ -206,7 +189,7 @@ struct FavoritesView: View {
                                 isFavorite: prompt.isFavorite,
                                 onFavorite: { model.onFavorite(prompt) },
                                 onCopy: { model.onCopy(prompt) },
-                                onDelete: { model.onDeleteRequest(prompt) }
+                                onDelete: { model.onDelete(prompt) }
                             )
                         }
                         .listStyle(.plain)
@@ -250,7 +233,7 @@ struct FavoritesView: View {
                                     Button(action: { model.onFavorite(vibePrompt) }) {
                                         Label(vibePrompt.isFavorite ? "Unfavorite" : "Favorite", systemImage: vibePrompt.isFavorite ? "heart.slash" : "heart")
                                     }
-                                    Button(role: .destructive, action: { model.onDeleteRequest(vibePrompt) }) {
+                                    Button(role: .destructive, action: { model.onDelete(vibePrompt) }) {
                                         Label("Delete", systemImage: "trash")
                                     }
                                 }
@@ -261,7 +244,7 @@ struct FavoritesView: View {
                                 isFavorite: vibePrompt.isFavorite,
                                 onFavorite: { model.onFavorite(vibePrompt) },
                                 onCopy: { model.onCopy(vibePrompt) },
-                                onDelete: { model.onDeleteRequest(vibePrompt) }
+                                onDelete: { model.onDelete(vibePrompt) }
                             )
                         }
                         .listStyle(.plain)
@@ -316,32 +299,6 @@ struct FavoritesView: View {
                     }
                 )
             }
-            .alert(
-                item: $model.route.showingDeletePromptAlert,
-                title: { _ in Text("Delete Prompt") },
-                actions: { prompt in
-                    Button("Delete", role: .destructive) {
-                        model.confirmDelete(prompt)
-                    }
-                    Button("Cancel", role: .cancel) {}
-                },
-                message: { prompt in
-                    Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")
-                }
-            )
-            .alert(
-                item: $model.route.showingDeleteVibePromptAlert,
-                title: { _ in Text("Delete Vibe Prompt") },
-                actions: { vibePrompt in
-                    Button("Delete", role: .destructive) {
-                        model.confirmDelete(vibePrompt)
-                    }
-                    Button("Cancel", role: .cancel) {}
-                },
-                message: { vibePrompt in
-                    Text("Are you sure you want to delete \(vibePrompt.app)? This action cannot be undone.")
-                }
-            )
         }
     }
 

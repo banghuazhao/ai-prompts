@@ -57,6 +57,11 @@ struct ContentView: View {
                 }
             }
         }
+        // Above the tab bar, so it stays put when a detail page that deleted its prompt closes.
+        .overlay(alignment: .bottom) {
+            UndoBanner()
+                .padding(.bottom, 72)
+        }
         // Last, so the router's sheet sees it too.
         .environment(\.promptCategories, categoriesByID)
     }

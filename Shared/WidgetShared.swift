@@ -18,9 +18,15 @@ struct WidgetPromptItem: Codable, Hashable, Identifiable {
     let kind: Kind
     let rowID: Int
     let title: String
+    /// Cut short to keep the snapshot small; `fullText` has the rest.
     let text: String
+    /// The whole prompt when `text` was cut short, for the widgets' Copy button.
+    var fullText: String? = nil
 
     var id: String { "\(kind.rawValue)-\(rowID)" }
+
+    /// What the widgets' Copy button puts on the clipboard.
+    var copyText: String { fullText ?? text }
 
     /// e.g. `aiprompts://prompt/12`
     var deepLink: URL {
@@ -62,6 +68,32 @@ enum WidgetShared {
 
     /// Set by the app at launch. Intents that open the app hand their deep link to it.
     @MainActor static var openDeepLink: ((URL) -> Void)?
+
+    // MARK: - Copy from a widget
+
+    private static var defaults: UserDefaults? {
+        UserDefaults(suiteName: appGroupID)
+    }
+
+    private static let lastCopiedItemIDKey = "widgetLastCopiedItemID"
+    private static let lastCopiedDateKey = "widgetLastCopiedDate"
+
+    /// How long a widget shows a checkmark after its Copy button is tapped.
+    static let copiedFeedbackDuration: TimeInterval = 2
+
+    static func noteCopied(itemID: String, at date: Date = Date()) {
+        defaults?.set(itemID, forKey: lastCopiedItemIDKey)
+        defaults?.set(date, forKey: lastCopiedDateKey)
+    }
+
+    /// The item copied from a widget a moment ago, and when its checkmark should go away.
+    static func recentCopy(at date: Date = Date()) -> (itemID: String, until: Date)? {
+        guard let itemID = defaults?.string(forKey: lastCopiedItemIDKey),
+              let copiedAt = defaults?.object(forKey: lastCopiedDateKey) as? Date
+        else { return nil }
+        let until = copiedAt.addingTimeInterval(copiedFeedbackDuration)
+        return until > date ? (itemID, until) : nil
+    }
 
     private static var snapshotURL: URL? {
         FileManager.default

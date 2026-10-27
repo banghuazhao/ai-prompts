@@ -16,10 +16,15 @@ enum PromptActions {
         registerPositiveAction()
     }
 
-    /// Opens an assistant with `text` filled in, and copies `text` too: some assistants' apps
-    /// open without the text from the link, and then it's one paste away.
+    /// The Quick Launch setting "Also Copy the Prompt". On unless the user turned it off.
+    nonisolated static let copiesOnLaunchKey = "copiesPromptOnQuickLaunch"
+
+    /// Opens an assistant with `text` filled in. Unless turned off in Settings, `text` is copied
+    /// too: some assistants' apps open without the text from the link, and then it's one paste away.
     static func launch(_ text: String, at url: URL) {
-        UIPasteboard.general.string = text
+        if UserDefaults.standard.object(forKey: copiesOnLaunchKey) as? Bool ?? true {
+            UIPasteboard.general.string = text
+        }
         open(url)
     }
 

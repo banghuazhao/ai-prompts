@@ -104,5 +104,4 @@ struct PromptRowView: View {
             forDevs: false
         ), onFavorite: {})
     }
-    .environmentObject(DataManager())
 }

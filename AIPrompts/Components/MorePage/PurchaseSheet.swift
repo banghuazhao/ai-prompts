@@ -7,6 +7,9 @@
 
 import SwiftUI
 import Dependencies
+import OSLog
+
+private let logger = Logger(subsystem: "AIPrompts", category: "Purchase")
 
 struct PurchaseSheet: View {
     @Dependency(\.purchaseManager) var purchaseManager
@@ -239,7 +242,7 @@ struct PurchaseSheet: View {
             case .success:
                 showSuccessModal = true
             case .failure(let error):
-                print("Purchase failed: \(error.localizedDescription)")
+                logger.error("Purchase failed: \(error.localizedDescription)")
                 switch error {
                 case .userCancelled:
                     break

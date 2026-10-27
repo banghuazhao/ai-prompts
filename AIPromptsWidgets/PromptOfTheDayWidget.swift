@@ -9,6 +9,8 @@ import WidgetKit
 struct DailyPromptEntry: TimelineEntry {
     let date: Date
     let item: WidgetPromptItem
+    /// Set right after the Copy button was tapped, to show a checkmark.
+    var isCopied = false
 }
 
 struct DailyPromptProvider: TimelineProvider {
@@ -24,12 +26,18 @@ struct DailyPromptProvider: TimelineProvider {
         let now = Date()
         let calendar = Calendar.current
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) ?? now.addingTimeInterval(86400)
-        completion(Timeline(entries: [entry(for: now), entry(for: tomorrow)], policy: .after(tomorrow)))
+        var entries = [entry(for: now)]
+        // Just copied: show a checkmark, then the normal widget again.
+        if let copy = WidgetShared.recentCopy(at: now), copy.itemID == entries[0].item.id {
+            entries = [entry(for: now, isCopied: true), entry(for: copy.until)]
+        }
+        entries.append(entry(for: tomorrow))
+        completion(Timeline(entries: entries, policy: .after(tomorrow)))
     }
 
-    private func entry(for date: Date) -> DailyPromptEntry {
+    private func entry(for date: Date, isCopied: Bool = false) -> DailyPromptEntry {
         let item = WidgetShared.loadSnapshot()?.promptOfTheDay(for: date) ?? .sample
-        return DailyPromptEntry(date: date, item: item)
+        return DailyPromptEntry(date: date, item: item, isCopied: isCopied)
     }
 }
 
@@ -63,10 +71,14 @@ struct PromptOfTheDayWidgetView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         default:
             VStack(alignment: .leading, spacing: 6) {
-                Label("Today's Prompt", systemImage: "sparkles")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.purple)
-                    .lineLimit(1)
+                HStack(alignment: .center, spacing: 6) {
+                    Label("Today's Prompt", systemImage: "sparkles")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.purple)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                    WidgetCopyButton(itemID: entry.item.id, isCopied: entry.isCopied)
+                }
                 Text(entry.item.title)
                     .font(.headline)
                     .lineLimit(2)
@@ -88,7 +100,7 @@ struct PromptOfTheDayWidget: Widget {
             PromptOfTheDayWidgetView(entry: entry)
         }
         .configurationDisplayName("Prompt of the Day")
-        .description("A new AI prompt every day. Tap to open it.")
+        .description("A new AI prompt every day. Tap to open it, or copy it right from the widget.")
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryInline])
     }
 }

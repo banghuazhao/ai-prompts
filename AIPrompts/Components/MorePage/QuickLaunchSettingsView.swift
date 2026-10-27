@@ -11,6 +11,7 @@ struct QuickLaunchSettingsView: View {
     @Shared(.quickLaunchOrder) private var order
     @Shared(.hiddenQuickLaunchProviders) private var hidden
     @Shared(.defaultLLMProvider) private var defaultProvider
+    @AppStorage(PromptActions.copiesOnLaunchKey) private var copiesOnLaunch = true
 
     private var providers: [LLMProvider] {
         LLMProvider.ordered(order)
@@ -40,7 +41,13 @@ struct QuickLaunchSettingsView: View {
             } header: {
                 Text("Assistants")
             } footer: {
-                Text("Drag to reorder. Quick Launch opens the assistant with your prompt filled in, and copies it in case the app opens empty.")
+                Text("Drag to reorder. Quick Launch opens the assistant with your prompt filled in.")
+            }
+
+            Section {
+                Toggle("Also Copy the Prompt", isOn: $copiesOnLaunch)
+            } footer: {
+                Text("Some assistants' apps open without the prompt from the link. With this on, it's also on the clipboard, ready to paste.")
             }
         }
         .environment(\.editMode, .constant(.active))

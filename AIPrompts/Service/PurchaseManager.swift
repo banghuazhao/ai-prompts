@@ -9,6 +9,9 @@ import Foundation
 import StoreKit
 import Dependencies
 import Sharing
+import OSLog
+
+private let logger = Logger(subsystem: "AIPrompts", category: "Purchase")
 
 // MARK: - Purchase Manager
 @Observable
@@ -38,7 +41,7 @@ final class PurchaseManager {
             let products = try await Product.products(for: [productID])
             premiumProduct = products.first
         } catch {
-            print("❌ Failed to load product: \(error.localizedDescription)")
+            logger.error("Failed to load product: \(error.localizedDescription)")
         }
         productLoadFailed = premiumProduct == nil
     }
@@ -76,7 +79,7 @@ final class PurchaseManager {
             let result = try await premiumProduct.purchase()
             return await handlePurchaseResult(result)
         } catch {
-            print("❌ Purchase failed: \(error.localizedDescription)")
+            logger.error("Purchase failed: \(error.localizedDescription)")
             return .failure(.purchaseFailed(error))
         }
     }
@@ -120,22 +123,22 @@ final class PurchaseManager {
             
         case let .success(.unverified(_, error)):
             // ⚠️ Purchase successful but verification failed
-            print("⚠️ Purchase verification failed: \(error.localizedDescription)")
+            logger.error("Purchase verification failed: \(error.localizedDescription)")
             return .failure(.verificationFailed(error))
             
         case .pending:
             // ⏳ Waiting for approval (SCA, Ask to Buy, etc.)
-            print("⏳ Purchase pending - waiting for approval")
+            logger.info("Purchase pending, waiting for approval")
             return .failure(.pending)
             
         case .userCancelled:
             // ❌ User cancelled the purchase
-            print("❌ Purchase cancelled by user")
+            logger.info("Purchase cancelled by the user")
             return .failure(.userCancelled)
             
         @unknown default:
             // ❓ Unknown result
-            print("❓ Unknown purchase result")
+            logger.error("Unknown purchase result")
             return .failure(.unknown)
         }
     }

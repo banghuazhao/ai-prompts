@@ -92,6 +92,10 @@ struct SearchView: View {
             .scrollDismissesKeyboard(.immediately)
             .navigationTitle("Search")
             .searchable(text: $query, prompt: "Prompts and vibe prompts")
+            .onAppear {
+                // The Prompts and Vibe Prompts tabs add to the same history.
+                recentSearches = RecentSearches.load()
+            }
             .onSubmit(of: .search) {
                 rememberSearch()
                 if canAskAI {

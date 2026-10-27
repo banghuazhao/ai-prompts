@@ -12,6 +12,9 @@ import AppTrackingTransparency
 import GoogleMobileAds
 import SwiftUI
 import UserMessagingPlatform
+import OSLog
+
+private let logger = Logger(subsystem: "AIPrompts", category: "Consent")
 
 @MainActor
 final class ConsentManager: ObservableObject {
@@ -76,13 +79,13 @@ final class ConsentManager: ObservableObject {
         // 2. ATT, only after UMP and only while the app is on screen. Never re-asked after a decision.
         await waitUntilActive()
         #if DEBUG
-        print("[CONSENT] UMP status=\(ConsentInformation.shared.consentStatus.rawValue) canRequestAds=\(ConsentInformation.shared.canRequestAds) ATT before=\(ATTrackingManager.trackingAuthorizationStatus.rawValue)")
+        logger.debug("UMP status=\(ConsentInformation.shared.consentStatus.rawValue) canRequestAds=\(ConsentInformation.shared.canRequestAds) ATT before=\(ATTrackingManager.trackingAuthorizationStatus.rawValue)")
         #endif
         if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
             _ = await ATTrackingManager.requestTrackingAuthorization()
         }
         #if DEBUG
-        print("[CONSENT] ATT after=\(ATTrackingManager.trackingAuthorizationStatus.rawValue) npa=\(!mayPersonalizeAds)")
+        logger.debug("ATT after=\(ATTrackingManager.trackingAuthorizationStatus.rawValue) npa=\(!self.mayPersonalizeAds)")
         #endif
 
         // 3. Start ads only when consent allows requesting them.

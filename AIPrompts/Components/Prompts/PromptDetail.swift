@@ -17,7 +17,6 @@ class PromptDetailModel {
         case customizing
         case runningOnDevice
         case sharingCard
-        case showingDeleteAlert(Prompt)
     }
 
     var route: Route?
@@ -75,17 +74,10 @@ class PromptDetailModel {
         route = .editingPrompt
     }
 
-    func onDeleteRequest() {
-        route = .showingDeleteAlert(prompt)
-    }
-
-    func confirmDelete(action: () -> Void) {
-        withErrorReporting {
-            try database.write { db in
-                try Prompt.delete(prompt).execute(db)
-            }
-        }
-        action()
+    /// Deletes right away and closes the page; the banner that follows offers Undo.
+    func onDelete(dismiss: () -> Void) {
+        PromptTrash.delete(prompt)
+        dismiss()
     }
 
     func onUpdate(_ newPrompt: Prompt) {
@@ -155,7 +147,7 @@ struct PromptDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     Haptics.shared.vibrateIfEnabled()
-                    model.onDeleteRequest()
+                    model.onDelete { dismiss() }
                 }) {
                     Image(systemName: "trash")
                 }
@@ -205,26 +197,6 @@ struct PromptDetailView: View {
                 }
             )
         }
-        .alert(
-            item: $model.route.showingDeleteAlert,
-            title: { _ in
-                Text("Delete Prompt")
-            },
-            actions: { _ in
-                Button("Delete", role: .destructive) {
-                    Haptics.shared.vibrateIfEnabled()
-                    model.confirmDelete {
-                        dismiss()
-                    }
-                }
-                Button("Cancel", role: .cancel) {
-                    Haptics.shared.vibrateIfEnabled()
-                }
-            },
-            message: { prompt in
-                Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")
-            }
-        )
     }
 
     private var hero: some View {

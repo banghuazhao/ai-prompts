@@ -7,6 +7,9 @@
 
 import GoogleMobileAds
 import SwiftUI
+import OSLog
+
+private let logger = Logger(subsystem: "AIPrompts", category: "Ads")
 
 enum AdManager {
     /// Production IDs come from the Release build settings. Google test IDs exist in Debug only;
@@ -36,9 +39,9 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
             request: request,
             completionHandler: { appOpenAdIn, error in
                 if let error = error {
-                    print("[OPEN AD] Failed to load: \(error)")
+                    logger.error("App open ad failed to load: \(error.localizedDescription)")
                 } else {
-                    print("[OPEN AD] Ad is ready")
+                    logger.debug("App open ad is ready")
                 }
                 self.appOpenAd = appOpenAdIn
                 self.appOpenAd?.fullScreenContentDelegate = self
@@ -48,14 +51,14 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
     }
 
     func tryToPresentAd() {
-        print("[DEBUG] tryToPresentAd called")
+        logger.debug("tryToPresentAd called")
         guard let gOpenAd = appOpenAd, wasLoadTimeLessThanNHoursAgo(thresholdN: 4) else {
-            print("[DEBUG] No ad loaded or ad expired, requesting new ad")
+            logger.debug("No app open ad loaded or it expired; requesting a new one")
             requestAppOpenAd()
             return
         }
         guard appHasEnterBackgroundBefore else {
-            print("[DEBUG] appHasEnterBackgroundBefore is false, not presenting ad")
+            logger.debug("App hasn't been in the background; not presenting an app open ad")
             return
         }
         // Give a widget / Shortcut deep link a moment to register before deciding.
@@ -66,7 +69,7 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
 
     private func presentIfAllowed(_ gOpenAd: AppOpenAd) {
         guard AppUsage.shouldShowAppOpenAd else {
-            print("[DEBUG] App open ad skipped by ad policy")
+            logger.debug("App open ad skipped by ad policy")
             return
         }
         guard var presenter = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
@@ -74,7 +77,7 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
         while let presented = presenter.presentedViewController {
             presenter = presented
         }
-        print("[DEBUG] Presenting App Open Ad")
+        logger.debug("Presenting app open ad")
         gOpenAd.present(from: presenter)
         AppUsage.noteAppOpenAdPresented()
     }
@@ -88,12 +91,12 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
     }
 
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-        print("[OPEN AD] Failed to present: \(error)")
+        logger.error("App open ad failed to present: \(error.localizedDescription)")
         requestAppOpenAd()
     }
 
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
-        print("[OPEN AD] Ad dismissed")
+        logger.debug("App open ad dismissed")
         requestAppOpenAd()
     }
 }
@@ -151,11 +154,11 @@ struct BannerView: UIViewControllerRepresentable {
         // MARK: - BannerViewDelegate methods
 
         private func bannerViewDidReceiveAd(_ bannerView: BannerView) {
-            print("DID RECEIVE Banner AD")
+            logger.debug("Banner ad received")
         }
 
         private func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
-            print("DID NOT RECEIVE Banner AD: \(error.localizedDescription)")
+            logger.error("Banner ad failed: \(error.localizedDescription)")
         }
     }
 }
