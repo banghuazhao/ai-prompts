@@ -69,10 +69,13 @@ class PromptListModel {
         , animation: .default) var usages
 
     @ObservationIgnored
+    @FetchAll(PromptCategory.all, animation: .default) var categories
+
+    @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
 
-    /// A prompt opened from the Recently Used shelf.
-    var recentPromptDestination: Prompt?
+    /// A prompt opened from the Recently Used shelf or Surprise Me.
+    var openedPrompt: Prompt?
 
     @CasePathable
     enum Route {
@@ -101,10 +104,6 @@ class PromptListModel {
         case .forDevelopers:
             prompts = prompts.filter { $0.forDevs }
         }
-        // Search
-        if !searchText.isEmpty {
-            prompts = searchPrompts(prompts, query: searchText)
-        }
         // Sort
         switch sortOption {
         case .modifiedDate:
@@ -129,21 +128,45 @@ class PromptListModel {
         case .title:
             prompts = prompts.sorted { $0.act.localizedCaseInsensitiveCompare($1.act) == .orderedAscending }
         case .characterLengthAsc:
-            prompts = prompts.sorted { $0.prompt.count < $1.prompt.count }
+            prompts = Self.sortedByLength(prompts, ascending: true)
         case .characterLengthDesc:
-            prompts = prompts.sorted { $0.prompt.count > $1.prompt.count }
+            prompts = Self.sortedByLength(prompts, ascending: false)
+        }
+        // Search: best matches first, with the chosen sort breaking ties.
+        let search = TextSearch(searchText)
+        if !search.isEmpty {
+            let categoryTitles = Dictionary(categories.map { ($0.id, $0.displayTitle) }, uniquingKeysWith: { first, _ in first })
+            prompts = search.rank(
+                prompts,
+                title: { $0.act },
+                fields: { prompt in
+                    [prompt.prompt, prompt.categoryID.flatMap { categoryTitles[$0] } ?? ""]
+                }
+            )
         }
         return prompts
     }
 
-    func searchPrompts(_ prompts: [Prompt], query: String) -> [Prompt] {
-        guard !query.isEmpty else { return prompts }
+    /// Counting characters walks the whole string, so do it once per prompt rather than per comparison.
+    private static func sortedByLength(_ prompts: [Prompt], ascending: Bool) -> [Prompt] {
+        prompts
+            .map { (prompt: $0, length: $0.prompt.count) }
+            .sorted { ascending ? $0.length < $1.length : $0.length > $1.length }
+            .map { $0.prompt }
+    }
 
-        let lowercasedQuery = query.lowercased()
-        return prompts.filter { prompt in
-            prompt.act.lowercased().contains(lowercasedQuery) ||
-                prompt.prompt.lowercased().contains(lowercasedQuery)
+    /// How many prompts each category holds, for the category picker.
+    var promptCountsByCategory: [PromptCategory.ID: Int] {
+        prompts.reduce(into: [:]) { counts, prompt in
+            if let categoryID = prompt.categoryID {
+                counts[categoryID, default: 0] += 1
+            }
         }
+    }
+
+    /// Opens a random prompt from the ones currently listed.
+    func onSurpriseMe() {
+        openedPrompt = filteredPrompts.randomElement()
     }
     
     /// Most recently used first. Usage rows are deleted with their prompt, but stay defensive.
@@ -373,6 +396,9 @@ struct PromptListView: View {
         NavigationStack {
             VStack {
                 List {
+                    // Filtering and sorting run once per update rather than for every use below.
+                    let visiblePrompts = model.filteredPrompts
+
                     AIStudioLibraryHero(
                         eyebrow: "THE PROMPT LIBRARY",
                         title: "Find your next idea.",
@@ -402,7 +428,7 @@ struct PromptListView: View {
                         if !recentPrompts.isEmpty {
                             RecentlyUsedShelf(
                                 prompts: recentPrompts,
-                                onSelect: { model.recentPromptDestination = $0 },
+                                onSelect: { model.openedPrompt = $0 },
                                 onCustomize: { model.route = .customizing($0) },
                                 onRemove: { PromptUsage.remove(promptID: $0.id) },
                                 onClear: { PromptUsage.removeAll() }
@@ -417,7 +443,7 @@ struct PromptListView: View {
                         Text(model.searchText.isEmpty ? "Explore prompts" : "Search results")
                             .font(.title3.bold())
                         Spacer()
-                        Text("\(model.filteredPrompts.count)")
+                        Text("\(visiblePrompts.count)")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.secondary)
                     }
@@ -425,7 +451,7 @@ struct PromptListView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
 
-                    ForEach(model.filteredPrompts) { prompt in
+                    ForEach(visiblePrompts) { prompt in
                         Group {
                             if model.isSelecting {
                                 let isSelected = model.selectedIDs.contains(prompt.id)
@@ -508,7 +534,7 @@ struct PromptListView: View {
                         )
                     }
 
-                    if model.filteredPrompts.isEmpty {
+                    if visiblePrompts.isEmpty {
                         ContentUnavailableView(
                             model.searchText.isEmpty ? "No prompts here yet" : "No matching prompts",
                             systemImage: "sparkle.magnifyingglass",
@@ -521,7 +547,7 @@ struct PromptListView: View {
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .background(AIStudioPalette.canvas)
-                .navigationDestination(item: $model.recentPromptDestination) { prompt in
+                .navigationDestination(item: $model.openedPrompt) { prompt in
                     PromptDetailView(model: PromptDetailModel(prompt: prompt))
                 }
             }
@@ -627,6 +653,10 @@ struct PromptListView: View {
                                 Haptics.shared.vibrateIfEnabled()
                                 model.toggleSelecting()
                             }
+                            Button("Surprise Me", systemImage: "dice") {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.onSurpriseMe()
+                            }
                             Button("Generate Prompt Idea", systemImage: "sparkles") {
                                 Haptics.shared.vibrateIfEnabled()
                                 model.generateMarkovPrompt()
@@ -658,6 +688,8 @@ struct PromptListView: View {
             .sheet(isPresented: Binding($model.route.selectCategory)) {
                 CategorySelectionSheet(
                     selectedCategory: model.selectedCategory,
+                    totalCount: model.prompts.count,
+                    promptCounts: model.promptCountsByCategory,
                     onSelect: { category in
                         model.onSelectCategory(category)
                     }

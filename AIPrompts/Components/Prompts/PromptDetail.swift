@@ -28,15 +28,6 @@ class PromptDetailModel {
         self.prompt = prompt
     }
     
-    var category: PromptCategory? {
-        try? database.read { db in
-            try? PromptCategory
-                .all
-                .where { $0.id.is(prompt.categoryID) }
-                .fetchOne(db)
-        }
-    }
-
     func onCopy() {
         PromptActions.copy(prompt.prompt)
         recordUse()
@@ -108,6 +99,11 @@ class PromptDetailModel {
 struct PromptDetailView: View {
     @State var model: PromptDetailModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.promptCategories) private var categories
+
+    private var category: PromptCategory? {
+        model.prompt.categoryID.flatMap { categories[$0] }
+    }
 
     var body: some View {
         ScrollView {
@@ -259,8 +255,8 @@ struct PromptDetailView: View {
                 .foregroundStyle(.white)
                 .fixedSize(horizontal: false, vertical: true)
 
-            if let category = model.category {
-                Label(Bundle.main.localizedString(forKey: category.title, value: category.title, table: nil), systemImage: "square.grid.2x2.fill")
+            if let category {
+                Label(category.displayTitle, systemImage: "square.grid.2x2.fill")
                     .font(.subheadline)
                     .foregroundStyle(.white)
                     .padding(.horizontal, 12)
@@ -312,7 +308,8 @@ struct PromptDetailView: View {
 
                 Spacer(minLength: 12)
 
-                Text("\(model.prompt.prompt.count) characters")
+                let stats = PromptStats(model.prompt.prompt)
+                Text("\(stats.words) words · ~\(stats.estimatedTokens) tokens")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

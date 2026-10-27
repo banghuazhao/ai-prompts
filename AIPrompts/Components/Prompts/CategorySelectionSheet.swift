@@ -10,6 +10,10 @@ import SwiftUI
 struct CategorySelectionSheet: View {
     @FetchAll(PromptCategory.all) var categories
     @State var selectedCategory: PromptCategory.ID?
+    /// Number of prompts in the library, shown next to "All" when set.
+    var totalCount: Int? = nil
+    /// Number of prompts in each category. Categories missing from it show 0 once any count is set.
+    var promptCounts: [PromptCategory.ID: Int]? = nil
     let onSelect: (PromptCategory?) -> Void
 
     var body: some View {
@@ -22,6 +26,9 @@ struct CategorySelectionSheet: View {
                 HStack {
                     Text("💬 All")
                     Spacer()
+                    if let totalCount {
+                        count(totalCount)
+                    }
                     if selectedCategory == nil {
                         Image(systemName: "checkmark")
                             .foregroundColor(.green)
@@ -43,6 +50,9 @@ struct CategorySelectionSheet: View {
                     HStack {
                         Text(category.displayTitle)
                         Spacer()
+                        if let promptCounts {
+                            count(promptCounts[category.id, default: 0])
+                        }
                         if category.id == selectedCategory {
                             Image(systemName: "checkmark")
                                 .foregroundColor(.green)
@@ -54,5 +64,12 @@ struct CategorySelectionSheet: View {
             }
         }
         .glassSheetBackground()
+    }
+
+    private func count(_ value: Int) -> some View {
+        Text(value, format: .number)
+            .font(.subheadline.monospacedDigit())
+            .foregroundStyle(.secondary)
+            .accessibilityLabel(Text("\(value) prompts"))
     }
 }

@@ -104,9 +104,6 @@ class VibePromptListModel {
                 }
             }
         }
-        if !searchText.isEmpty {
-            new = searchVibePrompts(vibePrompts: new, query: searchText)
-        }
         // Sort
         switch sortOption {
         case .modifiedDate:
@@ -131,21 +128,24 @@ class VibePromptListModel {
         case .title:
             new = new.sorted { $0.app.localizedCaseInsensitiveCompare($1.app) == .orderedAscending }
         case .characterLengthAsc:
-            new = new.sorted { $0.prompt.count < $1.prompt.count }
+            new = Self.sortedByLength(new, ascending: true)
         case .characterLengthDesc:
-            new = new.sorted { $0.prompt.count > $1.prompt.count }
+            new = Self.sortedByLength(new, ascending: false)
+        }
+        // Search: best matches first, with the chosen sort breaking ties.
+        let search = TextSearch(searchText)
+        if !search.isEmpty {
+            new = search.rank(new, title: { $0.app }, fields: { [$0.prompt, $0.techstack, $0.contributor] })
         }
         return new
     }
 
-    func searchVibePrompts(vibePrompts: [VibePrompt], query: String) -> [VibePrompt] {
-        guard !query.isEmpty else { return vibePrompts }
-
-        let lowercasedQuery = query.lowercased()
-        return vibePrompts.filter { vibePrompt in
-            vibePrompt.app.lowercased().contains(lowercasedQuery) ||
-                vibePrompt.prompt.lowercased().contains(lowercasedQuery)
-        }
+    /// Counting characters walks the whole string, so do it once per prompt rather than per comparison.
+    private static func sortedByLength(_ vibePrompts: [VibePrompt], ascending: Bool) -> [VibePrompt] {
+        vibePrompts
+            .map { (vibePrompt: $0, length: $0.prompt.count) }
+            .sorted { ascending ? $0.length < $1.length : $0.length > $1.length }
+            .map { $0.vibePrompt }
     }
 
     func onFavorite(_ prompt: VibePrompt) {
@@ -216,6 +216,9 @@ struct VibePromptListView: View {
         NavigationStack {
             VStack {
                 List {
+                    // Filtering and sorting run once per update rather than for every use below.
+                    let visibleVibePrompts = model.filteredVibePrompts
+
                     AIStudioLibraryHero(
                         eyebrow: "VIBE CODING",
                         title: "Build the next big thing.",
@@ -268,7 +271,7 @@ struct VibePromptListView: View {
                         Text(model.searchText.isEmpty ? "Explore builds" : "Search results")
                             .font(.title3.bold())
                         Spacer()
-                        Text("\(model.filteredVibePrompts.count)")
+                        Text("\(visibleVibePrompts.count)")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.secondary)
                     }
@@ -276,7 +279,7 @@ struct VibePromptListView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
 
-                    ForEach(model.filteredVibePrompts) { vibePrompt in
+                    ForEach(visibleVibePrompts) { vibePrompt in
                         NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
                             VibePromptRowView(vibePrompt: vibePrompt) {
                                 model.onFavorite(vibePrompt)
@@ -331,7 +334,7 @@ struct VibePromptListView: View {
                         )
                     }
 
-                    if model.filteredVibePrompts.isEmpty {
+                    if visibleVibePrompts.isEmpty {
                         ContentUnavailableView(
                             model.searchText.isEmpty ? "No builds here yet" : "No matching builds",
                             systemImage: "sparkle.magnifyingglass",

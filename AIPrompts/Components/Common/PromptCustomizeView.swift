@@ -265,3 +265,23 @@ struct PromptCustomizeCard: View {
         prompt: "I want you to act as a storyteller for {{audience}}. My first request is \"I need an interesting story on perseverance.\""
     )
 }
+
+/// Lists the fill-in-the-blank variables found in a prompt as it's typed, so it's clear that
+/// `{{topic}}` was recognized. Shows nothing when there are none.
+struct DetectedBlanksLabel: View {
+    let text: String
+
+    var body: some View {
+        let labels = PromptTemplate(text).variables.map(\.label)
+        if !labels.isEmpty {
+            Label {
+                Text("Blanks found: \(labels.formatted(.list(type: .and)))")
+            } icon: {
+                Image(systemName: "checkmark.circle.fill")
+            }
+            .font(.footnote)
+            .foregroundStyle(AIStudioPalette.violet)
+            .transition(.opacity)
+        }
+    }
+}

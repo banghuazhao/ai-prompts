@@ -40,7 +40,7 @@ struct QuickLaunchSettingsView: View {
             } header: {
                 Text("Assistants")
             } footer: {
-                Text("Drag to reorder. Quick Launch opens the assistant with your prompt filled in.")
+                Text("Drag to reorder. Quick Launch opens the assistant with your prompt filled in, and copies it in case the app opens empty.")
             }
         }
         .environment(\.editMode, .constant(.active))

@@ -6,6 +6,7 @@
 
 import Foundation
 import SharingGRDB
+import SwiftUI
 
 @Table
 struct PromptCategory: Identifiable {
@@ -20,4 +21,10 @@ extension PromptCategory {
     var displayTitle: String {
         Bundle.main.localizedString(forKey: title, value: title, table: nil)
     }
+}
+
+extension EnvironmentValues {
+    /// Every category by id. Fetched once near the root so each prompt row can show its
+    /// category without querying the database while it renders.
+    @Entry var promptCategories: [PromptCategory.ID: PromptCategory] = [:]
 }

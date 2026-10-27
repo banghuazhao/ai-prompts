@@ -7,15 +7,10 @@ struct PromptRowView: View {
 
     @State private var copied = false
 
-    @Dependency(\.defaultDatabase) private var database
+    @Environment(\.promptCategories) private var categories
 
-    var category: PromptCategory? {
-        try? database.read { db in
-            try? PromptCategory
-                .all
-                .where { $0.id.is(prompt.categoryID) }
-                .fetchOne(db)
-        }
+    private var category: PromptCategory? {
+        prompt.categoryID.flatMap { categories[$0] }
     }
 
     var body: some View {

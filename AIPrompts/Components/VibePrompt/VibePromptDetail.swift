@@ -320,7 +320,8 @@ struct VibePromptDetailView: View {
 
                 Spacer(minLength: 12)
 
-                Text("\(model.vibePrompt.prompt.count) characters")
+                let stats = PromptStats(model.vibePrompt.prompt)
+                Text("\(stats.words) words · ~\(stats.estimatedTokens) tokens")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

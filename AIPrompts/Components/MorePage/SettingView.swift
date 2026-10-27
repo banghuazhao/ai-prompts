@@ -68,6 +68,23 @@ struct SettingView: View {
                                 .foregroundColor(themeManager.current.textPrimary)
                         }
                         .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
+
+                        Button {
+                            Haptics.shared.vibrateIfEnabled()
+                            PromptVariableMemory.clear()
+                            backupMessage = BackupMessage(
+                                title: String(localized: "Filled-In Blanks Cleared"),
+                                message: String(localized: "Blanks will start empty until you fill them in again.")
+                            )
+                        } label: {
+                            linkRow("Forget Filled-In Blanks")
+                        }
+
+                        Text("Values you type into blanks like {{topic}} are remembered on this device to fill the same blank next time.")
+                            .font(.footnote)
+                            .foregroundColor(themeManager.current.textPrimary.opacity(0.6))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     settingsSection(title: "Quick Launch") {
                         NavigationLink {

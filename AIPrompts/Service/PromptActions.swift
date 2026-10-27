@@ -16,6 +16,13 @@ enum PromptActions {
         registerPositiveAction()
     }
 
+    /// Opens an assistant with `text` filled in, and copies `text` too: some assistants' apps
+    /// open without the text from the link, and then it's one paste away.
+    static func launch(_ text: String, at url: URL) {
+        UIPasteboard.general.string = text
+        open(url)
+    }
+
     static func open(_ url: URL) {
         AppUsage.noteOutboundAction()
         UIApplication.shared.open(url)

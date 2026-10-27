@@ -8,6 +8,8 @@ enum LLMProvider: String, CaseIterable, Identifiable {
     case claude
     case perplexity
     case gemini
+    case copilot
+    case leChat
 
     var id: String { rawValue }
 
@@ -18,6 +20,8 @@ enum LLMProvider: String, CaseIterable, Identifiable {
         case .claude: "Claude"
         case .perplexity: "Perplexity"
         case .gemini: "Gemini"
+        case .copilot: "Copilot"
+        case .leChat: "Le Chat"
         }
     }
 
@@ -28,6 +32,8 @@ enum LLMProvider: String, CaseIterable, Identifiable {
         case .claude: "sun.max.fill"
         case .perplexity: "questionmark.circle.fill"
         case .gemini: "sparkles"
+        case .copilot: "bubble.left.and.bubble.right.fill"
+        case .leChat: "wind"
         }
     }
 
@@ -38,6 +44,8 @@ enum LLMProvider: String, CaseIterable, Identifiable {
         case .claude: .claude
         case .perplexity: .perplexity
         case .gemini: .gemini
+        case .copilot: .copilot
+        case .leChat: .leChat
         }
     }
 
@@ -52,6 +60,8 @@ enum LLMProvider: String, CaseIterable, Identifiable {
         case .claude: "https://claude.ai/new?q="
         case .perplexity: "https://www.perplexity.ai/?q="
         case .gemini: "https://gemini.google.com/app?prompt="
+        case .copilot: "https://copilot.microsoft.com/?q="
+        case .leChat: "https://chat.mistral.ai/chat?q="
         }
     }
 
@@ -130,7 +140,7 @@ struct OpenInDefaultLLMButton: View {
             if let url = provider.url(for: launchable) {
                 Button {
                     Haptics.shared.vibrateIfEnabled()
-                    PromptActions.open(url)
+                    PromptActions.launch(launchable, at: url)
                     onLaunch?()
                 } label: {
                     Label("Open in \(provider.label)", systemImage: provider.icon)
@@ -206,7 +216,7 @@ struct LLMQuickLaunchSection: View {
             text = prompt
         }
         guard let url = provider.url(for: text) else { return }
-        PromptActions.open(url)
+        PromptActions.launch(text, at: url)
         onLaunch?()
     }
 }

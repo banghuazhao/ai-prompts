@@ -26,18 +26,21 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🎨 **Image Playground**: Turn image prompts, or any on-device answer, into a picture (iOS 18.1+, Apple Intelligence devices).
 - 🖼️ **Share as Image**: Share any prompt or answer as a branded card that links to the App Store.
 - 🌏 **Traditional Chinese**: Full zh-Hant localization of the app, widgets, and Siri phrases.
-- 🧩 **Fill-in-the-Blank Templates**: Prompts with variables (`{{topic}}`, `${Name: default}`, or a trailing `My first request is "..."`) get a **Customize & Use** sheet. Fill in the blanks, preview the result live, then copy it or launch it straight into ChatGPT, Claude, Gemini, Grok, or Perplexity.
+- 🧩 **Fill-in-the-Blank Templates**: Prompts with variables (`{{topic}}`, `${Name: default}`, or a trailing `My first request is "..."`) get a **Customize & Use** sheet. Fill in the blanks, preview the result live, then copy it or launch it straight into ChatGPT, Claude, Gemini, Grok, Perplexity, Copilot, or Le Chat. While you write a prompt, the form lists the blanks it found. Values you type are remembered for the same blank next time; **Settings › Prompt Creation › Forget Filled-In Blanks** clears them.
+- 🚀 **Quick Launch**: Launching a prompt into an assistant also copies it, so it's one paste away if the assistant's app opens without it. Pick, hide and reorder assistants in **Settings › Quick Launch**.
 - 🍎 **Run on Device with Apple Intelligence**: On iOS 26 devices with Apple Intelligence, run any prompt right in the app with Apple's on-device Foundation Models: free, private and offline. Replies stream in, you can ask follow-ups, and conversations are saved under **Favorites › Chats**. If the model declines a prompt, the app offers Quick Launch instead. Other devices keep the existing Copy and Quick Launch flow.
 - 🔎 **Ask in Plain Language**: In the Search tab, describe what you need (like "help me prepare for a job interview") and Apple Intelligence picks the best prompts from the library. It can only choose prompts that exist.
 - 💡 **Blank Ideas**: In **Customize & Use**, tap **Suggest Ideas** for three tappable values for every blank.
 - 🏷️ **Auto Title & Category**: When adding a prompt, Apple Intelligence suggests its title, category and developer flag, or the app name and tech stack for a vibe prompt.
 - 🌐 **On-Device Translation**: If a prompt isn't in your language, translate it in place with Apple's Translation framework (iOS 18+) and copy the translation.
-- 🔍 **Prompt Details**: View detailed information for each prompt, including contributor and tech stack.
+- 🔍 **Prompt Details**: View detailed information for each prompt, including contributor, tech stack, and its size in words and estimated tokens.
+- 🔎 **Smarter Search**: Search matches every word you type, in any order, ignoring case and accents, and also looks at categories, tech stacks and contributors. The best matches (titles that start with or contain your words) come first. The Search tab remembers your recent searches; swipe one to remove it or tap **Clear**.
+- 🎲 **Surprise Me**: In the Prompts tab's **…** menu, open a random prompt from the ones currently listed.
 - 🖥️ **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
 - 🫧 **Liquid Glass Design**: On iOS 26 the app uses Liquid Glass throughout: a floating tab bar that shrinks while you scroll, a dedicated Search tab that searches prompts and vibe prompts together, and glass buttons, chips, quick launch pills, and cards. iOS 17.4–25 keep the original look.
 - 🧩 **Modular Architecture**: Includes a reusable `MoreApps` module for app recommendations, with localization support.
 - 💾 **Local Data Management**: Uses GRDB for efficient, local data storage and management.
-- 🗂️ **Prompt Categories**: Organize and browse prompts by category for easier discovery and filtering. Quickly find prompts relevant to your needs.
+- 🗂️ **Prompt Categories**: Organize and browse prompts by category for easier discovery and filtering. The category picker shows how many prompts each one holds.
 - 🧠 **Context Engineering Tips**: Access best practices and actionable tips for effective context engineering directly in the app, helping you craft better prompts for LLMs.
 - 🛠️ **Prompt Engineering Analyzer**: Analyze your prompts with built-in tools to improve their effectiveness, clarity, and results.
 - 🌙 **Appearance**: Follows the system light or dark setting by default, or pick Light or Dark in **Settings › Appearance**.

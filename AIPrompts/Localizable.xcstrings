@@ -1,6 +1,122 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Surprise Me" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "給我驚喜"
+        }
+      }
+    },
+    "Recent Searches" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "最近搜尋"
+        }
+      }
+    },
+    "Clear recent searches" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "清除最近搜尋"
+        }
+      }
+    },
+    "Remove" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "移除"
+        }
+      }
+    },
+    "%lld words · ~%lld tokens" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "%1$lld 個字 · 約 %2$lld 個 token"
+        }
+      }
+    },
+    "Blanks found: %@" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "已偵測到的空格：%@"
+        }
+      }
+    },
+    "Filled-In Blanks Cleared" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "已清除填寫過的空格"
+        }
+      }
+    },
+    "Blanks will start empty until you fill them in again." : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "空格會保持空白，直到你再次填寫。"
+        }
+      }
+    },
+    "Forget Filled-In Blanks" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "忘記填寫過的空格"
+        }
+      }
+    },
+    "Values you type into blanks like {{topic}} are remembered on this device to fill the same blank next time." : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "你在 {{topic}} 等空格中輸入的內容會保存在這部裝置上，下次遇到相同空格時會自動填入。"
+        }
+      }
+    },
+    "Drag to reorder. Quick Launch opens the assistant with your prompt filled in, and copies it in case the app opens empty." : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "拖移以重新排序。快速開啟會開啟助理並預先填入你的提示詞，同時也會複製提示詞，以防 App 開啟時沒有帶入內容。"
+        }
+      }
+    },
+    "%lld prompts" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompt"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompts"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 個提示詞"
+          }
+        }
+      }
+    },
     "  Suggestion: %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -213,7 +329,8 @@
             "value" : "%lld 個字元"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "%lld items added, %lld updated." : {
       "localizations" : {
@@ -237,9 +354,6 @@
           }
         }
       }
-    },
-    "%lld prompts" : {
-
     },
     "%lld saved items" : {
       "localizations" : {
@@ -1118,7 +1232,6 @@
       }
     },
     "Clear" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1538,7 +1651,8 @@
             "value" : "拖移以重新排序。快速開啟會開啟助理並預先填入你的提示詞。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Duplicate" : {
       "localizations" : {

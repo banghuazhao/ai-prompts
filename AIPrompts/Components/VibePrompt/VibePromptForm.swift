@@ -234,6 +234,7 @@ struct VibePromptFormView: View {
                 Label("Tip: wrap words in {{double braces}} (e.g. {{topic}}) to make fill-in-the-blank variables.", systemImage: "lightbulb")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                DetectedBlanksLabel(text: model.prompt.prompt)
             }
 
             if model.canSuggestDetails {
