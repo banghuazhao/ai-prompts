@@ -6,30 +6,35 @@ struct SearchView: View {
     @FetchAll(Prompt.all, animation: .default) private var prompts
     @FetchAll(VibePrompt.all, animation: .default) private var vibePrompts
     @Dependency(\.defaultDatabase) private var database
+    @Environment(\.promptCategories) private var categories
 
     @State private var query = ""
     @State private var aiSearch = AISearchState()
+    @State private var recentSearches = RecentSearches.load()
 
     private var trimmedQuery: String {
         query.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    /// Best matches first; equally good matches are in alphabetical order.
     private var matchingPrompts: [Prompt] {
-        guard !trimmedQuery.isEmpty else { return [] }
-        return prompts
-            .filter { $0.act.localizedCaseInsensitiveContains(trimmedQuery) || $0.prompt.localizedCaseInsensitiveContains(trimmedQuery) }
-            .sorted { $0.act.localizedCaseInsensitiveCompare($1.act) == .orderedAscending }
+        let search = TextSearch(query)
+        guard !search.isEmpty else { return [] }
+        let alphabetical = prompts.sorted { $0.act.localizedCaseInsensitiveCompare($1.act) == .orderedAscending }
+        return search.rank(
+            alphabetical,
+            title: { $0.act },
+            fields: { prompt in
+                [prompt.prompt, prompt.categoryID.flatMap { categories[$0]?.displayTitle } ?? ""]
+            }
+        )
     }
 
     private var matchingVibePrompts: [VibePrompt] {
-        guard !trimmedQuery.isEmpty else { return [] }
-        return vibePrompts
-            .filter {
-                $0.app.localizedCaseInsensitiveContains(trimmedQuery) ||
-                    $0.prompt.localizedCaseInsensitiveContains(trimmedQuery) ||
-                    $0.techstack.localizedCaseInsensitiveContains(trimmedQuery)
-            }
-            .sorted { $0.app.localizedCaseInsensitiveCompare($1.app) == .orderedAscending }
+        let search = TextSearch(query)
+        guard !search.isEmpty else { return [] }
+        let alphabetical = vibePrompts.sorted { $0.app.localizedCaseInsensitiveCompare($1.app) == .orderedAscending }
+        return search.rank(alphabetical, title: { $0.app }, fields: { [$0.prompt, $0.techstack, $0.contributor] })
     }
 
     /// Natural language search is offered once a query is typed, on devices that can run it.
@@ -44,6 +49,9 @@ struct SearchView: View {
             List {
                 if trimmedQuery.isEmpty {
                     searchDiscovery
+                    if !recentSearches.isEmpty {
+                        recentSearchesSection
+                    }
                 }
                 if canAskAI {
                     aiSection
@@ -54,7 +62,7 @@ struct SearchView: View {
                 if !promptResults.isEmpty {
                     Section("Prompts") {
                         ForEach(promptResults) { prompt in
-                            NavigationLink(destination: PromptDetailView(model: PromptDetailModel(prompt: prompt))) {
+                            NavigationLink(destination: PromptDetailView(model: PromptDetailModel(prompt: prompt)).onAppear(perform: rememberSearch)) {
                                 PromptRowView(prompt: prompt) {
                                     toggleFavorite(prompt)
                                 }
@@ -67,7 +75,7 @@ struct SearchView: View {
                 if !vibePromptResults.isEmpty {
                     Section("Vibe Prompts") {
                         ForEach(vibePromptResults) { vibePrompt in
-                            NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
+                            NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt)).onAppear(perform: rememberSearch)) {
                                 VibePromptRowView(vibePrompt: vibePrompt) {
                                     toggleFavorite(vibePrompt)
                                 }
@@ -84,7 +92,12 @@ struct SearchView: View {
             .scrollDismissesKeyboard(.immediately)
             .navigationTitle("Search")
             .searchable(text: $query, prompt: "Prompts and vibe prompts")
+            .onAppear {
+                // The Prompts and Vibe Prompts tabs add to the same history.
+                recentSearches = RecentSearches.load()
+            }
             .onSubmit(of: .search) {
+                rememberSearch()
                 if canAskAI {
                     findWithAI()
                 }
@@ -155,6 +168,67 @@ struct SearchView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Recent searches
+
+    private var recentSearchesSection: some View {
+        Section {
+            ForEach(recentSearches, id: \.self) { search in
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    query = search
+                } label: {
+                    Label {
+                        Text(search)
+                            .foregroundStyle(.primary)
+                            .lineLimit(1)
+                    } icon: {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 36, alignment: .leading)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .swipeActions {
+                    Button("Remove", role: .destructive) {
+                        removeRecentSearch(search)
+                    }
+                }
+            }
+        } header: {
+            HStack {
+                Text("Recent Searches")
+                Spacer()
+                Button("Clear") {
+                    Haptics.shared.vibrateIfEnabled()
+                    withAnimation {
+                        recentSearches = []
+                    }
+                    RecentSearches.save([])
+                }
+                .font(.subheadline)
+                .accessibilityLabel("Clear recent searches")
+            }
+        }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
+    }
+
+    /// Called when a search is submitted or one of its results is opened.
+    private func rememberSearch() {
+        let updated = RecentSearches.adding(trimmedQuery, to: recentSearches)
+        guard updated != recentSearches else { return }
+        recentSearches = updated
+        RecentSearches.save(updated)
+    }
+
+    private func removeRecentSearch(_ search: String) {
+        withAnimation {
+            recentSearches.removeAll { $0 == search }
+        }
+        RecentSearches.save(recentSearches)
+    }
+
     private var noResultsCard: some View {
         HStack(alignment: .top, spacing: 14) {
             Image(systemName: "magnifyingglass")
@@ -207,14 +281,14 @@ struct SearchView: View {
                         .foregroundStyle(.secondary)
                 }
                 ForEach(aiSearch.prompts) { prompt in
-                    NavigationLink(destination: PromptDetailView(model: PromptDetailModel(prompt: prompt))) {
+                    NavigationLink(destination: PromptDetailView(model: PromptDetailModel(prompt: prompt)).onAppear(perform: rememberSearch)) {
                         PromptRowView(prompt: prompt) {
                             toggleFavorite(prompt)
                         }
                     }
                 }
                 ForEach(aiSearch.vibePrompts) { vibePrompt in
-                    NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
+                    NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt)).onAppear(perform: rememberSearch)) {
                         VibePromptRowView(vibePrompt: vibePrompt) {
                             toggleFavorite(vibePrompt)
                         }

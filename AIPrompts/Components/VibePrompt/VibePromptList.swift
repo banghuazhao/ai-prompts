@@ -3,6 +3,7 @@ import SharingGRDB
 import SwiftUI
 import SwiftUIFlowLayout
 import SwiftUINavigation
+import UIKit
 
 @Observable
 @MainActor
@@ -57,7 +58,7 @@ class VibePromptListModel {
         loadCorpusIfNeeded()
         let generated = markovGenerator?.generatePrompt() ?? ""
         let draft = VibePrompt.Draft(
-            app: "AI Generated App",
+            app: String(localized: "New App Idea"),
             prompt: generated.isEmpty ? "Failed to load corpus." : generated
         )
         route = .addingDraft(draft)
@@ -67,13 +68,75 @@ class VibePromptListModel {
     enum Route {
         case showingAddVibePrompt
         case editingPrompt(VibePrompt)
-        case showingDeleteAlert(VibePrompt)
         case isFilterTechShareSheetPresented
         case addingDraft(VibePrompt.Draft)
+        case generatingIdea
         case customizing(VibePrompt)
     }
 
     var route: Route?
+
+    // MARK: - Recent searches
+
+    /// Shared with the other search fields, newest first.
+    var recentSearches = RecentSearches.load()
+
+    /// Called when a search is submitted or one of its results is opened.
+    func rememberSearch() {
+        let updated = RecentSearches.adding(searchText, to: RecentSearches.load())
+        guard updated != recentSearches else { return }
+        recentSearches = updated
+        RecentSearches.save(updated)
+    }
+
+    func reloadRecentSearches() {
+        recentSearches = RecentSearches.load()
+    }
+
+    // MARK: - New prompts from Apple Intelligence or the clipboard
+
+    /// Written by Apple Intelligence, waiting for the idea sheet to close before the form opens.
+    @ObservationIgnored
+    private var generatedDraft: VibePrompt.Draft?
+
+    /// Apple Intelligence writes a prompt for an app of the user's choosing. Devices without it
+    /// get a remix of the library instead.
+    func onGenerateIdea() {
+        if OnDeviceAI.status == .available {
+            route = .generatingIdea
+        } else {
+            generateMarkovPrompt()
+        }
+    }
+
+    func generateIdea(about topic: String) async throws {
+        guard #available(iOS 26.0, *) else { return }
+        let idea = try await PromptAssistant.generateVibeIdea(about: topic)
+        generatedDraft = VibePrompt.Draft(
+            app: idea.appName,
+            prompt: idea.prompt,
+            techstack: idea.techStack.joined(separator: ", ")
+        )
+    }
+
+    /// Two sheets can't be swapped in one step, so the form opens once the idea sheet is gone.
+    func onIdeaSheetDismissed() {
+        guard let draft = generatedDraft else { return }
+        generatedDraft = nil
+        route = .addingDraft(draft)
+    }
+
+    var canAddFromClipboard: Bool {
+        UIPasteboard.general.hasStrings
+    }
+
+    /// Opens the add form with the copied text. A short first line becomes the app name.
+    func onAddFromClipboard() {
+        guard let text = UIPasteboard.general.string,
+              let imported = ImportedPrompt(text: text)
+        else { return }
+        route = .addingDraft(VibePrompt.Draft(app: imported.title, prompt: imported.prompt))
+    }
 
     var allTechStacks: [String] {
         Array(Set(vibePrompts.flatMap { $0.techstackArray }))
@@ -104,9 +167,6 @@ class VibePromptListModel {
                 }
             }
         }
-        if !searchText.isEmpty {
-            new = searchVibePrompts(vibePrompts: new, query: searchText)
-        }
         // Sort
         switch sortOption {
         case .modifiedDate:
@@ -131,21 +191,24 @@ class VibePromptListModel {
         case .title:
             new = new.sorted { $0.app.localizedCaseInsensitiveCompare($1.app) == .orderedAscending }
         case .characterLengthAsc:
-            new = new.sorted { $0.prompt.count < $1.prompt.count }
+            new = Self.sortedByLength(new, ascending: true)
         case .characterLengthDesc:
-            new = new.sorted { $0.prompt.count > $1.prompt.count }
+            new = Self.sortedByLength(new, ascending: false)
+        }
+        // Search: best matches first, with the chosen sort breaking ties.
+        let search = TextSearch(searchText)
+        if !search.isEmpty {
+            new = search.rank(new, title: { $0.app }, fields: { [$0.prompt, $0.techstack, $0.contributor] })
         }
         return new
     }
 
-    func searchVibePrompts(vibePrompts: [VibePrompt], query: String) -> [VibePrompt] {
-        guard !query.isEmpty else { return vibePrompts }
-
-        let lowercasedQuery = query.lowercased()
-        return vibePrompts.filter { vibePrompt in
-            vibePrompt.app.lowercased().contains(lowercasedQuery) ||
-                vibePrompt.prompt.lowercased().contains(lowercasedQuery)
-        }
+    /// Counting characters walks the whole string, so do it once per prompt rather than per comparison.
+    private static func sortedByLength(_ vibePrompts: [VibePrompt], ascending: Bool) -> [VibePrompt] {
+        vibePrompts
+            .map { (vibePrompt: $0, length: $0.prompt.count) }
+            .sorted { ascending ? $0.length < $1.length : $0.length > $1.length }
+            .map { $0.vibePrompt }
     }
 
     func onFavorite(_ prompt: VibePrompt) {
@@ -174,16 +237,9 @@ class VibePromptListModel {
         route = .addingDraft(VibePrompt.Draft(duplicating: prompt))
     }
 
-    func onDeleteRequest(_ prompt: VibePrompt) {
-        route = .showingDeleteAlert(prompt)
-    }
-
-    func confirmDelete(_ prompt: VibePrompt) {
-        withErrorReporting {
-            try database.write { db in
-                try VibePrompt.delete(prompt).execute(db)
-            }
-        }
+    /// Deletes right away; the banner that follows offers Undo.
+    func onDelete(_ prompt: VibePrompt) {
+        PromptTrash.delete(prompt)
     }
 
     func onTapFilterTechStackSheet() {
@@ -216,6 +272,9 @@ struct VibePromptListView: View {
         NavigationStack {
             VStack {
                 List {
+                    // Filtering and sorting run once per update rather than for every use below.
+                    let visibleVibePrompts = model.filteredVibePrompts
+
                     AIStudioLibraryHero(
                         eyebrow: "VIBE CODING",
                         title: "Build the next big thing.",
@@ -268,7 +327,7 @@ struct VibePromptListView: View {
                         Text(model.searchText.isEmpty ? "Explore builds" : "Search results")
                             .font(.title3.bold())
                         Spacer()
-                        Text("\(model.filteredVibePrompts.count)")
+                        Text("\(visibleVibePrompts.count)")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.secondary)
                     }
@@ -276,8 +335,8 @@ struct VibePromptListView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
 
-                    ForEach(model.filteredVibePrompts) { vibePrompt in
-                        NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt))) {
+                    ForEach(visibleVibePrompts) { vibePrompt in
+                        NavigationLink(destination: VibePromptDetailView(model: VibePromptDetailModel(vibePrompt: vibePrompt)).onAppear { model.rememberSearch() }) {
                             VibePromptRowView(vibePrompt: vibePrompt) {
                                 model.onFavorite(vibePrompt)
                             }
@@ -314,7 +373,7 @@ struct VibePromptListView: View {
                                 }
                                 Button(role: .destructive, action: {
                                     Haptics.shared.vibrateIfEnabled()
-                                    model.onDeleteRequest(vibePrompt)
+                                    model.onDelete(vibePrompt)
                                 }) {
                                     Label("Delete", systemImage: "trash")
                                 }
@@ -327,11 +386,11 @@ struct VibePromptListView: View {
                             isFavorite: vibePrompt.isFavorite,
                             onFavorite: { model.onFavorite(vibePrompt) },
                             onCopy: { model.onCopy(vibePrompt) },
-                            onDelete: { model.onDeleteRequest(vibePrompt) }
+                            onDelete: { model.onDelete(vibePrompt) }
                         )
                     }
 
-                    if model.filteredVibePrompts.isEmpty {
+                    if visibleVibePrompts.isEmpty {
                         ContentUnavailableView(
                             model.searchText.isEmpty ? "No builds here yet" : "No matching builds",
                             systemImage: "sparkle.magnifyingglass",
@@ -346,6 +405,21 @@ struct VibePromptListView: View {
                 .scrollContentBackground(.hidden)
                 .background(AIStudioPalette.canvas)
                 .searchable(text: $model.searchText, prompt: "Search prompts")
+                .searchSuggestions {
+                    // Recent searches while the field is empty; typing filters the list instead.
+                    if model.searchText.isEmpty {
+                        ForEach(model.recentSearches, id: \.self) { search in
+                            Label(search, systemImage: "clock.arrow.circlepath")
+                                .searchCompletion(search)
+                        }
+                    }
+                }
+                .onSubmit(of: .search) {
+                    model.rememberSearch()
+                }
+                .onAppear {
+                    model.reloadRecentSearches()
+                }
                 .navigationTitle("Vibe Prompts")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -380,7 +454,7 @@ struct VibePromptListView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             Haptics.shared.vibrateIfEnabled()
-                            model.generateMarkovPrompt()
+                            model.onGenerateIdea()
                         }) {
                             Image(systemName: "sparkles")
                         }
@@ -388,11 +462,18 @@ struct VibePromptListView: View {
                         .help("Generate prompt idea")
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
+                        // Tap to add; touch and hold to add from the clipboard.
+                        Menu {
+                            Button("Add from Clipboard", systemImage: "doc.on.clipboard") {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.onAddFromClipboard()
+                            }
+                            .disabled(!model.canAddFromClipboard)
+                        } label: {
+                            Image(systemName: "plus")
+                        } primaryAction: {
                             Haptics.shared.vibrateIfEnabled()
                             model.route = .showingAddVibePrompt
-                        }) {
-                            Image(systemName: "plus")
                         }
                         .accessibilityLabel("Add vibe prompt")
                         .help("Add vibe prompt")
@@ -438,6 +519,20 @@ struct VibePromptListView: View {
                 .sheet(item: $model.route.addingDraft, id: \.self) { draft in
                     VibePromptFormView(model: VibePromptFormModel(prompt: draft) { _ in model.route = nil })
                 }
+                .sheet(isPresented: Binding($model.route.generatingIdea), onDismiss: { model.onIdeaSheetDismissed() }) {
+                    PromptIdeaSheet(
+                        title: "New App Idea",
+                        placeholder: "e.g. a habit tracker for plant care",
+                        examples: [
+                            String(localized: "A budget tracker"),
+                            String(localized: "A word puzzle game"),
+                            String(localized: "A recipe organizer"),
+                            String(localized: "A pomodoro timer"),
+                        ]
+                    ) { topic in
+                        try await model.generateIdea(about: topic)
+                    }
+                }
                 .sheet(item: $model.route.customizing, id: \.self) { vibePrompt in
                     PromptCustomizeView(title: vibePrompt.app, prompt: vibePrompt.prompt) {
                         VibePromptUsage.record(vibePromptID: vibePrompt.id)
@@ -446,22 +541,6 @@ struct VibePromptListView: View {
                 .sheet(item: $model.route.editingPrompt, id: \.self) { prompt in
                     VibePromptFormView(model: VibePromptFormModel(prompt: VibePrompt.Draft(prompt)) { _ in model.route = nil })
                 }
-                .alert(
-                    item: $model.route.showingDeleteAlert,
-                    title: { _ in
-                        Text("Delete Prompt")
-                    },
-                    actions: { prompt in
-                        Button("Delete", role: .destructive) {
-                            model.confirmDelete(prompt)
-                        }
-                        Button("Cancel", role: .cancel) {
-                        }
-                    },
-                    message: { prompt in
-                        Text("Are you sure you want to delete \(prompt.app)? This action cannot be undone.")
-                    }
-                )
             }
         }
     }

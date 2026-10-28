@@ -1,6 +1,410 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Undo" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "復原"
+          }
+        }
+      }
+    },
+    "Deleted “%@”" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已刪除「%@」"
+          }
+        }
+      }
+    },
+    "%lld prompts deleted" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompt deleted"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompts deleted"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已刪除 %lld 個提示詞"
+          }
+        }
+      }
+    },
+    "Couldn't restore the deleted prompts." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "無法復原已刪除的提示詞。"
+          }
+        }
+      }
+    },
+    "Added “%@” from the share sheet" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已從分享選單加入「%@」"
+          }
+        }
+      }
+    },
+    "%lld prompts added from the share sheet" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompt added from the share sheet"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompts added from the share sheet"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已從分享選單加入 %lld 個提示詞"
+          }
+        }
+      }
+    },
+    "What should it help with?" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "想讓它幫忙做什麼？"
+          }
+        }
+      }
+    },
+    "Leave it empty for a surprise." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留空就給你一個驚喜。"
+          }
+        }
+      }
+    },
+    "Writing…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撰寫中…"
+          }
+        }
+      }
+    },
+    "Write It" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始撰寫"
+          }
+        }
+      }
+    },
+    "Apple Intelligence writes it on your device. You can edit it before saving." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence 會在你的裝置上撰寫，儲存前可以再修改。"
+          }
+        }
+      }
+    },
+    "New Prompt Idea" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新的提示詞點子"
+          }
+        }
+      }
+    },
+    "e.g. planning a birthday party" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如：籌備生日派對"
+          }
+        }
+      }
+    },
+    "Writing a cover letter" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "撰寫求職信"
+          }
+        }
+      }
+    },
+    "Learning to cook" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "學做菜"
+          }
+        }
+      }
+    },
+    "Explaining code to a beginner" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "向初學者解釋程式碼"
+          }
+        }
+      }
+    },
+    "Planning a trip" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "規劃旅行"
+          }
+        }
+      }
+    },
+    "Add from Clipboard" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從剪貼簿加入"
+          }
+        }
+      }
+    },
+    "New App Idea" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新的 App 點子"
+          }
+        }
+      }
+    },
+    "e.g. a habit tracker for plant care" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例如：照顧植物的習慣追蹤器"
+          }
+        }
+      }
+    },
+    "A budget tracker" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記帳工具"
+          }
+        }
+      }
+    },
+    "A word puzzle game" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字謎題遊戲"
+          }
+        }
+      }
+    },
+    "A recipe organizer" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食譜整理工具"
+          }
+        }
+      }
+    },
+    "A pomodoro timer" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "番茄鐘計時器"
+          }
+        }
+      }
+    },
+    "Also Copy the Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同時拷貝提示詞"
+          }
+        }
+      }
+    },
+    "Some assistants' apps open without the prompt from the link. With this on, it's also on the clipboard, ready to paste." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "有些助理的 App 開啟時不會帶入連結中的提示詞。開啟此選項後，提示詞也會放在剪貼簿上，隨時可以貼上。"
+          }
+        }
+      }
+    },
+    "Surprise Me" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "給我驚喜"
+        }
+      }
+    },
+    "Recent Searches" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "最近搜尋"
+        }
+      }
+    },
+    "Clear recent searches" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "清除最近搜尋"
+        }
+      }
+    },
+    "Remove" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "移除"
+        }
+      }
+    },
+    "%lld words · ~%lld tokens" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "%1$lld 個字 · 約 %2$lld 個 token"
+        }
+      }
+    },
+    "Blanks found: %@" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "已偵測到的空格：%@"
+        }
+      }
+    },
+    "Filled-In Blanks Cleared" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "已清除填寫過的空格"
+        }
+      }
+    },
+    "Blanks will start empty until you fill them in again." : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "空格會保持空白，直到你再次填寫。"
+        }
+      }
+    },
+    "Forget Filled-In Blanks" : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "忘記填寫過的空格"
+        }
+      }
+    },
+    "Values you type into blanks like {{topic}} are remembered on this device to fill the same blank next time." : {
+      "zh-Hant" : {
+        "stringUnit" : {
+          "state" : "translated",
+          "value" : "你在 {{topic}} 等空格中輸入的內容會保存在這部裝置上，下次遇到相同空格時會自動填入。"
+        }
+      }
+    },
+    "%lld prompts" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompt"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld prompts"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 個提示詞"
+          }
+        }
+      }
+    },
     "  Suggestion: %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -213,7 +617,8 @@
             "value" : "%lld 個字元"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "%lld items added, %lld updated." : {
       "localizations" : {
@@ -237,9 +642,6 @@
           }
         }
       }
-    },
-    "%lld prompts" : {
-
     },
     "%lld saved items" : {
       "localizations" : {
@@ -723,7 +1125,8 @@
             "value" : "如有需要，請補充更多背景資訊。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Add a bit more detail to clarify your request." : {
       "localizations" : {
@@ -943,7 +1346,8 @@
             "value" : "確定要刪除「%@」嗎？此操作無法復原。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Ask a follow-up" : {
       "localizations" : {
@@ -1118,7 +1522,6 @@
       }
     },
     "Clear" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1189,7 +1592,8 @@
             "value" : "考慮將複雜任務拆成多個步驟。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Contact Support" : {
       "localizations" : {
@@ -1476,7 +1880,8 @@
             "value" : "刪除 %lld 個提示詞？"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Delete Prompt" : {
       "localizations" : {
@@ -1835,7 +2240,8 @@
             "value" : "較長的提示詞可考慮補充更多細節（誰、什麼、如何、何時、何地）。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "For longer prompts, consider providing an example." : {
       "localizations" : {
@@ -2005,7 +2411,8 @@
             "value" : "指令類型"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Is for Developers" : {
       "localizations" : {
@@ -2085,7 +2492,8 @@
             "value" : "較長的提示詞若拆成步驟會更容易理解。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Long prompt could benefit from more structure (steps, lists, etc.)." : {
       "localizations" : {
@@ -2125,7 +2533,8 @@
             "value" : "讓提示詞成為明確的指令或問題。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Modified Date" : {
       "extractionState" : "stale",
@@ -2741,7 +3150,8 @@
             "value" : "提示詞很短，可能不是明確的指令或問題。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Prompt Text" : {
       "localizations" : {
@@ -3370,7 +3780,8 @@
             "value" : "具體性"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Start New Chat" : {
       "localizations" : {
@@ -3400,7 +3811,8 @@
             "value" : "分步指示"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Stop" : {
       "localizations" : {
@@ -3585,7 +3997,8 @@
             "value" : "此操作無法復原。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "This backup has %lld prompts, %lld vibe prompts and %lld chats. Prompts with the same title are updated to the backup's version and the rest are added. Nothing is deleted." : {
       "localizations" : {

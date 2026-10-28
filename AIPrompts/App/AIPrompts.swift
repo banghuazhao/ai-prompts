@@ -42,8 +42,9 @@ struct AIPrompts: App {
                     await SpotlightIndexer.update()
                 }
                 .onChange(of: scenePhase) { _, newPhase in
-                    print("scenePhase: \(newPhase)")
                     if newPhase == .active {
+                        // Prompts saved from the share sheet while the app was away.
+                        SharedInboxImporter.importPending(database: AppDatabase.shared)
                         if !purchaseManager.isPremiumUserPurchased {
                             openAd.tryToPresentAd()
                         }

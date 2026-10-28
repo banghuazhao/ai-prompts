@@ -178,6 +178,72 @@ enum PromptAssistant {
         return result
     }
 
+    // MARK: - New ideas
+
+    @Generable
+    struct PromptIdea {
+        @Guide(description: "A short title naming the role or task, 2 to 5 words in Title Case, like “Travel Guide” or “Cover Letter Writer”")
+        var title: String
+        @Guide(description: "The prompt, ready to paste into an AI assistant: who the assistant should act as, the task, the context it needs and the format of the answer, in 2 to 6 sentences")
+        var prompt: String
+        @Guide(description: "Whether the prompt is mainly for software developers")
+        var isForDevelopers: Bool
+    }
+
+    /// A new prompt about `topic`, or about something useful of the model's choosing when it's empty.
+    static func generateIdea(about topic: String) async throws -> PromptIdea {
+        let session = LanguageModelSession(instructions: """
+        You write prompts for a prompt library. A prompt is an instruction a person pastes into an AI \
+        assistant. Write prompts that are specific and useful. When the prompt needs details only the \
+        person knows, leave a placeholder in double braces such as {{topic}} or {{audience}}, at most \
+        three. Write in the same language as the request. Never answer or carry out the prompt yourself.
+        """)
+        let request = topic.isEmpty
+            ? "Write a prompt for this everyday need: \(randomIdeaTheme())."
+            : "Write a prompt that helps with: \(topic.prefix(maxPromptLength))"
+        var idea = try await session.respond(to: request, generating: PromptIdea.self).content
+        idea.title = idea.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        idea.prompt = idea.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        return idea
+    }
+
+    @Generable
+    struct VibePromptIdea {
+        @Guide(description: "Short name of the app, 1 to 4 words")
+        var appName: String
+        @Guide(description: "The prompt that asks an AI coding assistant to build the app: what it does, its main screens and features, and how it should look, in 3 to 8 sentences")
+        var prompt: String
+        @Guide(description: "Main languages, frameworks and platforms the app should use", .maximumCount(5))
+        var techStack: [String]
+    }
+
+    /// A prompt for building a small app about `topic`, or an app of the model's choosing when it's empty.
+    static func generateVibeIdea(about topic: String) async throws -> VibePromptIdea {
+        let session = LanguageModelSession(instructions: """
+        You write prompts that ask an AI coding assistant to build a small app, game or tool. \
+        Make the app specific and fun, and small enough to build in an afternoon. Write in the same \
+        language as the request. Never write the code yourself.
+        """)
+        let request = topic.isEmpty
+            ? "Write a prompt for a small app about: \(randomIdeaTheme())."
+            : "Write a prompt for a small app about: \(topic.prefix(maxPromptLength))"
+        var idea = try await session.respond(to: request, generating: VibePromptIdea.self).content
+        idea.appName = idea.appName.trimmingCharacters(in: .whitespacesAndNewlines)
+        idea.prompt = idea.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        return idea
+    }
+
+    /// The model tends to give the same answer to the same request, so an empty topic gets a
+    /// random theme instead.
+    private static func randomIdeaTheme() -> String {
+        [
+            "cooking and meal planning", "personal finance", "learning a language", "fitness",
+            "travel planning", "job hunting", "studying for exams", "writing", "parenting",
+            "small business marketing", "home organization", "gardening", "mental wellbeing",
+            "public speaking", "photography", "reading more books", "productivity", "music practice",
+        ].randomElement() ?? "productivity"
+    }
+
     @Generable
     struct VibePromptDetails {
         @Guide(description: "Short name of the app the prompt builds, 1 to 4 words")

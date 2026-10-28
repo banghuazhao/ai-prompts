@@ -9,6 +9,8 @@ import WidgetKit
 struct FavoritesEntry: TimelineEntry {
     let date: Date
     let favorites: [WidgetPromptItem]
+    /// The favorite whose Copy button was just tapped, to show a checkmark.
+    var copiedItemID: String? = nil
 }
 
 struct FavoritesProvider: TimelineProvider {
@@ -22,11 +24,17 @@ struct FavoritesProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<FavoritesEntry>) -> Void) {
         // The app reloads this timeline whenever favorites change.
-        completion(Timeline(entries: [currentEntry()], policy: .never))
+        let now = Date()
+        var entries = [currentEntry(at: now)]
+        // Just copied: show a checkmark, then the normal widget again.
+        if let copy = WidgetShared.recentCopy(at: now) {
+            entries = [currentEntry(at: now, copiedItemID: copy.itemID), currentEntry(at: copy.until)]
+        }
+        completion(Timeline(entries: entries, policy: .never))
     }
 
-    private func currentEntry() -> FavoritesEntry {
-        FavoritesEntry(date: Date(), favorites: WidgetShared.loadSnapshot()?.favorites ?? [])
+    private func currentEntry(at date: Date = Date(), copiedItemID: String? = nil) -> FavoritesEntry {
+        FavoritesEntry(date: date, favorites: WidgetShared.loadSnapshot()?.favorites ?? [], copiedItemID: copiedItemID)
     }
 }
 
@@ -52,28 +60,28 @@ struct FavoritePromptsWidgetView: View {
                 Spacer(minLength: 0)
             } else {
                 ForEach(entry.favorites.prefix(maxRows)) { item in
-                    Link(destination: item.deepLink) {
-                        HStack(spacing: 8) {
-                            Image(systemName: item.kind == .vibe ? "laptopcomputer" : "text.bubble")
-                                .font(.caption)
-                                .foregroundStyle(.purple)
-                                .frame(width: 16)
-                            VStack(alignment: .leading, spacing: 1) {
-                                Text(item.title)
-                                    .font(.subheadline.weight(.semibold))
-                                    .lineLimit(1)
-                                if family == .systemLarge {
-                                    Text(item.text)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                    HStack(spacing: 8) {
+                        Link(destination: item.deepLink) {
+                            HStack(spacing: 8) {
+                                Image(systemName: item.kind == .vibe ? "laptopcomputer" : "text.bubble")
+                                    .font(.caption)
+                                    .foregroundStyle(.purple)
+                                    .frame(width: 16)
+                                VStack(alignment: .leading, spacing: 1) {
+                                    Text(item.title)
+                                        .font(.subheadline.weight(.semibold))
                                         .lineLimit(1)
+                                    if family == .systemLarge {
+                                        Text(item.text)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                            .lineLimit(1)
+                                    }
                                 }
+                                Spacer(minLength: 0)
                             }
-                            Spacer(minLength: 0)
-                            Image(systemName: "chevron.right")
-                                .font(.caption2)
-                                .foregroundStyle(.tertiary)
                         }
+                        WidgetCopyButton(itemID: item.id, isCopied: item.id == entry.copiedItemID)
                     }
                 }
                 Spacer(minLength: 0)
@@ -91,7 +99,7 @@ struct FavoritePromptsWidget: Widget {
             FavoritePromptsWidgetView(entry: entry)
         }
         .configurationDisplayName("Favorite Prompts")
-        .description("Your favorite prompts, one tap away.")
+        .description("Your favorite prompts, one tap away. Copy one without opening the app.")
         .supportedFamilies([.systemMedium, .systemLarge])
     }
 }

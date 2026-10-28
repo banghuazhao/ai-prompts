@@ -9,6 +9,9 @@ import Dependencies
 import MoreApps
 import SharingGRDB
 import SwiftUI
+import OSLog
+
+private let logger = Logger(subsystem: "AIPrompts", category: "Feedback")
 
 @Observable
 @MainActor
@@ -349,7 +352,7 @@ struct SupportEmail {
         guard let url else { return }
         openURL(url) { accepted in
             if !accepted { // e.g. Simulator
-                print("Device doesn't support email.\n \(body)")
+                logger.info("Device can't send email (for example, the Simulator)")
             }
         }
     }

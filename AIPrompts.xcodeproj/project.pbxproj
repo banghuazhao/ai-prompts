@@ -14,6 +14,7 @@
 		99442BBC2E2C475B004A205C /* SwiftUIFlowLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 99442BBB2E2C475B004A205C /* SwiftUIFlowLayout */; };
 		999235552E2C509700AE3AC9 /* SwiftUIFlowLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 999235542E2C509700AE3AC9 /* SwiftUIFlowLayout */; };
 		E1A7C0012E90000100A1B2C3 /* AIPromptsWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E1A7C0042E90000100A1B2C3 /* AIPromptsWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E1A7E0012E90000100A1B2C3 /* AIPromptsShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E1A7E0042E90000100A1B2C3 /* AIPromptsShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,13 @@
 			remoteGlobalIDString = 99782A6E2E2890320029FD22;
 			remoteInfo = AIPrompts;
 		};
+		E1A7E0022E90000100A1B2C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 99782A672E2890320029FD22 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E1A7E00B2E90000100A1B2C3;
+			remoteInfo = AIPromptsShare;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +49,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				E1A7C0012E90000100A1B2C3 /* AIPromptsWidgets.appex in Embed Foundation Extensions */,
+				E1A7E0012E90000100A1B2C3 /* AIPromptsShare.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,6 +60,7 @@
 		99782A6F2E2890320029FD22 /* AIPrompts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AIPrompts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1A7C0042E90000100A1B2C3 /* AIPromptsWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AIPromptsWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1A7D0022E90000100A1B2C3 /* AIPromptsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AIPromptsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1A7E0042E90000100A1B2C3 /* AIPromptsShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AIPromptsShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -73,6 +83,21 @@
 			);
 			target = E1A7C00B2E90000100A1B2C3 /* AIPromptsWidgets */;
 		};
+		E1A7E0052E90000100A1B2C3 /* Exceptions for "AIPromptsShare" folder in "AIPromptsShare" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AIPromptsShare.entitlements,
+				Info.plist,
+			);
+			target = E1A7E00B2E90000100A1B2C3 /* AIPromptsShare */;
+		};
+		E1A7E0072E90000100A1B2C3 /* Exceptions for "Shared" folder in "AIPromptsShare" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				OpenRandomPromptIntent.swift,
+			);
+			target = E1A7E00B2E90000100A1B2C3 /* AIPromptsShare */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -94,7 +119,18 @@
 		};
 		E1A7C0072E90000100A1B2C3 /* Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E1A7E0072E90000100A1B2C3 /* Exceptions for "Shared" folder in "AIPromptsShare" target */,
+			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		E1A7E0062E90000100A1B2C3 /* AIPromptsShare */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E1A7E0052E90000100A1B2C3 /* Exceptions for "AIPromptsShare" folder in "AIPromptsShare" target */,
+			);
+			path = AIPromptsShare;
 			sourceTree = "<group>";
 		};
 		E1A7D0032E90000100A1B2C3 /* AIPromptsTests */ = {
@@ -132,6 +168,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1A7E0082E90000100A1B2C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -149,6 +192,7 @@
 				99442BBA2E2C475B004A205C /* Frameworks */,
 				E1A7C0062E90000100A1B2C3 /* AIPromptsWidgets */,
 				E1A7C0072E90000100A1B2C3 /* Shared */,
+				E1A7E0062E90000100A1B2C3 /* AIPromptsShare */,
 				E1A7D0032E90000100A1B2C3 /* AIPromptsTests */,
 				99782A702E2890320029FD22 /* Products */,
 			);
@@ -160,6 +204,7 @@
 				99782A6F2E2890320029FD22 /* AIPrompts.app */,
 				E1A7C0042E90000100A1B2C3 /* AIPromptsWidgets.appex */,
 				E1A7D0022E90000100A1B2C3 /* AIPromptsTests.xctest */,
+				E1A7E0042E90000100A1B2C3 /* AIPromptsShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -180,6 +225,7 @@
 			);
 			dependencies = (
 				E1A7C00C2E90000100A1B2C3 /* PBXTargetDependency */,
+				E1A7E00C2E90000100A1B2C3 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				99782A712E2890320029FD22 /* AIPrompts */,
@@ -244,6 +290,29 @@
 			productReference = E1A7D0022E90000100A1B2C3 /* AIPromptsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		E1A7E00B2E90000100A1B2C3 /* AIPromptsShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1A7E00F2E90000100A1B2C3 /* Build configuration list for PBXNativeTarget "AIPromptsShare" */;
+			buildPhases = (
+				E1A7E00A2E90000100A1B2C3 /* Sources */,
+				E1A7E0082E90000100A1B2C3 /* Frameworks */,
+				E1A7E0092E90000100A1B2C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E1A7E0062E90000100A1B2C3 /* AIPromptsShare */,
+				E1A7C0072E90000100A1B2C3 /* Shared */,
+			);
+			name = AIPromptsShare;
+			packageProductDependencies = (
+			);
+			productName = AIPromptsShare;
+			productReference = E1A7E0042E90000100A1B2C3 /* AIPromptsShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -263,6 +332,9 @@
 					E1A7D0072E90000100A1B2C3 = {
 						CreatedOnToolsVersion = 26.6;
 						TestTargetID = 99782A6E2E2890320029FD22;
+					};
+					E1A7E00B2E90000100A1B2C3 = {
+						CreatedOnToolsVersion = 26.6;
 					};
 				};
 			};
@@ -292,6 +364,7 @@
 				99782A6E2E2890320029FD22 /* AIPrompts */,
 				E1A7C00B2E90000100A1B2C3 /* AIPromptsWidgets */,
 				E1A7D0072E90000100A1B2C3 /* AIPromptsTests */,
+				E1A7E00B2E90000100A1B2C3 /* AIPromptsShare */,
 			);
 		};
 /* End PBXProject section */
@@ -312,6 +385,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E1A7D0052E90000100A1B2C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1A7E0092E90000100A1B2C3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -342,6 +422,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1A7E00A2E90000100A1B2C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -354,6 +441,11 @@
 			isa = PBXTargetDependency;
 			target = 99782A6E2E2890320029FD22 /* AIPrompts */;
 			targetProxy = E1A7D0012E90000100A1B2C3 /* PBXContainerItemProxy */;
+		};
+		E1A7E00C2E90000100A1B2C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E1A7E00B2E90000100A1B2C3 /* AIPromptsShare */;
+			targetProxy = E1A7E0022E90000100A1B2C3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -647,6 +739,60 @@
 			};
 			name = Release;
 		};
+		E1A7E00D2E90000100A1B2C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AIPromptsShare/AIPromptsShare.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = F694X76A5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AIPromptsShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "AI Prompts";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.aiPrompts.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E1A7E00E2E90000100A1B2C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AIPromptsShare/AIPromptsShare.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = F694X76A5X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AIPromptsShare/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "AI Prompts";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.aiPrompts.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -682,6 +828,15 @@
 			buildConfigurations = (
 				E1A7D0092E90000100A1B2C3 /* Debug */,
 				E1A7D00A2E90000100A1B2C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1A7E00F2E90000100A1B2C3 /* Build configuration list for PBXNativeTarget "AIPromptsShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1A7E00D2E90000100A1B2C3 /* Debug */,
+				E1A7E00E2E90000100A1B2C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

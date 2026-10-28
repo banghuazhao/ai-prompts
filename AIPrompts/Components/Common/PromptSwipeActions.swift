@@ -6,10 +6,8 @@
 import SwiftUI
 
 extension View {
-    /// Swipe right to favorite, swipe left to copy or delete.
-    ///
-    /// Delete only asks for confirmation (the caller shows the alert), so it deliberately isn't
-    /// `role: .destructive`, which would animate the row away before the user confirmed.
+    /// Swipe right to favorite, swipe left to copy or delete. Deleting can be undone from the
+    /// banner that follows, so a full swipe is enough for it.
     func promptSwipeActions(
         isFavorite: Bool,
         onFavorite: @escaping () -> Void,
@@ -26,14 +24,13 @@ extension View {
                 }
                 .tint(isFavorite ? .gray : .pink)
             }
-            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                Button {
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                Button(role: .destructive) {
                     Haptics.shared.vibrateIfEnabled()
                     onDelete()
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }
-                .tint(.red)
 
                 Button {
                     Haptics.shared.vibrateIfEnabled()

@@ -1,7 +1,9 @@
+import SharingGRDB
 import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = 0
+    @FetchAll(PromptCategory.all) private var categories
     @State private var router = DeepLinkRouter.shared
     @AppStorage("selectedThemeColor") private var selectedThemeColor = ThemeColor.default.rawValue
     @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
@@ -55,6 +57,17 @@ struct ContentView: View {
                 }
             }
         }
+        // Above the tab bar, so it stays put when a detail page that deleted its prompt closes.
+        .overlay(alignment: .bottom) {
+            UndoBanner()
+                .padding(.bottom, 72)
+        }
+        // Last, so the router's sheet sees it too.
+        .environment(\.promptCategories, categoriesByID)
+    }
+
+    private var categoriesByID: [PromptCategory.ID: PromptCategory] {
+        Dictionary(categories.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
     }
 
     /// Floating Liquid Glass tab bar with a dedicated search tab that collapses while scrolling.
@@ -120,5 +133,8 @@ struct ContentView: View {
 }
 
 #Preview {
+    let _ = prepareDependencies {
+        $0.defaultDatabase = try! appDatabase()
+    }
     ContentView()
 }

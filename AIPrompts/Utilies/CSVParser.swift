@@ -1,4 +1,7 @@
 import Foundation
+import OSLog
+
+private let logger = Logger(subsystem: "AIPrompts", category: "CSV")
 
 /// A small RFC 4180 CSV parser.
 ///
@@ -73,14 +76,14 @@ enum CSVParser {
     /// Parses a bundled CSV resource, dropping the header row.
     static func parseResource(named name: String, bundle: Bundle = .main) -> [[String]] {
         guard let url = bundle.url(forResource: name, withExtension: "csv") else {
-            print("Could not find \(name).csv")
+            logger.error("Could not find \(name).csv")
             return []
         }
         do {
             let content = try String(contentsOf: url, encoding: .utf8)
             return Array(parse(content).dropFirst())
         } catch {
-            print("Error loading \(name).csv: \(error)")
+            logger.error("Error loading \(name).csv: \(error.localizedDescription)")
             return []
         }
     }

@@ -125,6 +125,8 @@ extension Color {
     static let claude = Color(red: 0.98, green: 0.80, blue: 0.20) // Yellow
     static let perplexity = Color(red: 0.18, green: 0.29, blue: 0.97) // Blue
     static let gemini = Color(red: 0.13, green: 0.47, blue: 0.98) // Google Blue
+    static let copilot = Color(red: 0.00, green: 0.47, blue: 0.55) // Teal
+    static let leChat = Color(red: 0.98, green: 0.44, blue: 0.08) // Mistral Orange
 }
 
 struct LLMQuickLaunchButton: View {

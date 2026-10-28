@@ -46,10 +46,27 @@ enum WidgetSnapshotWriter {
     }
 
     private static func item(for prompt: Prompt) -> WidgetPromptItem {
-        WidgetPromptItem(kind: .prompt, rowID: prompt.id, title: prompt.act, text: String(prompt.prompt.prefix(maxTextLength)))
+        WidgetPromptItem(
+            kind: .prompt,
+            rowID: prompt.id,
+            title: prompt.act,
+            text: String(prompt.prompt.prefix(maxTextLength)),
+            fullText: fullText(prompt.prompt)
+        )
     }
 
     private static func item(for vibePrompt: VibePrompt) -> WidgetPromptItem {
-        WidgetPromptItem(kind: .vibe, rowID: vibePrompt.id, title: vibePrompt.app, text: String(vibePrompt.prompt.prefix(maxTextLength)))
+        WidgetPromptItem(
+            kind: .vibe,
+            rowID: vibePrompt.id,
+            title: vibePrompt.app,
+            text: String(vibePrompt.prompt.prefix(maxTextLength)),
+            fullText: fullText(vibePrompt.prompt)
+        )
+    }
+
+    /// Only stored when the shown text was cut short, so short prompts aren't saved twice.
+    private static func fullText(_ text: String) -> String? {
+        text.count > maxTextLength ? text : nil
     }
 }

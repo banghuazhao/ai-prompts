@@ -1,172 +1,208 @@
 import Foundation
+import NaturalLanguage
 
 struct PromptIssue: Identifiable {
+    enum Kind: Equatable {
+        case tooShort
+        case tooLong
+        case vagueWords
+        case fillerWords
+        case leadingLanguage
+        case repeatedSentences
+        case noOutputFormat
+        case noAudience
+        case noExamples
+        case noStructure
+        case processWithoutSteps
+    }
+
     let id = UUID()
+    let kind: Kind
     let type: String
     let description: String
     let suggestion: String?
 }
 
-class PromptAnalyzer {
+/// Quick, rule-based tips for a prompt, shown by Check Prompt and passed to Improve with
+/// Apple Intelligence as hints.
+///
+/// Size and repetition checks work in any language. Checks that look for English words only run
+/// on English prompts, and they match whole words, so "whole" doesn't count as "who".
+enum PromptAnalyzer {
     static let vagueWords = ["thing", "things", "stuff", "something", "anything", "everything"]
     static let fillerWords = ["just", "basically", "kind of", "sort of", "actually", "really", "very"]
     static let leadingWords = ["obviously", "clearly", "everyone knows", "of course"]
-    static let formatKeywords = ["in JSON", "as a list", "in table form", "as a table", "as a poem", "as a story"]
-    static let audienceKeywords = ["for beginners", "for experts", "for children", "for a 5-year-old", "for business professionals"]
-    static let exampleKeywords = ["e.g.", "for example", "such as", "like this:"]
-    static let stepKeywords = ["step 1", "first", "then", "next", "finally", "after that"]
+    static let formatWords = [
+        "json", "table", "list", "bullet", "bullets", "markdown", "csv", "yaml", "paragraph", "paragraphs",
+        "essay", "poem", "story", "outline", "summary", "headings", "format", "sentences", "words", "code",
+        "email", "letter", "script", "steps",
+    ]
+    static let audienceWords = [
+        "audience", "beginner", "beginners", "expert", "experts", "child", "children", "kid", "kids",
+        "student", "students", "professional", "professionals", "reader", "readers", "customer", "customers",
+        "client", "clients", "user", "users", "team", "non-technical", "year-old", "year old",
+    ]
+    static let exampleWords = ["for example", "e.g.", "such as", "for instance", "example", "examples", "like this"]
+    static let stepWords = ["step", "steps", "first", "then", "next", "finally", "after that"]
+
+    /// Below this many words a prompt is likely too vague to get a useful answer.
+    static let minWords = 5
+    static let maxWords = 300
+    /// Checks for missing details (format, audience…) only apply from this many words up,
+    /// so short, simple requests aren't nagged.
+    static let detailedPromptWords = 40
 
     static func analyze(_ prompt: String) -> [PromptIssue] {
-        var issues: [PromptIssue] = []
-        let lower = prompt.lowercased()
+        let text = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return [] }
 
-        // 1. Clarity (only flag if 2+ vague words)
-        let vagueCount = vagueWords.filter { lower.contains($0) }.count
-        if vagueCount >= 2 {
+        let wordCount = countWords(in: text)
+        var issues: [PromptIssue] = []
+
+        if wordCount < minWords {
             issues.append(PromptIssue(
-                type: String(localized: "Clarity"),
-                description: String(localized: "Prompt contains several vague words (e.g., 'things', 'something')."),
-                suggestion: String(localized: "Try to be a bit more specific about what you want.")
-            ))
-        }
-        // Only flag generic verbs if prompt is very short and only uses them
-        if lower.range(of: #"\b(do|make|fix|get|improve|help)\b"#, options: .regularExpression) != nil && prompt.count < 30 {
-            issues.append(PromptIssue(
+                kind: .tooShort,
                 type: String(localized: "Clarity"),
                 description: String(localized: "Prompt is very short and may be too generic."),
                 suggestion: String(localized: "Add a bit more detail to clarify your request.")
             ))
         }
-
-        // Heuristic for missing details (only for long prompts)
-        if (!lower.contains("who") && !lower.contains("what") && !lower.contains("how") && !lower.contains("when") && !lower.contains("where")) && prompt.count > 120 {
+        if wordCount > maxWords {
             issues.append(PromptIssue(
-                type: String(localized: "Specificity"),
-                description: String(localized: "For longer prompts, consider adding more details (who, what, how, when, where)."),
-                suggestion: String(localized: "Add a bit more context if needed.")
-            ))
-        }
-
-        // 3. Structure (only for very long prompts)
-        if !lower.contains("- ") && !lower.contains("1.") && !lower.contains("step") && !lower.contains("list") && !lower.contains("json") {
-            if prompt.count > 200 {
-                issues.append(PromptIssue(
-                    type: String(localized: "Structure"),
-                    description: String(localized: "Long prompt could benefit from more structure (steps, lists, etc.)."),
-                    suggestion: String(localized: "Break your instructions into steps or a list if possible.")
-                ))
-            }
-        }
-
-        // 4. Stepwise Instructions (only for very long prompts)
-        var hasStep = false
-        for word in stepKeywords {
-            if lower.contains(word) { hasStep = true; break }
-        }
-        if !hasStep && prompt.count > 200 {
-            issues.append(PromptIssue(
-                type: String(localized: "Stepwise Instructions"),
-                description: String(localized: "Long prompt could be easier to follow if broken into steps."),
-                suggestion: String(localized: "Consider breaking complex tasks into steps.")
-            ))
-        }
-
-        // 5. Conciseness (flag only if very long)
-        if prompt.split(separator: " ").count > 200 {
-            issues.append(PromptIssue(
+                kind: .tooLong,
                 type: String(localized: "Conciseness"),
                 description: String(localized: "Prompt is very long. Consider shortening if possible."),
                 suggestion: String(localized: "Remove unnecessary words for clarity.")
             ))
         }
-        // Filler words: only flag if 2+ present
-        let fillerCount = fillerWords.filter { lower.contains($0) }.count
-        if fillerCount >= 2 {
+        if hasRepeatedSentences(text) {
             issues.append(PromptIssue(
-                type: String(localized: "Conciseness"),
-                description: String(localized: "Prompt contains several filler words (e.g., 'just', 'basically')."),
-                suggestion: String(localized: "Remove filler words for clarity.")
-            ))
-        }
-
-        // 6. Redundancy (only for long prompts)
-        let sentences = prompt.split(separator: ".")
-        let uniqueSentences = Set(sentences.map { $0.trimmingCharacters(in: .whitespaces) })
-        if uniqueSentences.count < sentences.count && prompt.count > 120 {
-            issues.append(PromptIssue(
+                kind: .repeatedSentences,
                 type: String(localized: "Redundancy"),
                 description: String(localized: "Prompt contains repeated sentences or phrases."),
                 suggestion: String(localized: "Remove repeated instructions to keep your prompt focused.")
             ))
         }
 
-        // 7. Format/Output Specification (only for long prompts)
-        var hasFormat = false
-        for word in formatKeywords {
-            if lower.contains(word) { hasFormat = true; break }
-        }
-        if !hasFormat && prompt.count > 120 {
+        guard isEnglish(text) else { return issues }
+
+        if count(vagueWords, in: text) >= 2 {
             issues.append(PromptIssue(
-                type: String(localized: "Format/Output"),
-                description: String(localized: "For longer prompts, consider specifying the desired output format."),
-                suggestion: String(localized: "E.g., 'Respond in JSON'.")
+                kind: .vagueWords,
+                type: String(localized: "Clarity"),
+                description: String(localized: "Prompt contains several vague words (e.g., 'things', 'something')."),
+                suggestion: String(localized: "Try to be a bit more specific about what you want.")
             ))
         }
-
-        // 8. Audience Awareness (only for long prompts)
-        var hasAudience = false
-        for word in audienceKeywords {
-            if lower.contains(word) { hasAudience = true; break }
-        }
-        if !hasAudience && prompt.count > 120 {
+        if count(fillerWords, in: text) >= 2 {
             issues.append(PromptIssue(
-                type: String(localized: "Audience"),
-                description: String(localized: "For longer prompts, consider specifying the intended audience."),
-                suggestion: String(localized: "E.g., 'Explain for a beginner'.")
+                kind: .fillerWords,
+                type: String(localized: "Conciseness"),
+                description: String(localized: "Prompt contains several filler words (e.g., 'just', 'basically')."),
+                suggestion: String(localized: "Remove filler words for clarity.")
             ))
         }
-
-        // 9. Task Completeness (heuristic, only for long prompts)
-        if lower.contains("process") && !lower.contains("step") && prompt.count > 120 {
+        if count(leadingWords, in: text) >= 2 {
             issues.append(PromptIssue(
-                type: String(localized: "Completeness"),
-                description: String(localized: "Prompt asks for a process but does not specify steps."),
-                suggestion: String(localized: "List the steps or details needed for the process.")
-            ))
-        }
-
-        // 10. Avoiding Leading/Loaded Language (only if 2+ present)
-        let leadingCount = leadingWords.filter { lower.contains($0) }.count
-        if leadingCount >= 2 {
-            issues.append(PromptIssue(
+                kind: .leadingLanguage,
                 type: String(localized: "Neutrality"),
                 description: String(localized: "Prompt contains several leading or biased phrases."),
                 suggestion: String(localized: "Use neutral language to avoid biasing the AI's response.")
             ))
         }
 
-        // 11. Use of Examples (only for long prompts)
-        var hasExample = false
-        for word in exampleKeywords {
-            if lower.contains(word) { hasExample = true; break }
-        }
-        if !hasExample && prompt.count > 120 {
+        guard wordCount >= detailedPromptWords else { return issues }
+
+        if count(formatWords, in: text) == 0 {
             issues.append(PromptIssue(
+                kind: .noOutputFormat,
+                type: String(localized: "Format/Output"),
+                description: String(localized: "For longer prompts, consider specifying the desired output format."),
+                suggestion: String(localized: "E.g., 'Respond in JSON'.")
+            ))
+        }
+        if wordCount >= 60, count(audienceWords, in: text) == 0 {
+            issues.append(PromptIssue(
+                kind: .noAudience,
+                type: String(localized: "Audience"),
+                description: String(localized: "For longer prompts, consider specifying the intended audience."),
+                suggestion: String(localized: "E.g., 'Explain for a beginner'.")
+            ))
+        }
+        if wordCount >= 80, count(exampleWords, in: text) == 0 {
+            issues.append(PromptIssue(
+                kind: .noExamples,
                 type: String(localized: "Examples"),
                 description: String(localized: "For longer prompts, consider providing an example."),
                 suggestion: String(localized: "Add an example to clarify your request.")
             ))
         }
-
-        // 12. Instruction/Question Type (soften: only flag if prompt is not a question or command and is very short)
-        if !prompt.hasSuffix("?") && !lower.starts(with: "please ") && !lower.starts(with: "write ") && !lower.starts(with: "generate ") && !lower.starts(with: "create ") && prompt.count < 30 {
+        let hasSteps = count(stepWords, in: text) > 0
+        if wordCount >= 120, !hasSteps, !hasListMarkers(text) {
             issues.append(PromptIssue(
-                type: String(localized: "Instruction Type"),
-                description: String(localized: "Prompt is very short and may not be a clear instruction or question."),
-                suggestion: String(localized: "Make your prompt a clear instruction or question.")
+                kind: .noStructure,
+                type: String(localized: "Structure"),
+                description: String(localized: "Long prompt could benefit from more structure (steps, lists, etc.)."),
+                suggestion: String(localized: "Break your instructions into steps or a list if possible.")
             ))
         }
-
+        if count(["process"], in: text) > 0, !hasSteps {
+            issues.append(PromptIssue(
+                kind: .processWithoutSteps,
+                type: String(localized: "Completeness"),
+                description: String(localized: "Prompt asks for a process but does not specify steps."),
+                suggestion: String(localized: "List the steps or details needed for the process.")
+            ))
+        }
         return issues
     }
-} 
+
+    // MARK: - Helpers
+
+    /// Word count from the system's word boundaries, so it also works for languages without spaces.
+    static func countWords(in text: String) -> Int {
+        var count = 0
+        text.enumerateSubstrings(in: text.startIndex..., options: [.byWords, .substringNotRequired]) { _, _, _, _ in
+            count += 1
+        }
+        return count
+    }
+
+    static func isEnglish(_ text: String) -> Bool {
+        NLLanguageRecognizer.dominantLanguage(for: text) == .english
+    }
+
+    /// How many of `phrases` appear in `text` as whole words, ignoring case.
+    static func count(_ phrases: [String], in text: String) -> Int {
+        phrases.filter { containsWholePhrase($0, in: text) }.count
+    }
+
+    static func containsWholePhrase(_ phrase: String, in text: String) -> Bool {
+        // Not preceded or followed by a letter or digit, so "e.g." and "year-old" work too.
+        let pattern = #"(?<![\p{L}\p{N}])"# + NSRegularExpression.escapedPattern(for: phrase) + #"(?![\p{L}\p{N}])"#
+        return text.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil
+    }
+
+    /// Lines that start like a list: "- ", "* ", "• " or "1. " / "1) ".
+    static func hasListMarkers(_ text: String) -> Bool {
+        text.range(of: #"(?m)^\s*(?:[-*•]|\d+[.)])\s+"#, options: .regularExpression) != nil
+    }
+
+    /// The same sentence more than once. Very short sentences like "Thanks." don't count.
+    static func hasRepeatedSentences(_ text: String) -> Bool {
+        var seen = Set<String>()
+        var repeated = false
+        text.enumerateSubstrings(in: text.startIndex..., options: .bySentences) { sentence, _, _, stop in
+            guard let sentence else { return }
+            let normalized = sentence
+                .lowercased()
+                .trimmingCharacters(in: .whitespacesAndNewlines.union(.punctuationCharacters))
+            guard countWords(in: normalized) >= 4 else { return }
+            if !seen.insert(normalized).inserted {
+                repeated = true
+                stop = true
+            }
+        }
+        return repeated
+    }
+}

@@ -9,7 +9,8 @@
             "value" : "每天一個新的 AI 提示詞，點一下即可開啟。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Favorite Prompts" : {
       "localizations" : {
@@ -59,7 +60,8 @@
             "value" : "你最愛的提示詞，一點即達。"
           }
         }
-      }
+      },
+      "extractionState" : "stale"
     },
     "Open Random Prompt" : {
       "localizations" : {
@@ -97,6 +99,66 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開啟 AI提示詞 並顯示一個隨機提示詞，給你靈感。"
+          }
+        }
+      }
+    },
+    "A new AI prompt every day. Tap to open it, or copy it right from the widget." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每天一個新的 AI 提示詞。點一下即可開啟，也可以直接從小工具拷貝。"
+          }
+        }
+      }
+    },
+    "Your favorite prompts, one tap away. Copy one without opening the app." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一點即達你最愛的提示詞，不必開啟 App 也能拷貝。"
+          }
+        }
+      }
+    },
+    "Copy Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝提示詞"
+          }
+        }
+      }
+    },
+    "Prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示詞"
+          }
+        }
+      }
+    },
+    "Copied" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已拷貝"
+          }
+        }
+      }
+    },
+    "Copy prompt" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拷貝提示詞"
           }
         }
       }

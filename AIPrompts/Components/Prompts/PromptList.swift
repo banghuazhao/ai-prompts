@@ -2,6 +2,7 @@ import Dependencies
 import SharingGRDB
 import SwiftUI
 import SwiftUINavigation
+import UIKit
 
 @Observable
 @MainActor
@@ -69,17 +70,20 @@ class PromptListModel {
         , animation: .default) var usages
 
     @ObservationIgnored
+    @FetchAll(PromptCategory.all, animation: .default) var categories
+
+    @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
 
-    /// A prompt opened from the Recently Used shelf.
-    var recentPromptDestination: Prompt?
+    /// A prompt opened from the Recently Used shelf or Surprise Me.
+    var openedPrompt: Prompt?
 
     @CasePathable
     enum Route {
         case showingAddPrompt
         case editingPrompt(Prompt)
-        case showingDeleteAlert(Prompt)
         case addingDraft(Prompt.Draft)
+        case generatingIdea
         case selectCategory
         case customizing(Prompt)
     }
@@ -100,10 +104,6 @@ class PromptListModel {
             prompts = prompts.filter(\.isNew)
         case .forDevelopers:
             prompts = prompts.filter { $0.forDevs }
-        }
-        // Search
-        if !searchText.isEmpty {
-            prompts = searchPrompts(prompts, query: searchText)
         }
         // Sort
         switch sortOption {
@@ -129,21 +129,62 @@ class PromptListModel {
         case .title:
             prompts = prompts.sorted { $0.act.localizedCaseInsensitiveCompare($1.act) == .orderedAscending }
         case .characterLengthAsc:
-            prompts = prompts.sorted { $0.prompt.count < $1.prompt.count }
+            prompts = Self.sortedByLength(prompts, ascending: true)
         case .characterLengthDesc:
-            prompts = prompts.sorted { $0.prompt.count > $1.prompt.count }
+            prompts = Self.sortedByLength(prompts, ascending: false)
+        }
+        // Search: best matches first, with the chosen sort breaking ties.
+        let search = TextSearch(searchText)
+        if !search.isEmpty {
+            let categoryTitles = Dictionary(categories.map { ($0.id, $0.displayTitle) }, uniquingKeysWith: { first, _ in first })
+            prompts = search.rank(
+                prompts,
+                title: { $0.act },
+                fields: { prompt in
+                    [prompt.prompt, prompt.categoryID.flatMap { categoryTitles[$0] } ?? ""]
+                }
+            )
         }
         return prompts
     }
 
-    func searchPrompts(_ prompts: [Prompt], query: String) -> [Prompt] {
-        guard !query.isEmpty else { return prompts }
+    /// Counting characters walks the whole string, so do it once per prompt rather than per comparison.
+    private static func sortedByLength(_ prompts: [Prompt], ascending: Bool) -> [Prompt] {
+        prompts
+            .map { (prompt: $0, length: $0.prompt.count) }
+            .sorted { ascending ? $0.length < $1.length : $0.length > $1.length }
+            .map { $0.prompt }
+    }
 
-        let lowercasedQuery = query.lowercased()
-        return prompts.filter { prompt in
-            prompt.act.lowercased().contains(lowercasedQuery) ||
-                prompt.prompt.lowercased().contains(lowercasedQuery)
+    /// How many prompts each category holds, for the category picker.
+    var promptCountsByCategory: [PromptCategory.ID: Int] {
+        prompts.reduce(into: [:]) { counts, prompt in
+            if let categoryID = prompt.categoryID {
+                counts[categoryID, default: 0] += 1
+            }
         }
+    }
+
+    // MARK: - Recent searches
+
+    /// Shared with the other search fields, newest first.
+    var recentSearches = RecentSearches.load()
+
+    /// Called when a search is submitted or one of its results is opened.
+    func rememberSearch() {
+        let updated = RecentSearches.adding(searchText, to: RecentSearches.load())
+        guard updated != recentSearches else { return }
+        recentSearches = updated
+        RecentSearches.save(updated)
+    }
+
+    func reloadRecentSearches() {
+        recentSearches = RecentSearches.load()
+    }
+
+    /// Opens a random prompt from the ones currently listed.
+    func onSurpriseMe() {
+        openedPrompt = filteredPrompts.randomElement()
     }
     
     /// Most recently used first. Usage rows are deleted with their prompt, but stay defensive.
@@ -213,16 +254,9 @@ class PromptListModel {
         route = .addingDraft(Prompt.Draft(duplicating: prompt))
     }
 
-    func onDeleteRequest(_ prompt: Prompt) {
-        route = .showingDeleteAlert(prompt)
-    }
-
-    func confirmDelete(_ prompt: Prompt) {
-        withErrorReporting {
-            try database.write { db in
-                try Prompt.delete(prompt).execute(db)
-            }
-        }
+    /// Deletes right away; the banner that follows offers Undo.
+    func onDelete(_ prompt: Prompt) {
+        PromptTrash.delete(prompt)
     }
 
     // MARK: - Selecting several prompts
@@ -230,7 +264,6 @@ class PromptListModel {
     /// Selection mode, for favoriting, moving, sharing or deleting many prompts at once.
     var isSelecting = false
     var selectedIDs: Set<Prompt.ID> = []
-    var showingDeleteSelectedAlert = false
     var showingMoveSelected = false
 
     func toggleSelecting() {
@@ -322,16 +355,10 @@ class PromptListModel {
             .joined(separator: "\n\n---\n\n")
     }
 
-    /// Library prompts stay deleted: ContentSync only ever inserts an item once.
-    func confirmDeleteSelected() {
-        let doomed = prompts.filter { selectedIDs.contains($0.id) }
-        withErrorReporting {
-            try database.write { db in
-                for prompt in doomed {
-                    try Prompt.delete(prompt).execute(db)
-                }
-            }
-        }
+    /// Library prompts stay deleted: ContentSync only ever inserts an item once. The banner that
+    /// follows offers Undo.
+    func deleteSelected() {
+        PromptTrash.delete(prompts.filter { selectedIDs.contains($0.id) })
         finishSelecting()
     }
 
@@ -359,10 +386,51 @@ class PromptListModel {
         loadCorpusIfNeeded()
         let generated = markovGenerator?.generatePrompt() ?? ""
         let draft = Prompt.Draft(
-            act: "AI Generated Act",
+            act: String(localized: "New Prompt Idea"),
             prompt: generated.isEmpty ? "Failed to load corpus." : generated
         )
         route = .addingDraft(draft)
+    }
+
+    // MARK: - New prompts from Apple Intelligence or the clipboard
+
+    /// Written by Apple Intelligence, waiting for the idea sheet to close before the form opens.
+    @ObservationIgnored
+    private var generatedDraft: Prompt.Draft?
+
+    /// Apple Intelligence writes a prompt about a topic of the user's choosing. Devices without it
+    /// get a remix of the library instead.
+    func onGenerateIdea() {
+        if OnDeviceAI.status == .available {
+            route = .generatingIdea
+        } else {
+            generateMarkovPrompt()
+        }
+    }
+
+    func generateIdea(about topic: String) async throws {
+        guard #available(iOS 26.0, *) else { return }
+        let idea = try await PromptAssistant.generateIdea(about: topic)
+        generatedDraft = Prompt.Draft(act: idea.title, prompt: idea.prompt, forDevs: idea.isForDevelopers)
+    }
+
+    /// Two sheets can't be swapped in one step, so the form opens once the idea sheet is gone.
+    func onIdeaSheetDismissed() {
+        guard let draft = generatedDraft else { return }
+        generatedDraft = nil
+        route = .addingDraft(draft)
+    }
+
+    var canAddFromClipboard: Bool {
+        UIPasteboard.general.hasStrings
+    }
+
+    /// Opens the add form with the copied text. A short first line becomes the title.
+    func onAddFromClipboard() {
+        guard let text = UIPasteboard.general.string,
+              let imported = ImportedPrompt(text: text)
+        else { return }
+        route = .addingDraft(Prompt.Draft(act: imported.title, prompt: imported.prompt))
     }
 }
 
@@ -373,6 +441,9 @@ struct PromptListView: View {
         NavigationStack {
             VStack {
                 List {
+                    // Filtering and sorting run once per update rather than for every use below.
+                    let visiblePrompts = model.filteredPrompts
+
                     AIStudioLibraryHero(
                         eyebrow: "THE PROMPT LIBRARY",
                         title: "Find your next idea.",
@@ -402,7 +473,7 @@ struct PromptListView: View {
                         if !recentPrompts.isEmpty {
                             RecentlyUsedShelf(
                                 prompts: recentPrompts,
-                                onSelect: { model.recentPromptDestination = $0 },
+                                onSelect: { model.openedPrompt = $0 },
                                 onCustomize: { model.route = .customizing($0) },
                                 onRemove: { PromptUsage.remove(promptID: $0.id) },
                                 onClear: { PromptUsage.removeAll() }
@@ -417,7 +488,7 @@ struct PromptListView: View {
                         Text(model.searchText.isEmpty ? "Explore prompts" : "Search results")
                             .font(.title3.bold())
                         Spacer()
-                        Text("\(model.filteredPrompts.count)")
+                        Text("\(visiblePrompts.count)")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.secondary)
                     }
@@ -425,7 +496,7 @@ struct PromptListView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
 
-                    ForEach(model.filteredPrompts) { prompt in
+                    ForEach(visiblePrompts) { prompt in
                         Group {
                             if model.isSelecting {
                                 let isSelected = model.selectedIDs.contains(prompt.id)
@@ -451,6 +522,7 @@ struct PromptListView: View {
                                     destination: PromptDetailView(
                                         model: PromptDetailModel(prompt: prompt)
                                     )
+                                    .onAppear { model.rememberSearch() }
                                 ) {
                                     PromptRowView(
                                         prompt: prompt,
@@ -489,7 +561,7 @@ struct PromptListView: View {
                                         }
                                         Button(role: .destructive, action: {
                                             Haptics.shared.vibrateIfEnabled()
-                                            model.onDeleteRequest(prompt)
+                                            model.onDelete(prompt)
                                         }) {
                                             Label("Delete", systemImage: "trash")
                                         }
@@ -504,11 +576,11 @@ struct PromptListView: View {
                             isFavorite: prompt.isFavorite,
                             onFavorite: { model.onFavorite(prompt) },
                             onCopy: { model.onCopy(prompt) },
-                            onDelete: { model.onDeleteRequest(prompt) }
+                            onDelete: { model.onDelete(prompt) }
                         )
                     }
 
-                    if model.filteredPrompts.isEmpty {
+                    if visiblePrompts.isEmpty {
                         ContentUnavailableView(
                             model.searchText.isEmpty ? "No prompts here yet" : "No matching prompts",
                             systemImage: "sparkle.magnifyingglass",
@@ -521,7 +593,7 @@ struct PromptListView: View {
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .background(AIStudioPalette.canvas)
-                .navigationDestination(item: $model.recentPromptDestination) { prompt in
+                .navigationDestination(item: $model.openedPrompt) { prompt in
                     PromptDetailView(model: PromptDetailModel(prompt: prompt))
                 }
             }
@@ -555,7 +627,7 @@ struct PromptListView: View {
                             .simultaneousGesture(TapGesture().onEnded { PromptActions.share() })
                             Button(role: .destructive) {
                                 Haptics.shared.vibrateIfEnabled()
-                                model.showingDeleteSelectedAlert = true
+                                model.deleteSelected()
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -572,6 +644,21 @@ struct PromptListView: View {
             }
             .scrollDismissesKeyboard(.immediately)
             .searchable(text: $model.searchText, prompt: "Search prompts")
+            .searchSuggestions {
+                // Recent searches while the field is empty; typing filters the list instead.
+                if model.searchText.isEmpty {
+                    ForEach(model.recentSearches, id: \.self) { search in
+                        Label(search, systemImage: "clock.arrow.circlepath")
+                            .searchCompletion(search)
+                    }
+                }
+            }
+            .onSubmit(of: .search) {
+                model.rememberSearch()
+            }
+            .onAppear {
+                model.reloadRecentSearches()
+            }
             .navigationTitle(model.isSelecting ? Text("\(model.selectedIDs.count) Selected") : Text("Prompts"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -627,10 +714,19 @@ struct PromptListView: View {
                                 Haptics.shared.vibrateIfEnabled()
                                 model.toggleSelecting()
                             }
+                            Button("Surprise Me", systemImage: "dice") {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.onSurpriseMe()
+                            }
                             Button("Generate Prompt Idea", systemImage: "sparkles") {
                                 Haptics.shared.vibrateIfEnabled()
-                                model.generateMarkovPrompt()
+                                model.onGenerateIdea()
                             }
+                            Button("Add from Clipboard", systemImage: "doc.on.clipboard") {
+                                Haptics.shared.vibrateIfEnabled()
+                                model.onAddFromClipboard()
+                            }
+                            .disabled(!model.canAddFromClipboard)
                         } label: {
                             Label("More", systemImage: "ellipsis")
                         }
@@ -658,6 +754,8 @@ struct PromptListView: View {
             .sheet(isPresented: Binding($model.route.selectCategory)) {
                 CategorySelectionSheet(
                     selectedCategory: model.selectedCategory,
+                    totalCount: model.prompts.count,
+                    promptCounts: model.promptCountsByCategory,
                     onSelect: { category in
                         model.onSelectCategory(category)
                     }
@@ -678,36 +776,6 @@ struct PromptListView: View {
                         model.route = nil
                     }
                 )
-            }
-            .alert(
-                item: $model.route.showingDeleteAlert,
-                title: { _ in
-                    Text("Delete Prompt")
-                },
-                actions: { prompt in
-                    Button("Delete", role: .destructive) {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.confirmDelete(prompt)
-                    }
-                    Button("Cancel", role: .cancel) {
-                        Haptics.shared.vibrateIfEnabled()
-                    }
-                },
-                message: { prompt in
-                    Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")
-                }
-            )
-            .alert(
-                "Delete \(model.selectedIDs.count) Prompts?",
-                isPresented: $model.showingDeleteSelectedAlert
-            ) {
-                Button("Delete", role: .destructive) {
-                    Haptics.shared.vibrateIfEnabled()
-                    model.confirmDeleteSelected()
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("This action cannot be undone.")
             }
             .sheet(isPresented: $model.showingMoveSelected) {
                 let choice = model.moveCategoryChoice
@@ -732,29 +800,18 @@ struct PromptListView: View {
                     }
                 )
             }
-        }
-    }
-}
-
-struct SearchBar: View {
-    @Binding var text: String
-    let placeholder: String
-
-    var body: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-
-            TextField(placeholder, text: $text)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-
-            if !text.isEmpty {
-                Button(action: {
-                    Haptics.shared.vibrateIfEnabled()
-                    text = ""
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
+            .sheet(isPresented: Binding($model.route.generatingIdea), onDismiss: { model.onIdeaSheetDismissed() }) {
+                PromptIdeaSheet(
+                    title: "New Prompt Idea",
+                    placeholder: "e.g. planning a birthday party",
+                    examples: [
+                        String(localized: "Writing a cover letter"),
+                        String(localized: "Learning to cook"),
+                        String(localized: "Explaining code to a beginner"),
+                        String(localized: "Planning a trip"),
+                    ]
+                ) { topic in
+                    try await model.generateIdea(about: topic)
                 }
             }
         }
@@ -762,6 +819,8 @@ struct SearchBar: View {
 }
 
 #Preview {
+    let _ = prepareDependencies {
+        $0.defaultDatabase = try! appDatabase()
+    }
     PromptListView()
-        .environmentObject(DataManager())
 }

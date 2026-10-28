@@ -17,7 +17,6 @@ class PromptDetailModel {
         case customizing
         case runningOnDevice
         case sharingCard
-        case showingDeleteAlert(Prompt)
     }
 
     var route: Route?
@@ -28,15 +27,6 @@ class PromptDetailModel {
         self.prompt = prompt
     }
     
-    var category: PromptCategory? {
-        try? database.read { db in
-            try? PromptCategory
-                .all
-                .where { $0.id.is(prompt.categoryID) }
-                .fetchOne(db)
-        }
-    }
-
     func onCopy() {
         PromptActions.copy(prompt.prompt)
         recordUse()
@@ -84,17 +74,10 @@ class PromptDetailModel {
         route = .editingPrompt
     }
 
-    func onDeleteRequest() {
-        route = .showingDeleteAlert(prompt)
-    }
-
-    func confirmDelete(action: () -> Void) {
-        withErrorReporting {
-            try database.write { db in
-                try Prompt.delete(prompt).execute(db)
-            }
-        }
-        action()
+    /// Deletes right away and closes the page; the banner that follows offers Undo.
+    func onDelete(dismiss: () -> Void) {
+        PromptTrash.delete(prompt)
+        dismiss()
     }
 
     func onUpdate(_ newPrompt: Prompt) {
@@ -108,6 +91,11 @@ class PromptDetailModel {
 struct PromptDetailView: View {
     @State var model: PromptDetailModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.promptCategories) private var categories
+
+    private var category: PromptCategory? {
+        model.prompt.categoryID.flatMap { categories[$0] }
+    }
 
     var body: some View {
         ScrollView {
@@ -159,7 +147,7 @@ struct PromptDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     Haptics.shared.vibrateIfEnabled()
-                    model.onDeleteRequest()
+                    model.onDelete { dismiss() }
                 }) {
                     Image(systemName: "trash")
                 }
@@ -209,26 +197,6 @@ struct PromptDetailView: View {
                 }
             )
         }
-        .alert(
-            item: $model.route.showingDeleteAlert,
-            title: { _ in
-                Text("Delete Prompt")
-            },
-            actions: { _ in
-                Button("Delete", role: .destructive) {
-                    Haptics.shared.vibrateIfEnabled()
-                    model.confirmDelete {
-                        dismiss()
-                    }
-                }
-                Button("Cancel", role: .cancel) {
-                    Haptics.shared.vibrateIfEnabled()
-                }
-            },
-            message: { prompt in
-                Text("Are you sure you want to delete \(prompt.act)? This action cannot be undone.")
-            }
-        )
     }
 
     private var hero: some View {
@@ -259,8 +227,8 @@ struct PromptDetailView: View {
                 .foregroundStyle(.white)
                 .fixedSize(horizontal: false, vertical: true)
 
-            if let category = model.category {
-                Label(Bundle.main.localizedString(forKey: category.title, value: category.title, table: nil), systemImage: "square.grid.2x2.fill")
+            if let category {
+                Label(category.displayTitle, systemImage: "square.grid.2x2.fill")
                     .font(.subheadline)
                     .foregroundStyle(.white)
                     .padding(.horizontal, 12)
@@ -312,7 +280,8 @@ struct PromptDetailView: View {
 
                 Spacer(minLength: 12)
 
-                Text("\(model.prompt.prompt.count) characters")
+                let stats = PromptStats(model.prompt.prompt)
+                Text("\(stats.words) words · ~\(stats.estimatedTokens) tokens")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

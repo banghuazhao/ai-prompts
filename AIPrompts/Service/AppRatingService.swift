@@ -11,6 +11,9 @@ import Foundation
 import Sharing
 import StoreKit
 import SwiftUI
+import OSLog
+
+private let logger = Logger(subsystem: "AIPrompts", category: "Rating")
 
 @Observable
 class AppRatingService {
@@ -27,7 +30,7 @@ class AppRatingService {
     /// Increments the rate prepare trigger count and checks if we should show a rating prompt
     func incrementPrepareTriggerCount() {
         $ratePrepareTriggerCount.withLock { $0 += 1 }
-        print("Rate Prepare Trigger  count: \(ratePrepareTriggerCount)")
+        logger.debug("Rating trigger count: \(self.ratePrepareTriggerCount)")
 
         // Check if we should show rating prompt
         checkAndShowRatingPrompt()
@@ -55,7 +58,7 @@ class AppRatingService {
 
     /// Shows the system rating prompt
     private func showRatingPrompt() {
-        print("showRatingPrompt")
+        logger.info("Showing the rating prompt")
         // Update last prompt date
         $lastRatingPromptDate.withLock { $0 = Date() }
 

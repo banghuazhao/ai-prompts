@@ -35,6 +35,11 @@ enum PromptVariableMemory {
         UserDefaults.standard.set(stored, forKey: key)
     }
 
+    /// Forgets every remembered value.
+    static func clear() {
+        UserDefaults.standard.removeObject(forKey: key)
+    }
+
     private static func load() -> [String: String] {
         UserDefaults.standard.dictionary(forKey: key) as? [String: String] ?? [:]
     }

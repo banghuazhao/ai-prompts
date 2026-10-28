@@ -1,8 +1,10 @@
 import Foundation
-import SwiftUI
 
-class DataManager: ObservableObject {
+/// Reads the prompts bundled with the app from the CSV files in `Doc/`.
+final class DataManager {
     static let shared = DataManager()
+
+    private init() {}
 
     func loadPromptsDraft() -> [Prompt.Draft] {
         CSVParser.parseResource(named: "prompts").compactMap { columns in
