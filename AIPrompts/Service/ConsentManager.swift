@@ -7,6 +7,7 @@
 //  The most restrictive answer wins: ATT not authorized => non-personalized ads only.
 //
 
+#if !targetEnvironment(macCatalyst)
 import AdSupport
 import AppTrackingTransparency
 import GoogleMobileAds
@@ -119,3 +120,16 @@ final class ConsentManager: ObservableObject {
         return top
     }
 }
+#else
+import SwiftUI
+
+/// Mac stand-in: the Mac app shows no ads, so there is no consent or tracking prompt.
+@MainActor
+final class ConsentManager: ObservableObject {
+    static let shared = ConsentManager()
+    @Published private(set) var adsReady = false
+    @Published private(set) var privacyOptionsRequired = false
+    func gatherConsentAndStartAds() async {}
+    func presentPrivacyOptions() {}
+}
+#endif

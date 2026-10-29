@@ -5,6 +5,7 @@
 //  Created by Lulin Yang on 2025/7/11.
 //
 
+#if !targetEnvironment(macCatalyst)
 import GoogleMobileAds
 import SwiftUI
 import OSLog
@@ -12,6 +13,8 @@ import OSLog
 private let logger = Logger(subsystem: "AIPrompts", category: "Ads")
 
 enum AdManager {
+    static let isSupported = true
+
     /// Production IDs come from the Release build settings. Google test IDs exist in Debug only;
     /// Release never falls back to them (an unresolved ID stays empty and no ad is requested).
     struct GoogleAdsID {
@@ -188,3 +191,22 @@ class BannerViewController: UIViewController {
         }
     }
 }
+#else
+import SwiftUI
+
+// Google Mobile Ads has no Mac build, so the Mac app runs without ads.
+enum AdManager {
+    static let isSupported = false
+}
+
+@MainActor
+final class OpenAd: ObservableObject {
+    var appHasEnterBackgroundBefore = false
+    func requestAppOpenAd() {}
+    func tryToPresentAd() {}
+}
+
+struct BannerView: View {
+    var body: some View { EmptyView() }
+}
+#endif

@@ -1,4 +1,6 @@
+#if !targetEnvironment(macCatalyst)
 import GoogleMobileAds
+#endif
 import SharingGRDB
 import SwiftUI
 import UIKit
@@ -31,6 +33,11 @@ struct AIPrompts: App {
                     purchaseManager.startObservingTransactions()
                     await purchaseManager.checkPurchaseStatus()
                 }
+                #if DEBUG && targetEnvironment(macCatalyst)
+                .task {
+                    await ScreenshotLaunchConfiguration.prepareMacWindowAndCapture()
+                }
+                #endif
                 .task {
                     guard !ScreenshotLaunchConfiguration.isEnabled else { return }
                     await ConsentManager.shared.gatherConsentAndStartAds()

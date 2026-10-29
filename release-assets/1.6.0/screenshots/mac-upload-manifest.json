@@ -1,0 +1,18 @@
+{
+  "appId": "6748734078",
+  "bundleId": "com.appsbay.aiPrompts",
+  "versionId": "3dad2672-3b17-4952-9dc3-5569591df1a6",
+  "versionString": "1.0",
+  "groups": [
+    {
+      "locale": "en-US",
+      "placementType": "APP_SCREENSHOT",
+      "placementGroup": "MAC_PROFILE",
+      "images": [
+        "release-assets/1.6.0/screenshots/en-US/mac/01-library.png",
+        "release-assets/1.6.0/screenshots/en-US/mac/02-vibe-library.png",
+        "release-assets/1.6.0/screenshots/en-US/mac/03-search.png"
+      ]
+    }
+  ]
+}

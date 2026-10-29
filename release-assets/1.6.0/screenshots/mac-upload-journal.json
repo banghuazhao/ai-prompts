@@ -1,0 +1,163 @@
+{
+  "planSHA256": "08b53e7004d24e7d0d131e86d0eedd0636a55bf35dea3cfb33e1a3cff811e227",
+  "plan": {
+    "appId": "6748734078",
+    "bundleId": "com.appsbay.aiPrompts",
+    "versionId": "3dad2672-3b17-4952-9dc3-5569591df1a6",
+    "versionString": "1.0",
+    "assetLibraryId": "6748734078",
+    "groups": [
+      {
+        "locale": "en-US",
+        "localizationId": "4d2147e7-4a27-4ad8-91ff-1289cf25cf87",
+        "placementType": "APP_SCREENSHOT",
+        "placementGroup": "MAC_PROFILE",
+        "images": [
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/screenshots/en-US/mac/01-library.png",
+            "fileName": "01-library.png",
+            "fileSize": 1041763,
+            "size": [
+              2880,
+              1800
+            ],
+            "md5": "12a15061ebbe50738fa3ad1ec19ced55",
+            "sha256": "8e17f22ddfd2f2101ab2ca9b981427318482c1da3f4d54bb9e6d41fb2b20d8b3",
+            "acceptedSpecIds": [
+              "72e265ca-2840-5d89-8f6b-16681162fa46"
+            ],
+            "category": "APP_SCREENSHOTS_AND_PREVIEWS"
+          },
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/screenshots/en-US/mac/02-vibe-library.png",
+            "fileName": "02-vibe-library.png",
+            "fileSize": 1045685,
+            "size": [
+              2880,
+              1800
+            ],
+            "md5": "50ad4357ed42c2e955ee1dcf9fb5d2ad",
+            "sha256": "92c9d24a059e5bb341fd33a6698bb0c83a8454ec9b3c81b9be12ba82d97bcaf5",
+            "acceptedSpecIds": [
+              "72e265ca-2840-5d89-8f6b-16681162fa46"
+            ],
+            "category": "APP_SCREENSHOTS_AND_PREVIEWS"
+          },
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/screenshots/en-US/mac/03-search.png",
+            "fileName": "03-search.png",
+            "fileSize": 566475,
+            "size": [
+              2880,
+              1800
+            ],
+            "md5": "c16126280ceba0a6d965c9523919d8d0",
+            "sha256": "55f2cc7ffa21bcd00ebb01d9ae6fd9d37e928d30670f3cd28d37d24c7b092617",
+            "acceptedSpecIds": [
+              "72e265ca-2840-5d89-8f6b-16681162fa46"
+            ],
+            "category": "APP_SCREENSHOTS_AND_PREVIEWS"
+          }
+        ]
+      }
+    ]
+  },
+  "images": {
+    "8e17f22ddfd2f2101ab2ca9b981427318482c1da3f4d54bb9e6d41fb2b20d8b3": "63800019-2418-827e-8012-671bf0abb5cf",
+    "92c9d24a059e5bb341fd33a6698bb0c83a8454ec9b3c81b9be12ba82d97bcaf5": "d1c00019-2418-827e-8015-6a4887516ffc",
+    "55f2cc7ffa21bcd00ebb01d9ae6fd9d37e928d30670f3cd28d37d24c7b092617": "82800019-2418-827e-8010-7c147b0fca71"
+  },
+  "placements": {
+    "en-US:APP_SCREENSHOT:MAC_PROFILE": [
+      "9ac00019-2418-827e-8f0f-7717a10bfc07",
+      "19400019-2418-827e-8f20-f9aa3f44c96d",
+      "9c400019-2418-827e-8f22-439a91cf3656"
+    ]
+  },
+  "verification": {
+    "8e17f22ddfd2f2101ab2ca9b981427318482c1da3f4d54bb9e6d41fb2b20d8b3": {
+      "verifiedAt": "2026-10-29T18:26:16Z",
+      "sourceSHA256": "8e17f22ddfd2f2101ab2ca9b981427318482c1da3f4d54bb9e6d41fb2b20d8b3",
+      "sourceMD5": "12a15061ebbe50738fa3ad1ec19ced55",
+      "decodedRGBSHA256": "c3259126b5e385b95692f15d9f3652291948466888f15b9a4cec7d0c2d5fa281",
+      "deliveredSHA256": "19c0a6d1973d0b0987f4f4a4dfeda83dc5309368d0ce77ff5f2bad4108166108",
+      "deliveredFileSize": 1341822,
+      "exactDecodedMatch": true,
+      "uprightOpaqueSingleFramePNG": true,
+      "note": "Apple may transcode PNG encoding; full-resolution decoded RGB pixels match exactly.",
+      "state": "PREPARE_FOR_SUBMISSION",
+      "specId": "72e265ca-2840-5d89-8f6b-16681162fa46"
+    },
+    "92c9d24a059e5bb341fd33a6698bb0c83a8454ec9b3c81b9be12ba82d97bcaf5": {
+      "verifiedAt": "2026-10-29T18:26:28Z",
+      "sourceSHA256": "92c9d24a059e5bb341fd33a6698bb0c83a8454ec9b3c81b9be12ba82d97bcaf5",
+      "sourceMD5": "50ad4357ed42c2e955ee1dcf9fb5d2ad",
+      "decodedRGBSHA256": "29b6c90ef352a429895fe09a2ea7bc5d19355277dcd24dc51a6de9e33078a0e5",
+      "deliveredSHA256": "ff92f7e16492b50adc45ddaa5dc1ac226ab144925048f047736b96f4645ce56b",
+      "deliveredFileSize": 1342987,
+      "exactDecodedMatch": true,
+      "uprightOpaqueSingleFramePNG": true,
+      "note": "Apple may transcode PNG encoding; full-resolution decoded RGB pixels match exactly.",
+      "state": "PREPARE_FOR_SUBMISSION",
+      "specId": "72e265ca-2840-5d89-8f6b-16681162fa46"
+    },
+    "55f2cc7ffa21bcd00ebb01d9ae6fd9d37e928d30670f3cd28d37d24c7b092617": {
+      "verifiedAt": "2026-10-29T18:26:31Z",
+      "sourceSHA256": "55f2cc7ffa21bcd00ebb01d9ae6fd9d37e928d30670f3cd28d37d24c7b092617",
+      "sourceMD5": "c16126280ceba0a6d965c9523919d8d0",
+      "decodedRGBSHA256": "cd3fb7530bea5fcc2e7ad0eca3eb80407f10e90c33555eb9edc38b0657608370",
+      "deliveredSHA256": "bdd7b47e632a04cd948f34a2e10426f55095ebe3a9997213680b147f7aabbaf8",
+      "deliveredFileSize": 752287,
+      "exactDecodedMatch": true,
+      "uprightOpaqueSingleFramePNG": true,
+      "note": "Apple may transcode PNG encoding; full-resolution decoded RGB pixels match exactly.",
+      "state": "PREPARE_FOR_SUBMISSION",
+      "specId": "72e265ca-2840-5d89-8f6b-16681162fa46"
+    }
+  },
+  "finalPlacements": {
+    "en-US:APP_SCREENSHOT:MAC_PROFILE": [
+      {
+        "id": "9ac00019-2418-827e-8f0f-7717a10bfc07",
+        "attributes": {
+          "createdDate": "2026-10-29T18:26:36.631519Z",
+          "lastModifiedDate": "2026-10-29T18:26:36.631519Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "MAC_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "63800019-2418-827e-8012-671bf0abb5cf"
+      },
+      {
+        "id": "19400019-2418-827e-8f20-f9aa3f44c96d",
+        "attributes": {
+          "createdDate": "2026-10-29T18:26:37.763682Z",
+          "lastModifiedDate": "2026-10-29T18:26:37.763682Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "MAC_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "d1c00019-2418-827e-8015-6a4887516ffc"
+      },
+      {
+        "id": "9c400019-2418-827e-8f22-439a91cf3656",
+        "attributes": {
+          "createdDate": "2026-10-29T18:26:38.872801Z",
+          "lastModifiedDate": "2026-10-29T18:26:38.872801Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "MAC_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "82800019-2418-827e-8010-7c147b0fca71"
+      }
+    ]
+  },
+  "complete": true,
+  "verifiedAt": "2026-10-29T18:26:40Z"
+}
