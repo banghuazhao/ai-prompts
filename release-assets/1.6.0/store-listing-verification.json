@@ -1,0 +1,116 @@
+{
+  "verifiedAt": "2026-10-28T19:00:36Z",
+  "appId": "6748734078",
+  "bundleId": "com.appsbay.aiPrompts",
+  "versionId": "6f1e4e31-822d-4a18-bcd3-72f7bf935f47",
+  "versionString": "1.6.0",
+  "versionState": "PREPARE_FOR_SUBMISSION",
+  "locale": "en-US",
+  "preservedExistingScreenshotCount": 12,
+  "preservedExistingScreenshotIds": [
+    "0fc00019-2418-827e-8f33-5a0afd681a2c",
+    "28000019-2418-827e-8f1e-8dffe266aa74",
+    "28800019-2418-827e-8f30-541c67e32903",
+    "34800019-2418-827e-8f25-e49f72c9599d",
+    "4ac00019-2418-827e-8f10-c8da6bf0e190",
+    "4b000019-2418-827e-8f1c-f1e32ffdd540",
+    "54000019-2418-827e-8f3d-66e0d4dcf4b6",
+    "60000019-2418-827e-8f3a-7cfcfcd61bce",
+    "8b400019-2418-827e-8f03-92cc18e5e5eb",
+    "a2000019-2418-827e-8f19-e9f1bd511972",
+    "ccc00019-2418-827e-8f11-b3d6709cf270",
+    "e2000019-2418-827e-8f2e-314827710eb5"
+  ],
+  "groups": [
+    {
+      "placementType": "PRODUCT_PAGE_HEADER_ASSET",
+      "placementGroup": "DEFAULT_PROFILE",
+      "images": [
+        {
+          "placementId": "9f800019-2418-827e-8f2e-76ce3838014f",
+          "placementState": "ACTIVE",
+          "imageId": "fa400019-2418-827e-8009-e428e9a695db",
+          "fileName": "ai-prompts-universal-header-search-v2.png",
+          "dimensions": [
+            5244,
+            2950
+          ],
+          "sourceSHA256": "d8767138749caa037d0de45628a426692affd3f5130ea435e08933fb0a721244",
+          "specId": "c8f4e2b1-7a3d-5c9e-8b6f-2d1a0e9c8b7a",
+          "imageState": "PREPARE_FOR_SUBMISSION",
+          "exactDecodedPixelsVerified": true
+        }
+      ]
+    },
+    {
+      "placementType": "APP_STORE_SEARCH_RESULTS_ASSET",
+      "placementGroup": "DEFAULT_PROFILE",
+      "images": [
+        {
+          "placementId": "97800019-2418-827e-8f10-97f3777d7080",
+          "placementState": "ACTIVE",
+          "imageId": "fa400019-2418-827e-8009-e428e9a695db",
+          "fileName": "ai-prompts-universal-header-search-v2.png",
+          "dimensions": [
+            5244,
+            2950
+          ],
+          "sourceSHA256": "d8767138749caa037d0de45628a426692affd3f5130ea435e08933fb0a721244",
+          "specId": "c8f4e2b1-7a3d-5c9e-8b6f-2d1a0e9c8b7a",
+          "imageState": "PREPARE_FOR_SUBMISSION",
+          "exactDecodedPixelsVerified": true
+        }
+      ]
+    },
+    {
+      "placementType": "APP_SCREENSHOT",
+      "placementGroup": "IPHONE_DUO_PROFILE",
+      "images": [
+        {
+          "placementId": "e4800019-2418-827e-8f2d-540ee7f4885b",
+          "placementState": "ACTIVE",
+          "imageId": "54000019-2418-827e-801a-e2152fcbd269",
+          "fileName": "01-library-outer.png",
+          "dimensions": [
+            1398,
+            2034
+          ],
+          "sourceSHA256": "dbee97bea6447da09438fdd41de2e05af212e0fbf2a41b2acbda3db7528efa4b",
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "imageState": "PREPARE_FOR_SUBMISSION",
+          "exactDecodedPixelsVerified": true
+        },
+        {
+          "placementId": "4b000019-2418-827e-8f06-90aebab6200c",
+          "placementState": "ACTIVE",
+          "imageId": "57000019-2418-827e-8018-8bd6f70c8ee0",
+          "fileName": "02-vibe-library-outer.png",
+          "dimensions": [
+            1398,
+            2034
+          ],
+          "sourceSHA256": "160ad40e4ba0a2a31df287ba01f79fb71c69bdfc1828ed6b80c31cc03396fcc6",
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "imageState": "PREPARE_FOR_SUBMISSION",
+          "exactDecodedPixelsVerified": true
+        },
+        {
+          "placementId": "85c00019-2418-827e-8f24-3da9319d2052",
+          "placementState": "ACTIVE",
+          "imageId": "b0c00019-2418-827e-8008-d9dbeef26da0",
+          "fileName": "03-search-outer.png",
+          "dimensions": [
+            1398,
+            2034
+          ],
+          "sourceSHA256": "d4a97eedc8479f71245d17217c308c72e84fe56044f3e3a42fdb980313958a36",
+          "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520",
+          "imageState": "PREPARE_FOR_SUBMISSION",
+          "exactDecodedPixelsVerified": true
+        }
+      ]
+    }
+  ],
+  "allTargetPlacementsActive": true,
+  "existingScreenshotsPreserved": true
+}

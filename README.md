@@ -54,7 +54,7 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 
 ### Prerequisites
 
-- Xcode 26 or later (the iOS 26 SDK is needed for the Liquid Glass APIs)
+- Xcode 27.1 or later for native iPhone Duo layouts (the deployment minimum remains iOS 17.4)
 - Swift 5.9+
 - iOS 17.4+ (Liquid Glass on iOS 26+)
 

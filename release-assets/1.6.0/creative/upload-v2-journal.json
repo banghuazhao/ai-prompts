@@ -1,0 +1,165 @@
+{
+  "planSHA256": "06884057eb6dcd39499d5b4711dc5048c5d9e706bf59e4eccf14aab47c8e60aa",
+  "plan": {
+    "appId": "6748734078",
+    "bundleId": "com.appsbay.aiPrompts",
+    "versionId": "6f1e4e31-822d-4a18-bcd3-72f7bf935f47",
+    "versionString": "1.6.0",
+    "assetLibraryId": "6748734078",
+    "groups": [
+      {
+        "locale": "en-US",
+        "localizationId": "4d32f061-7654-448a-81ad-0f5cf5302c0f",
+        "placementType": "PRODUCT_PAGE_HEADER_ASSET",
+        "placementGroup": "DEFAULT_PROFILE",
+        "images": [
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/creative/ai-prompts-universal-header-search-v2.png",
+            "fileName": "ai-prompts-universal-header-search-v2.png",
+            "fileSize": 7888502,
+            "size": [
+              5244,
+              2950
+            ],
+            "md5": "7eafa093a595aa6b3cdc3878443b59aa",
+            "sha256": "d8767138749caa037d0de45628a426692affd3f5130ea435e08933fb0a721244",
+            "acceptedSpecIds": [
+              "c8f4e2b1-7a3d-5c9e-8b6f-2d1a0e9c8b7a"
+            ],
+            "category": "CREATIVE_ASSETS"
+          }
+        ]
+      },
+      {
+        "locale": "en-US",
+        "localizationId": "4d32f061-7654-448a-81ad-0f5cf5302c0f",
+        "placementType": "APP_STORE_SEARCH_RESULTS_ASSET",
+        "placementGroup": "DEFAULT_PROFILE",
+        "images": [
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/creative/ai-prompts-universal-header-search-v2.png",
+            "fileName": "ai-prompts-universal-header-search-v2.png",
+            "fileSize": 7888502,
+            "size": [
+              5244,
+              2950
+            ],
+            "md5": "7eafa093a595aa6b3cdc3878443b59aa",
+            "sha256": "d8767138749caa037d0de45628a426692affd3f5130ea435e08933fb0a721244",
+            "acceptedSpecIds": [
+              "c8f4e2b1-7a3d-5c9e-8b6f-2d1a0e9c8b7a"
+            ],
+            "category": "CREATIVE_ASSETS"
+          }
+        ]
+      }
+    ],
+    "previousJournalSHA256": "ea57c2bfd2aab7d50021659bf8cc22627a13fd4ab18282cb71ae1f33a80d492d",
+    "previousOwnedPlacements": {
+      "en-US:PRODUCT_PAGE_HEADER_ASSET:DEFAULT_PROFILE": [
+        {
+          "id": "e1c00019-2418-827e-8f28-781b5fded81f",
+          "attributes": {
+            "createdDate": "2026-10-28T18:37:42.275382Z",
+            "lastModifiedDate": "2026-10-28T18:37:42.275382Z",
+            "placementType": "PRODUCT_PAGE_HEADER_ASSET",
+            "mediaType": "IMAGE",
+            "placementGroup": "DEFAULT_PROFILE",
+            "state": "ACTIVE",
+            "stateDetails": null
+          },
+          "imageId": "65400019-2418-827e-803f-363cf1f93bf8"
+        }
+      ],
+      "en-US:APP_STORE_SEARCH_RESULTS_ASSET:DEFAULT_PROFILE": [
+        {
+          "id": "c3400019-2418-827e-8f05-80f65b7a0422",
+          "attributes": {
+            "createdDate": "2026-10-28T18:37:44.032713Z",
+            "lastModifiedDate": "2026-10-28T18:37:44.032713Z",
+            "placementType": "APP_STORE_SEARCH_RESULTS_ASSET",
+            "mediaType": "IMAGE",
+            "placementGroup": "DEFAULT_PROFILE",
+            "state": "ACTIVE",
+            "stateDetails": null
+          },
+          "imageId": "65400019-2418-827e-803f-363cf1f93bf8"
+        }
+      ]
+    }
+  },
+  "images": {
+    "d8767138749caa037d0de45628a426692affd3f5130ea435e08933fb0a721244": "fa400019-2418-827e-8009-e428e9a695db"
+  },
+  "placements": {
+    "en-US:PRODUCT_PAGE_HEADER_ASSET:DEFAULT_PROFILE": [
+      "9f800019-2418-827e-8f2e-76ce3838014f"
+    ],
+    "en-US:APP_STORE_SEARCH_RESULTS_ASSET:DEFAULT_PROFILE": [
+      "97800019-2418-827e-8f10-97f3777d7080"
+    ]
+  },
+  "verification": {
+    "d8767138749caa037d0de45628a426692affd3f5130ea435e08933fb0a721244": {
+      "verifiedAt": "2026-10-28T18:55:28Z",
+      "sourceSHA256": "d8767138749caa037d0de45628a426692affd3f5130ea435e08933fb0a721244",
+      "sourceMD5": "7eafa093a595aa6b3cdc3878443b59aa",
+      "decodedRGBSHA256": "f7486931dbf88802b32a580e14f38e52bd00891f034eae6391d98aadbc276a64",
+      "deliveredSHA256": "7c7ef2611e36952b0bfbb8eb3a7d7b81c88346cc60ac2fc7a3acb5c0554c0def",
+      "deliveredFileSize": 7889135,
+      "exactDecodedMatch": true,
+      "uprightOpaqueSingleFramePNG": true,
+      "note": "Apple may transcode PNG encoding; full-resolution decoded RGB pixels match exactly.",
+      "state": "PREPARE_FOR_SUBMISSION",
+      "specId": "c8f4e2b1-7a3d-5c9e-8b6f-2d1a0e9c8b7a"
+    }
+  },
+  "retainedPreviousImages": {
+    "e1c00019-2418-827e-8f28-781b5fded81f": {
+      "imageId": "65400019-2418-827e-803f-363cf1f93bf8",
+      "group": "en-US:PRODUCT_PAGE_HEADER_ASSET:DEFAULT_PROFILE",
+      "localizationId": "4d32f061-7654-448a-81ad-0f5cf5302c0f",
+      "status": "OWN_PLACEMENT_REMOVED_IMAGE_RETAINED"
+    },
+    "c3400019-2418-827e-8f05-80f65b7a0422": {
+      "imageId": "65400019-2418-827e-803f-363cf1f93bf8",
+      "group": "en-US:APP_STORE_SEARCH_RESULTS_ASSET:DEFAULT_PROFILE",
+      "localizationId": "4d32f061-7654-448a-81ad-0f5cf5302c0f",
+      "status": "OWN_PLACEMENT_REMOVED_IMAGE_RETAINED"
+    }
+  },
+  "finalPlacements": {
+    "en-US:PRODUCT_PAGE_HEADER_ASSET:DEFAULT_PROFILE": [
+      {
+        "id": "9f800019-2418-827e-8f2e-76ce3838014f",
+        "attributes": {
+          "createdDate": "2026-10-28T18:55:32.509159Z",
+          "lastModifiedDate": "2026-10-28T18:55:32.509159Z",
+          "placementType": "PRODUCT_PAGE_HEADER_ASSET",
+          "mediaType": "IMAGE",
+          "placementGroup": "DEFAULT_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "fa400019-2418-827e-8009-e428e9a695db"
+      }
+    ],
+    "en-US:APP_STORE_SEARCH_RESULTS_ASSET:DEFAULT_PROFILE": [
+      {
+        "id": "97800019-2418-827e-8f10-97f3777d7080",
+        "attributes": {
+          "createdDate": "2026-10-28T18:55:35.499996Z",
+          "lastModifiedDate": "2026-10-28T18:55:35.499996Z",
+          "placementType": "APP_STORE_SEARCH_RESULTS_ASSET",
+          "mediaType": "IMAGE",
+          "placementGroup": "DEFAULT_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "fa400019-2418-827e-8009-e428e9a695db"
+      }
+    ]
+  },
+  "complete": true,
+  "verifiedAt": "2026-10-28T18:55:36Z"
+}

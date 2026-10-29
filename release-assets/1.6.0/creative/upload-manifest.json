@@ -1,0 +1,20 @@
+{
+  "appId": "6748734078",
+  "bundleId": "com.appsbay.aiPrompts",
+  "versionId": "6f1e4e31-822d-4a18-bcd3-72f7bf935f47",
+  "versionString": "1.6.0",
+  "groups": [
+    {
+      "locale": "en-US",
+      "placementType": "PRODUCT_PAGE_HEADER_ASSET",
+      "placementGroup": "DEFAULT_PROFILE",
+      "images": ["release-assets/1.6.0/creative/ai-prompts-universal-header-search.png"]
+    },
+    {
+      "locale": "en-US",
+      "placementType": "APP_STORE_SEARCH_RESULTS_ASSET",
+      "placementGroup": "DEFAULT_PROFILE",
+      "images": ["release-assets/1.6.0/creative/ai-prompts-universal-header-search.png"]
+    }
+  ]
+}

@@ -74,13 +74,17 @@ struct PromptRowView: View {
                     }
                 } label: {
                     Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc")
+                        .labelStyle(.titleAndIcon)
                         .font(.subheadline.weight(.semibold))
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                         .foregroundStyle(copied ? .green : AIStudioPalette.violet)
                         .padding(.horizontal, 14)
                         .frame(minHeight: 44)
                         .background(AIStudioPalette.violet.opacity(0.09), in: Capsule())
                 }
                 .buttonStyle(.borderless)
+                .layoutPriority(1)
                 .accessibilityLabel(copied ? "Prompt copied" : "Copy prompt")
             }
         }

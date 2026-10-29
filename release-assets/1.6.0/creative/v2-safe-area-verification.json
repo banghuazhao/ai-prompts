@@ -1,0 +1,22 @@
+{
+  "templateURL": "https://devimages-cdn.apple.com/design/resources/download/app-store/creative_assets-universal_asset_template-static.psd",
+  "templateCanvas": [
+    5244,
+    2950
+  ],
+  "templateLayerName": "Art Safe Area",
+  "safeAreaLTRB": [
+    1921,
+    660,
+    3323,
+    1622
+  ],
+  "artworkHighLuminanceCoreBoundsLTRB": [
+    2325,
+    940,
+    2914,
+    1521
+  ],
+  "criticalCoreWithinSafeArea": true,
+  "method": "Official PSD layer metadata plus visual inspection of complete bulb/speech/title/tagline; local luminance bounds in core ROI."
+}

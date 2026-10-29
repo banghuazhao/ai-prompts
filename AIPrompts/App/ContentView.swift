@@ -2,7 +2,7 @@ import SharingGRDB
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedTab = 0
+    @State private var selectedTab = ScreenshotLaunchConfiguration.initialTab
     @FetchAll(PromptCategory.all) private var categories
     @State private var router = DeepLinkRouter.shared
     @AppStorage("selectedThemeColor") private var selectedThemeColor = ThemeColor.default.rawValue
