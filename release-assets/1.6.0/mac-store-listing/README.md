@@ -91,5 +91,5 @@ Neither tool submits the version for review.
 ## Before submitting the macOS version
 
 - The Mac binary is the same target built for Mac Catalyst with the iOS bundle ID (universal purchase). Archive with **Any Mac (Mac Catalyst)** in Xcode and upload; Xcode creates the Mac Catalyst signing profiles on first archive.
-- Version numbers: the macOS draft is **1.0** in App Store Connect while the project's `MARKETING_VERSION` is shared with iOS. Rename the macOS version to match the build you upload (for example 1.6.0).
+- Version numbers: the macOS draft in App Store Connect is **1.6.0**, matching the project's `MARKETING_VERSION` (shared with iOS). Archive with "Any Mac (Mac Catalyst)" and attach that 1.6.0 build to the macOS version.
 - The Mac app shows no ads and no tracking prompt, and doesn't offer the ad-removal Premium upgrade. A Premium purchase made on iPhone or iPad still shows as Premium on Mac.
