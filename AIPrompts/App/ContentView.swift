@@ -2,7 +2,7 @@ import SharingGRDB
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedTab = 0
+    @State private var selectedTab = ScreenshotLaunchConfiguration.initialTab
     @FetchAll(PromptCategory.all) private var categories
     @State private var router = DeepLinkRouter.shared
     @AppStorage("selectedThemeColor") private var selectedThemeColor = ThemeColor.default.rawValue
@@ -76,10 +76,12 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             Tab("Prompts", systemImage: "text.bubble", value: 0) {
                 PromptListView()
+                    .readableContentWidth()
             }
 
             Tab("Vibe Prompts", systemImage: "laptopcomputer", value: 1) {
                 VibePromptListView()
+                    .readableContentWidth()
             }
 
             Tab("Favorites", systemImage: "heart.fill", value: 2) {
@@ -88,13 +90,15 @@ struct ContentView: View {
 
             Tab("More", systemImage: "ellipsis.circle", value: 3) {
                 MoreView()
+                    .readableContentWidth(.scrollView)
             }
 
             Tab(value: 4, role: .search) {
                 SearchView()
+                    .readableContentWidth()
             }
         }
-        .tabBarMinimizeBehavior(.onScrollDown)
+        .platformTabStyle()
         .onChange(of: selectedTab) { _, _ in
             Haptics.shared.vibrateIfEnabled()
         }
@@ -103,12 +107,14 @@ struct ContentView: View {
     private var legacyTabView: some View {
         TabView(selection: $selectedTab) {
             PromptListView()
+                .readableContentWidth()
                 .tabItem {
                     Label("Prompts", systemImage: "text.bubble")
                 }
                 .tag(0)
 
             VibePromptListView()
+                .readableContentWidth()
                 .tabItem {
                     Label("Vibe Prompts", systemImage: "laptopcomputer")
                 }
@@ -121,6 +127,7 @@ struct ContentView: View {
                 .tag(2)
 
             MoreView()
+                .readableContentWidth(.scrollView)
                 .tabItem {
                     Label("More", systemImage: "ellipsis.circle")
                 }

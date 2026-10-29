@@ -39,6 +39,7 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🔎 **Smarter Search**: Search matches every word you type, in any order, ignoring case and accents, and also looks at categories, tech stacks and contributors. The best matches (titles that start with or contain your words) come first. Recent searches are suggested in every search field; in the Search tab, swipe one to remove it or tap **Clear**.
 - 🎲 **Surprise Me**: In the Prompts tab's **…** menu, open a random prompt from the ones currently listed.
 - 🖥️ **Modern SwiftUI Interface**: Clean, tab-based navigation for Prompts, Vibe Prompts, Favorites, and More.
+- 💻 **Mac App**: The same app runs natively on Mac (Mac Catalyst, universal purchase) with a sidebar instead of the tab bar and lists kept in a readable column. The Mac app has no ads. Mac App Store listing and screenshots: [`release-assets/1.6.0/mac-store-listing`](release-assets/1.6.0/mac-store-listing).
 - 🫧 **Liquid Glass Design**: On iOS 26 the app uses Liquid Glass throughout: a floating tab bar that shrinks while you scroll, a dedicated Search tab that searches prompts and vibe prompts together, and glass buttons, chips, quick launch pills, and cards. iOS 17.4–25 keep the original look.
 - 🧩 **Modular Architecture**: Includes a reusable `MoreApps` module for app recommendations, with localization support.
 - 💾 **Local Data Management**: Uses GRDB for efficient, local data storage and management.
@@ -47,14 +48,14 @@ A Swift iOS app for managing, browsing, and sharing AI prompts. Inspired by [f/a
 - 🛠️ **Prompt Engineering Analyzer**: **Check Prompt** gives quick tips on clarity, length, repetition, output format, audience and structure. Length and repetition checks work in any language; word-based tips only appear for English prompts, and match whole words only.
 - 🌙 **Appearance**: Follows the system light or dark setting by default, or pick Light or Dark in **Settings › Appearance**.
 - 🔠 **Dynamic Type**: Text throughout the app follows your text size setting, including accessibility sizes.
-- 📢 **Ad Integration**: Integrates Google Mobile Ads with ATT permission handling.
+- 📢 **Ad Integration**: Integrates Google Mobile Ads with ATT permission handling (iPhone and iPad only).
 - 🛒 **App Store Links**: The More tab features other recommended apps with direct App Store links.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Xcode 26 or later (the iOS 26 SDK is needed for the Liquid Glass APIs)
+- Xcode 27.1 or later for native iPhone Duo layouts (the deployment minimum remains iOS 17.4)
 - Swift 5.9+
 - iOS 17.4+ (Liquid Glass on iOS 26+)
 

@@ -1,0 +1,163 @@
+{
+  "planSHA256": "9f2ddf7e2b48675eebe71dda07982002aeec716715de4b49290c5bc3f56790fd",
+  "plan": {
+    "appId": "6748734078",
+    "bundleId": "com.appsbay.aiPrompts",
+    "versionId": "6f1e4e31-822d-4a18-bcd3-72f7bf935f47",
+    "versionString": "1.6.0",
+    "assetLibraryId": "6748734078",
+    "groups": [
+      {
+        "locale": "en-US",
+        "localizationId": "4d32f061-7654-448a-81ad-0f5cf5302c0f",
+        "placementType": "APP_SCREENSHOT",
+        "placementGroup": "IPHONE_DUO_PROFILE",
+        "images": [
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/screenshots/en-US/iphone-duo/01-library-outer.png",
+            "fileName": "01-library-outer.png",
+            "fileSize": 1031665,
+            "size": [
+              1398,
+              2034
+            ],
+            "md5": "97f162c656e35e621ec90b828d99b8e1",
+            "sha256": "dbee97bea6447da09438fdd41de2e05af212e0fbf2a41b2acbda3db7528efa4b",
+            "acceptedSpecIds": [
+              "205e7ab6-a23a-4ee2-b327-0a99ec2a2520"
+            ],
+            "category": "APP_SCREENSHOTS_AND_PREVIEWS"
+          },
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/screenshots/en-US/iphone-duo/02-vibe-library-outer.png",
+            "fileName": "02-vibe-library-outer.png",
+            "fileSize": 1030343,
+            "size": [
+              1398,
+              2034
+            ],
+            "md5": "e85e6bfd272f23122e9f5f70d21b2a86",
+            "sha256": "160ad40e4ba0a2a31df287ba01f79fb71c69bdfc1828ed6b80c31cc03396fcc6",
+            "acceptedSpecIds": [
+              "205e7ab6-a23a-4ee2-b327-0a99ec2a2520"
+            ],
+            "category": "APP_SCREENSHOTS_AND_PREVIEWS"
+          },
+          {
+            "path": "/Users/banghuazhao/Development/iOSApps/ai-prompts/release-assets/1.6.0/screenshots/en-US/iphone-duo/03-search-outer.png",
+            "fileName": "03-search-outer.png",
+            "fileSize": 609048,
+            "size": [
+              1398,
+              2034
+            ],
+            "md5": "4a48317e3c39205e9a0113b7db224874",
+            "sha256": "d4a97eedc8479f71245d17217c308c72e84fe56044f3e3a42fdb980313958a36",
+            "acceptedSpecIds": [
+              "205e7ab6-a23a-4ee2-b327-0a99ec2a2520"
+            ],
+            "category": "APP_SCREENSHOTS_AND_PREVIEWS"
+          }
+        ]
+      }
+    ]
+  },
+  "images": {
+    "dbee97bea6447da09438fdd41de2e05af212e0fbf2a41b2acbda3db7528efa4b": "54000019-2418-827e-801a-e2152fcbd269",
+    "160ad40e4ba0a2a31df287ba01f79fb71c69bdfc1828ed6b80c31cc03396fcc6": "57000019-2418-827e-8018-8bd6f70c8ee0",
+    "d4a97eedc8479f71245d17217c308c72e84fe56044f3e3a42fdb980313958a36": "b0c00019-2418-827e-8008-d9dbeef26da0"
+  },
+  "placements": {
+    "en-US:APP_SCREENSHOT:IPHONE_DUO_PROFILE": [
+      "e4800019-2418-827e-8f2d-540ee7f4885b",
+      "4b000019-2418-827e-8f06-90aebab6200c",
+      "85c00019-2418-827e-8f24-3da9319d2052"
+    ]
+  },
+  "verification": {
+    "dbee97bea6447da09438fdd41de2e05af212e0fbf2a41b2acbda3db7528efa4b": {
+      "verifiedAt": "2026-10-28T18:57:47Z",
+      "sourceSHA256": "dbee97bea6447da09438fdd41de2e05af212e0fbf2a41b2acbda3db7528efa4b",
+      "sourceMD5": "97f162c656e35e621ec90b828d99b8e1",
+      "decodedRGBSHA256": "d3696f15613cd216b077fb5a8496216b9d4e52d8462c32ea9c6ba4ff6d77bc17",
+      "deliveredSHA256": "4c5b2a9b6f8d6579c7dda3cd9944ec729bd2c0020c367ca655aa85a3d7263a98",
+      "deliveredFileSize": 1285526,
+      "exactDecodedMatch": true,
+      "uprightOpaqueSingleFramePNG": true,
+      "note": "Apple may transcode PNG encoding; full-resolution decoded RGB pixels match exactly.",
+      "state": "PREPARE_FOR_SUBMISSION",
+      "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520"
+    },
+    "160ad40e4ba0a2a31df287ba01f79fb71c69bdfc1828ed6b80c31cc03396fcc6": {
+      "verifiedAt": "2026-10-28T18:57:53Z",
+      "sourceSHA256": "160ad40e4ba0a2a31df287ba01f79fb71c69bdfc1828ed6b80c31cc03396fcc6",
+      "sourceMD5": "e85e6bfd272f23122e9f5f70d21b2a86",
+      "decodedRGBSHA256": "a4067ff7aa698af505ec94cb70ca539c53dccbad1cb8564c486e024dd15ada42",
+      "deliveredSHA256": "fc4b6a9914e1d5457fc21fff434acee151d17410b542a17d024f88bece3523cf",
+      "deliveredFileSize": 1283082,
+      "exactDecodedMatch": true,
+      "uprightOpaqueSingleFramePNG": true,
+      "note": "Apple may transcode PNG encoding; full-resolution decoded RGB pixels match exactly.",
+      "state": "PREPARE_FOR_SUBMISSION",
+      "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520"
+    },
+    "d4a97eedc8479f71245d17217c308c72e84fe56044f3e3a42fdb980313958a36": {
+      "verifiedAt": "2026-10-28T18:57:57Z",
+      "sourceSHA256": "d4a97eedc8479f71245d17217c308c72e84fe56044f3e3a42fdb980313958a36",
+      "sourceMD5": "4a48317e3c39205e9a0113b7db224874",
+      "decodedRGBSHA256": "5995cd161a604e9f269f8d2445a1f0c9ee5a3a4a797e4bcb772a9e45af05aad4",
+      "deliveredSHA256": "8bf8a3c69e273868b4178aa68d901d55fad9c81b16dd3aed7e7ab5eba3fd57f9",
+      "deliveredFileSize": 794569,
+      "exactDecodedMatch": true,
+      "uprightOpaqueSingleFramePNG": true,
+      "note": "Apple may transcode PNG encoding; full-resolution decoded RGB pixels match exactly.",
+      "state": "PREPARE_FOR_SUBMISSION",
+      "specId": "205e7ab6-a23a-4ee2-b327-0a99ec2a2520"
+    }
+  },
+  "finalPlacements": {
+    "en-US:APP_SCREENSHOT:IPHONE_DUO_PROFILE": [
+      {
+        "id": "e4800019-2418-827e-8f2d-540ee7f4885b",
+        "attributes": {
+          "createdDate": "2026-10-28T18:58:01.249882Z",
+          "lastModifiedDate": "2026-10-28T18:58:01.249882Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "54000019-2418-827e-801a-e2152fcbd269"
+      },
+      {
+        "id": "4b000019-2418-827e-8f06-90aebab6200c",
+        "attributes": {
+          "createdDate": "2026-10-28T18:58:01.944314Z",
+          "lastModifiedDate": "2026-10-28T18:58:01.944314Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "57000019-2418-827e-8018-8bd6f70c8ee0"
+      },
+      {
+        "id": "85c00019-2418-827e-8f24-3da9319d2052",
+        "attributes": {
+          "createdDate": "2026-10-28T18:58:02.622395Z",
+          "lastModifiedDate": "2026-10-28T18:58:02.622395Z",
+          "placementType": "APP_SCREENSHOT",
+          "mediaType": "IMAGE",
+          "placementGroup": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "imageId": "b0c00019-2418-827e-8008-d9dbeef26da0"
+      }
+    ]
+  },
+  "complete": true,
+  "verifiedAt": "2026-10-28T18:58:04Z"
+}

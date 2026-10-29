@@ -1,0 +1,51 @@
+{
+  "appId": "6748734078",
+  "bundleId": "com.appsbay.aiPrompts",
+  "platform": "macOS (Mac Catalyst)",
+  "placementGroup": "MAC_PROFILE",
+  "window": "1440x900 pt at 2x",
+  "capturedAt": "2026-10-29T09:15:23.526352+00:00",
+  "locale": "en-US",
+  "source": "Debug Mac Catalyst build in screenshot launch mode; the app captures its own window with ScreenCaptureKit (toolbar included, no shadow). Actual library content; ads and consent are skipped. Transparent rounded-corner pixels are filled with the adjacent window colour; all other pixels are unchanged. Converted from the display color profile to untagged sRGB so App Store Connect delivers identical pixels.",
+  "images": [
+    {
+      "file": "01-library.png",
+      "tab": "prompts",
+      "searchQuery": null,
+      "nativeSize": [
+        2880,
+        1800
+      ],
+      "mode": "RGB",
+      "cornerPixelsFilled": 1168,
+      "decodedRGBSHA256": "c3259126b5e385b95692f15d9f3652291948466888f15b9a4cec7d0c2d5fa281",
+      "sha256": "8e17f22ddfd2f2101ab2ca9b981427318482c1da3f4d54bb9e6d41fb2b20d8b3"
+    },
+    {
+      "file": "02-vibe-library.png",
+      "tab": "vibe",
+      "searchQuery": null,
+      "nativeSize": [
+        2880,
+        1800
+      ],
+      "mode": "RGB",
+      "cornerPixelsFilled": 1168,
+      "decodedRGBSHA256": "29b6c90ef352a429895fe09a2ea7bc5d19355277dcd24dc51a6de9e33078a0e5",
+      "sha256": "92c9d24a059e5bb341fd33a6698bb0c83a8454ec9b3c81b9be12ba82d97bcaf5"
+    },
+    {
+      "file": "03-search.png",
+      "tab": "search",
+      "searchQuery": "writing",
+      "nativeSize": [
+        2880,
+        1800
+      ],
+      "mode": "RGB",
+      "cornerPixelsFilled": 1168,
+      "decodedRGBSHA256": "cd3fb7530bea5fcc2e7ad0eca3eb80407f10e90c33555eb9edc38b0657608370",
+      "sha256": "55f2cc7ffa21bcd00ebb01d9ae6fd9d37e928d30670f3cd28d37d24c7b092617"
+    }
+  ]
+}

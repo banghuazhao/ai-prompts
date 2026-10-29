@@ -8,7 +8,7 @@ struct SearchView: View {
     @Dependency(\.defaultDatabase) private var database
     @Environment(\.promptCategories) private var categories
 
-    @State private var query = ""
+    @State private var query = ScreenshotLaunchConfiguration.initialSearchQuery
     @State private var aiSearch = AISearchState()
     @State private var recentSearches = RecentSearches.load()
 

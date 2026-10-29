@@ -251,12 +251,13 @@ struct FavoritesView: View {
                         .scrollContentBackground(.hidden)
                     }
                 }
-                if !model.purchaseManager.isPremiumUserPurchased {
+                if AdManager.isSupported && !model.purchaseManager.isPremiumUserPurchased {
                     BannerView()
                         .frame(height: 50)
                         .padding(.bottom, 16)
                 }
             }
+            .readableFrameWidth()
             .background(AIStudioPalette.canvas.ignoresSafeArea())
             .navigationTitle("Favorites")
             .navigationBarTitleDisplayMode(.inline)

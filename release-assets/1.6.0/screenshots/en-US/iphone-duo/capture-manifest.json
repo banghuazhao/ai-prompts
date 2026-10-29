@@ -1,0 +1,53 @@
+{
+  "appId": "6748734078",
+  "bundleId": "com.appsbay.aiPrompts",
+  "draftVersion": "1.6.0",
+  "device": "iPhone Duo",
+  "simulatorId": "4226058E-3DC3-473A-A184-8683070D64C9",
+  "runtime": "iOS 27.1",
+  "sdk": "iphonesimulator27.1",
+  "display": "outer",
+  "capturedAt": "2026-10-28T18:54:31.521041+00:00",
+  "locale": "en-US",
+  "source": "Native simctl display capture. Opaque alpha channel removed without resizing or changing RGB pixels. Actual library content; Debug simulator screenshot launch mode skips consent and ads.",
+  "images": [
+    {
+      "file": "01-library-outer.png",
+      "tab": "prompts",
+      "nativeSize": [
+        1398,
+        2034
+      ],
+      "mode": "RGB",
+      "decodedRGBSHA256": "d3696f15613cd216b077fb5a8496216b9d4e52d8462c32ea9c6ba4ff6d77bc17",
+      "sha256": "dbee97bea6447da09438fdd41de2e05af212e0fbf2a41b2acbda3db7528efa4b"
+    },
+    {
+      "file": "02-vibe-library-outer.png",
+      "tab": "vibe",
+      "nativeSize": [
+        1398,
+        2034
+      ],
+      "mode": "RGB",
+      "decodedRGBSHA256": "a4067ff7aa698af505ec94cb70ca539c53dccbad1cb8564c486e024dd15ada42",
+      "sha256": "160ad40e4ba0a2a31df287ba01f79fb71c69bdfc1828ed6b80c31cc03396fcc6"
+    },
+    {
+      "file": "03-search-outer.png",
+      "tab": "search",
+      "nativeSize": [
+        1398,
+        2034
+      ],
+      "mode": "RGB",
+      "decodedRGBSHA256": "5995cd161a604e9f269f8d2445a1f0c9ee5a3a4a797e4bcb772a9e45af05aad4",
+      "sha256": "d4a97eedc8479f71245d17217c308c72e84fe56044f3e3a42fdb980313958a36"
+    }
+  ],
+  "tests": {
+    "result": "passed",
+    "total": 85,
+    "failed": 0
+  }
+}

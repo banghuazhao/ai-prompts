@@ -1,4 +1,6 @@
+#if !targetEnvironment(macCatalyst)
 import GoogleMobileAds
+#endif
 import SharingGRDB
 import SwiftUI
 import UIKit
@@ -31,7 +33,13 @@ struct AIPrompts: App {
                     purchaseManager.startObservingTransactions()
                     await purchaseManager.checkPurchaseStatus()
                 }
+                #if DEBUG && targetEnvironment(macCatalyst)
                 .task {
+                    await ScreenshotLaunchConfiguration.prepareMacWindowAndCapture()
+                }
+                #endif
+                .task {
+                    guard !ScreenshotLaunchConfiguration.isEnabled else { return }
                     await ConsentManager.shared.gatherConsentAndStartAds()
                     openAd.requestAppOpenAd()
                 }
@@ -45,7 +53,7 @@ struct AIPrompts: App {
                     if newPhase == .active {
                         // Prompts saved from the share sheet while the app was away.
                         SharedInboxImporter.importPending(database: AppDatabase.shared)
-                        if !purchaseManager.isPremiumUserPurchased {
+                        if !ScreenshotLaunchConfiguration.isEnabled && !purchaseManager.isPremiumUserPurchased {
                             openAd.tryToPresentAd()
                         }
                         openAd.appHasEnterBackgroundBefore = false

@@ -171,7 +171,8 @@ struct MoreView: View {
                 collectionStat(value: model.vibePromptsCount, title: "Vibe prompts")
             }
 
-            if !model.isPremiumUser {
+            // Premium removes ads, and the Mac app has none, so Mac doesn't offer the upgrade.
+            if !model.isPremiumUser, AdManager.isSupported {
                 Button {
                     Haptics.shared.vibrateIfEnabled()
                     model.onTapPurchase()
@@ -183,7 +184,7 @@ struct MoreView: View {
                         .background(.white, in: Capsule())
                 }
                 .buttonStyle(.plain)
-            } else {
+            } else if model.isPremiumUser {
                 Label("Welcome, Premium user!", systemImage: "crown.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.white)

@@ -22,7 +22,7 @@ struct TranslatablePromptText: View {
                 .lineSpacing(5)
                 .foregroundColor(.primary)
                 .textSelection(.enabled)
-            if #available(iOS 18.0, *), Self.needsTranslation(text) {
+            if #available(iOS 18.0, macCatalyst 26.0, *), Self.needsTranslation(text) {
                 TranslationControls(
                     text: text,
                     translation: $translation,
@@ -47,7 +47,7 @@ struct TranslatablePromptText: View {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, macCatalyst 26.0, *)
 private struct TranslationControls: View {
     let text: String
     @Binding var translation: String?
