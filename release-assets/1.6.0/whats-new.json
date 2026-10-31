@@ -1,0 +1,8 @@
+{
+  "platform": "IOS",
+  "versionString": "1.6.0",
+  "whatsNew": {
+    "en-US": "• Now on Mac, with a roomy sidebar layout.\n• Prompt ideas from Apple Intelligence: say what you need and get a ready-to-edit prompt with blanks for the details (on supported devices).\n• Save from anywhere: share text from any app to AI Prompts, or add a prompt from the clipboard.\n• Widgets can copy a prompt without opening the app.\n• Smarter search matches every word in any order, puts the best matches first, and remembers recent searches.\n• Delete without a confirmation pop-up. An Undo banner brings prompts back.\n• Quick Launch fills in your blanks first and adds Microsoft Copilot and Mistral Le Chat.\n• Chat replies show full formatting: headings, lists, tables and code blocks with a Copy button. Long chats can continue with a summary.\n• Surprise Me, word and token counts, and blanks listed as you type.\n• No banner ads on Settings or More, faster lists, and many small fixes.",
+    "zh-Hans": "• 现已支持 Mac，采用宽敞的侧边栏布局。\n• Apple 智能提示词创意：说出你的需求，即可获得可直接编辑的提示词，细节处留有待填空白（需支持的设备）。\n• 随处保存：从任意 App 分享文字到 AI Prompts，或直接从剪贴板添加提示词。\n• 小组件无需打开 App 即可拷贝提示词。\n• 更智能的搜索：任意顺序匹配每个词，最佳结果优先，并记住最近的搜索。\n• 删除不再弹窗确认，可通过“撤销”横幅恢复。\n• 快速启动会先填好空白，并新增 Microsoft Copilot 和 Mistral Le Chat。\n• 聊天回复完整显示格式：标题、列表、表格，以及带拷贝按钮的代码块。长对话可借助摘要继续。\n• 新增“随机一个”、字数与 token 统计，输入时列出空白项。\n• 设置和“更多”页不再显示横幅广告，列表更流畅，并修复了许多小问题。"
+  }
+}
